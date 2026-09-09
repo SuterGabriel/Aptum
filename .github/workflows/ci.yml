@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Die Pipeline hat zwei Zwecke: Qualität sichern und als Guardrail für
+# agentische Änderungen dienen. Ein Agent, der gegen eine Projektregel
+# verstößt, bekommt hier ein rotes Ergebnis statt eines Review-Kommentars,
+# den niemand schreibt.
+
+jobs:
+  belege:
+    name: Beleg-Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Belege prüfen
+        run: bash scripts/beleg-check.sh
+
+  # --- Ab Stufe 1 ---------------------------------------------------------
+  # Bewusst als auskommentiertes Gerüst, nicht als leerer Job, der immer
+  # grün ist. Ein Job, der nichts prüft und trotzdem grün meldet, ist
+  # schlimmer als kein Job.
+  #
+  # fast:
+  #   Kompilieren, Unit- und Domain-Tests, ArchUnit. Ziel: Feedback < 2 min.
+  #
+  # backend-it:
+  #   Testcontainers mit echtem Postgres, inklusive Multi-Tenant-Isolationstest:
+  #   Mandant A sieht nichts von Mandant B.
+  #
+  # frontend:
+  #   Lint, Unit-Tests, Bundle-Größen-Budget.
+  #
+  # e2e:
+  #   Playwright inklusive axe-core über das Kalender-Grid, Report als Artefakt.
+  #
+  # kontrast:
+  #   Rechnet die Kontrastwerte aus den Farbtoken nach, statt sie zu schätzen.
+  #
+  # security:
+  #   Dependency-Scan und Container-Scan.
+  #
+  # evals:
+  #   Nur bei Änderungen an Prompts oder AI-Code, weil der Job Geld kostet.
+  #   Ergebnis und Differenz zum letzten Lauf als Kommentar am Pull Request.
