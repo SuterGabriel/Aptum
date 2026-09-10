@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Das Domain-Modul. ADR-001 verspricht: keine Framework-Abhaengigkeit.
+
+  Diese Datei ist der Beleg dafuer. Ausser JUnit im Test-Scope steht hier
+  nichts - kein Spring, kein JPA, kein Jackson. Ein Verstoss dagegen
+  kompiliert nicht, statt erst im ArchUnit-Test aufzufallen.
+
+  Die Umlaute fehlen in diesem Kommentar mit Absicht: XML-Kommentare in
+  Build-Dateien werden von Werkzeugen gelesen, deren Kodierung nicht in
+  unserer Hand liegt.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>de.aptum</groupId>
+    <artifactId>scheduling</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>scheduling-domain</artifactId>
+  <name>Aptum Scheduling Domain</name>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+</project>

@@ -19,13 +19,83 @@ jobs:
       - name: Belege prüfen
         run: bash scripts/beleg-check.sh
 
+  dokumente:
+    name: Prosa und Verweise
+    runs-on: ubuntu-latest
+    # Zwei Gates in einem Job, weil beide dieselbe Node-Einrichtung brauchen
+    # und zusammen unter einer Sekunde laufen. Sie bleiben getrennte Schritte,
+    # damit im roten Lauf ohne Logsuche sichtbar ist, welches der beiden hing.
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      # Der Git-Hook prüft nur vorgemerkte Dateien und ist mit --no-verify
+      # umgehbar. Hier läuft dieselbe Prüfung über den ganzen Baum — das
+      # fängt die Datei, die nie durch den Hook gegangen ist.
+      - name: Prosa prüfen
+        run: node scripts/prosa-check.mjs
+      - name: Verweise prüfen
+        run: node scripts/link-check.mjs
+
+  regeln:
+    name: Fundstellen der Fachregeln
+    runs-on: ubuntu-latest
+    # Prüft den Regelkatalog und, sobald es ihn gibt, den Domänencode gegen
+    # ihn: keine nackte Zahl in einer Regelklasse, jede Fundstelle existiert
+    # und trägt Status BELEGT. Grundlage ist ADR-007.
+    #
+    # Der wichtigste Befund aus Stufe 0 war, dass falscher Code im Test
+    # auffällt und falsche Fachlogik nicht. Ein Test über eine erfundene
+    # Frist ist grün. Das ist der Job, der das abfängt.
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Fundstellen prüfen
+        run: node scripts/regel-check.mjs
+
+  kontrast:
+    name: Kontrast der Farbtoken
+    runs-on: ubuntu-latest
+    # Rechnet die Kontrastwerte aus den Farbtoken nach, statt sie zu schätzen.
+    # Fast alle Behauptungen von WCAG-Konformität beruhen auf einem einmaligen
+    # manuellen Blick. Dieser Job macht daraus eine Zusage, die kaputtgehen
+    # kann, sobald jemand eine Farbe anfasst.
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Kontraste nachrechnen
+        run: node scripts/kontrast-check.mjs
+
+  domain:
+    name: Domain kompilieren und testen
+    runs-on: ubuntu-latest
+    # Der erste Job, der nicht in Sekunden fertig ist. Java 21 und Maven nach
+    # ADR-008; das Domain-Modul hat laut ADR-001 keine Framework-Abhängigkeit,
+    # deshalb braucht dieser Job weder Datenbank noch Container.
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+      - name: Domain-Tests
+        run: mvn -B --file services/scheduling/pom.xml test
+
   # --- Ab Stufe 1 ---------------------------------------------------------
   # Bewusst als auskommentiertes Gerüst, nicht als leerer Job, der immer
   # grün ist. Ein Job, der nichts prüft und trotzdem grün meldet, ist
   # schlimmer als kein Job.
   #
-  # fast:
-  #   Kompilieren, Unit- und Domain-Tests, ArchUnit. Ziel: Feedback < 2 min.
+  # archunit:
+  #   Prüft die Regeln aus ADR-001 maschinell: keine Framework-Abhängigkeit
+  #   im Domain-Modul, Abhängigkeitsrichtung nach innen. Fällt an, sobald
+  #   application und infrastructure existieren.
   #
   # backend-it:
   #   Testcontainers mit echtem Postgres, inklusive Multi-Tenant-Isolationstest:
@@ -36,9 +106,6 @@ jobs:
   #
   # e2e:
   #   Playwright inklusive axe-core über das Kalender-Grid, Report als Artefakt.
-  #
-  # kontrast:
-  #   Rechnet die Kontrastwerte aus den Farbtoken nach, statt sie zu schätzen.
   #
   # security:
   #   Dependency-Scan und Container-Scan.

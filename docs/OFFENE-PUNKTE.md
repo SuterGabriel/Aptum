@@ -65,6 +65,21 @@ Das berührt das Repo nicht, gehört aber vor eine Vertragsunterschrift.
 
 ## 7. Voraussetzung für Stufe 1
 
-Vor dem Domänenkern zu installieren: ein JDK 21 und ein Build-Werkzeug, Gradle
-mit Kotlin DSL oder Maven. Die Entscheidung zwischen beiden gehört in eine
-kurze ADR, weil sie später teuer zu ändern ist.
+**Erledigt am 2026-09-09.** Die Werkzeugkette steht:
+
+- Eclipse Temurin JDK 21.0.12 LTS
+- Apache Maven 3.9.16
+
+Beides ohne Administratorrechte ins Benutzerprofil installiert
+(`%LOCALAPPDATA%\Programs`), Prüfsumme jeweils gegen die Herstellerangabe
+geprüft. Maven 4 lag nur als Release Candidate vor und schied damit aus.
+
+Verifiziert nicht durch `--version`, sondern durch einen vollständigen Build:
+`mvn test` mit einem parametrisierten JUnit-5-Test über die Fristenregel, drei
+Fälle grün. Anschließend ein absichtlich falscher Erwartungswert — Build rot,
+Exit-Code 1. Ein Testlauf, von dem niemand gesehen hat, wie er fehlschlägt,
+belegt nichts.
+
+**Nachgeholt am 2026-09-10:** Die Begründung steht als
+[ADR-008](adr/ADR-008-maven-statt-gradle.md), mit Vermerk, dass sie einen Tag zu
+spät kommt. Die Verspätung selbst bleibt dort stehen, statt geglättet zu werden.

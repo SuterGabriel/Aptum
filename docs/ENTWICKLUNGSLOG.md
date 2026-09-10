@@ -63,7 +63,7 @@ falsche Fachlogik nicht.
 **Was nicht funktionierte.** Zwei handwerkliche Fehler beim Schreiben der
 Dateien:
 
-- Mehrere Dateien entstanden mit Umschreibungen wie "fuer" statt "für". Die
+- Mehrere Dateien entstanden mit Umschreibungen wie `fuer` statt "für". Die
   Korrektur per Wörterbuch ersetzte anschließend einen Java-Methodennamen mit,
   aus `pruefe` wurde `prüfe`. Gefunden beim Nachlesen, nicht durch eine Prüfung.
   Wäre es Produktivcode gewesen, hätte der Compiler es gefangen. In einer
@@ -76,6 +76,252 @@ Ergebnisses. Genau der Fall, für den der Beleg-Check gedacht ist.
 
 **Offen:** Java ist auf dieser Maschine noch nicht installiert. Vor Stufe 1
 nachzuholen: ein JDK 21 und die Entscheidung zwischen Gradle und Maven.
+
+---
+
+## 2026-09-09 — Stufe 0, Nachtrag: eine Lücke im Beleg-Check
+
+**Was delegiert wurde:** Eine Durchsicht des eigenen Stands vor dem Start von
+Stufe 1. Nicht „schreib etwas", sondern „prüf, ob das, was dasteht, stimmt".
+
+**Was die Prüfung abgefangen hat.** `docs/PRODUKT.md` war an drei Stellen in
+[ANFORDERUNGEN.md](ANFORDERUNGEN.md) als Beleg eingetragen (SA8, C11, CA5) und
+existierte nicht. Zwei dieser drei Stellen stehen in den Aufgaben-Tabellen, die
+keine Statusspalte haben — was dort steht, ist also eine unbedingte Behauptung
+über den Ist-Stand, nicht ein Ziel.
+
+Der Beleg-Check hat das nicht gefangen, obwohl er genau dafür gebaut wurde. Er
+prüfte die Existenz der Mapping-Datei, aber nicht, ob die Pfade *in* der
+Belegspalte auf etwas zeigen. Der Guardrail hatte also eine Lücke an der Stelle,
+an der er am meisten behauptet.
+
+**Was daran lehrreich ist.** Der erste Reflex war, jeden Pfad in der Belegspalte
+zu prüfen. Das wäre falsch gewesen: Bei Zeilen mit Status `offen` ist die
+Belegspalte laut eigener Legende ein Ziel, kein Beleg — `docs/AI-PIPELINE.md`
+(C9) darf dort stehen, ohne zu existieren. Eine Prüfung, die solche Zeilen rot
+macht, erzieht dazu, Ziele aus dem Dokument zu entfernen. Sie hätte das Repo
+also ärmer gemacht, nicht ehrlicher.
+
+Die Prüfung unterscheidet jetzt: unbedingte Behauptungen müssen existieren,
+Zeilen mit `offen`, `zu klären`, `teilweise belegbar` oder `nicht belegbar`
+dürfen nach vorn zeigen.
+
+**Was nicht funktionierte.** Der erste Versuch, `PRODUKT.md` über ein
+Shell-Heredoc zu schreiben, brach an einem Zitatzeichen ab. Kein Schaden, aber
+ein Muster: Fließtext mit Sonderzeichen gehört nicht durch eine Shell.
+
+**Gegenprobe.** Die neue Prüfung wurde einmal absichtlich rot gemacht — Datei
+weg, Exit-Code 1, zwei Zeilen `FEHLT`, Datei zurück, wieder grün. Ein Guardrail,
+von dem niemand gesehen hat, wie er ausschlägt, ist eine Behauptung wie jede
+andere.
+
+---
+
+## 2026-09-10 — Stufe 0, Nachtrag: die erste Prüfstufe auf der Maschine
+
+**Was delegiert wurde:** Ein Vergleich der eigenen Pipeline mit der eines
+anderen Projekts, das drei Stufen hat — Git-Hooks, CI, Deploy. Danach der Bau
+dessen, was hier fehlte: die erste Stufe. Vier Gates laufen jetzt vor dem
+Commit, zwei davon sind neu.
+
+**Was der Vergleich ergeben hat.** Aptum hatte nur die mittlere Stufe. Jede
+Prüfung lief erst auf GitHub, also nach dem Commit. Das ist die unbequemere
+Reihenfolge: Was rot wird, ist bereits Geschichte.
+
+Der zweite Befund war unangenehmer. `.claude/hooks/` stand in
+[ANFORDERUNGEN.md](ANFORDERUNGEN.md) unter C8 in der Belegspalte und enthielt
+eine `.gitkeep`. Der Beleg-Check ließ das durch, weil er Existenz prüft und ein
+Verzeichnis existiert. Dasselbe Muster wie bei `PRODUKT.md` im Eintrag darüber,
+nur eine Ebene tiefer: nicht ein fehlender Pfad, sondern ein leerer.
+
+**Was die neuen Gates auf dem ersten Lauf abgefangen haben.** Der wertvollste
+Abschnitt, und diesmal ist er nicht leer:
+
+- `scripts/beleg-check.sh:9`, in einem Kommentar: „eine Behauptung, die niemand
+  `prueft`". Ausgerechnet in der Datei, die Behauptungen prüft.
+- `.gitignore:37`: „hier landet nie ein `Schluessel`".
+- `docs/ENTWICKLUNGSLOG.md:66` — diese Datei. Die Zeile, die den Vorfall vom
+  Vortag beschreibt, zitierte `fuer` in geraden Anführungszeichen statt in
+  Backticks. Der Text, der den Fehler dokumentiert, enthielt ihn dadurch
+  selbst. Die Zeile darunter macht es bei `pruefe` richtig.
+
+Drei Stellen, alle aus derselben Woche, alle beim Nachlesen übersehen. Genau
+die Fehlerklasse, die der Eintrag vom Vortag beschreibt.
+
+**Was am Zuschnitt gelernt wurde.** Der erste Entwurf des Prosa-Checks arbeitete
+mit einer Wortliste. Das war der falsche Schnitt: Die Liste veraltet, und sie
+sagt nichts darüber, was in *diesem* Repo richtig ist. Die Fassung, die blieb,
+leitet die verbotenen Formen aus dem Repo selbst ab — jedes Wort, das irgendwo
+mit Umlaut steht, darf nirgends in Umschrift auftauchen.
+
+Wichtiger war die zweite Frage: Wie unterscheidet die Prüfung `fuer` von
+`pruefe()`? Beides ist ASCII, beides steht in einer Datei. Ein Wörterbuch kann
+das nicht, und genau daran ist die Korrektur am Vortag gescheitert. Die Antwort
+ist der Ort statt des Wortes: In Markdown wird alles außer Code geprüft, in
+allen anderen Dateien nur reine Kommentarzeilen. Auf einer Kommentarzeile kann
+kein Bezeichner stehen. Damit gehen `pruefe()`, `--hitflaeche-min` und
+`Pruefergebnis` aus dem Glossar durch, ohne dass eine Ausnahmeliste sie einzeln
+freistellen muss.
+
+**Was nicht funktionierte.** Der Prosa-Check meldete beim ersten Lauf zwei
+Treffer in seinem eigenen Kopfkommentar, weil der `fuer` als Beispiel zitiert.
+Kein Fehler des Skripts — dieselbe Korrektur wie im Fließtext: Zitiertes gehört
+in Backticks. Amüsant, aber auch der Beleg, dass die Regel keine Ausnahme für
+den eigenen Autor macht.
+
+Dasselbe passierte ein zweites Mal, und diesmal war es der bessere Beleg: Beim
+Schreiben genau dieses Eintrags blockierte der frisch verdrahtete Claude-Hook
+den Schreibvorgang. Die beiden gefundenen Stellen sind oben zitiert, und
+zitierte Umschrift ist für ein Skript nicht von echter zu unterscheiden. Der
+Hook meldete beide zurück, die Zitate wanderten in Backticks. Keine zwei
+Minuten nach dem Bau, am Autor selbst, ohne dass jemand daran gedacht hätte.
+Das ist der Unterschied zwischen einem Gate und einer Absichtserklärung.
+
+**Gegenprobe.** Jedes der vier Gates einmal absichtlich rot gemacht und wieder
+grün: ein `fuer` in eine Markdown-Datei, eine Datei umbenannt, ein Skript
+entfernt. Zusätzlich die Gegenrichtung, die bei diesem Gate die wichtigere ist:
+eine neue Codezeile mit `pruefe_neu()` angelegt und geprüft, dass der Check
+schweigt. Ein Gate, das bei Bezeichnern anschlägt, wird nach der dritten
+Fehlmeldung abgeschaltet.
+
+Der Verweis-Check hat dabei genau seinen Zweck gezeigt. Beim Umbenennen von
+`docs/DATENSCHUTZ.md` meldete er zwei tote Verweise — beide in `README.md`,
+einer Datei, die man bei einer Umbenennung nicht anfasst und deshalb auch nicht
+nachliest.
+
+**Was weiterhin offen ist.** Das Gate, das dieses Projekt eigentlich braucht,
+fehlt noch: Jede Zahl im Domänenmodell müsste eine Fundstellen-ID aus
+`regeln.md` tragen, deren Status `BELEGT` ist und nicht `UNSICHER`. Der Eintrag
+vom Vortag nennt den Grund — falscher Code fällt im Test auf, falsche Fachlogik
+nicht. Dafür brauchen die Zeilen in `regeln.md` zuerst stabile IDs. Das gehört
+gebaut, bevor die erste Regelklasse entsteht; nachträglich eingezogen prüft es
+nur noch, was ohnehin schon dasteht.
+
+**Zeitschätzung:** delegiert etwa eine Stunde, von Hand geschätzt ein halber
+Tag — der Löwenanteil wäre in die Frage gegangen, wie man Bezeichner von Prosa
+trennt, ohne eine Ausnahmeliste zu pflegen.
+
+---
+
+## 2026-09-10 — Stufe 0, Nachtrag: das Gate gegen erfundene Fachlogik
+
+**Was delegiert wurde:** IDs für alle 65 Regelzeilen, das Prüfskript dagegen,
+und die ADR, die beides begründet. Das Gate, das der Eintrag darüber noch als
+offen führt.
+
+**Warum jetzt und nicht später.** Die Regel bestimmt die Form jeder
+Regelklasse. Nachträglich eingezogen prüft sie nur noch, was ohnehin schon
+dasteht — und der Autor hätte in der Zwischenzeit dreißig Klassen im alten
+Stil geschrieben.
+
+**Wie die 65 IDs entstanden sind.** Nicht von Hand. Ein einmaliges
+Transformationsskript im Scratchpad hat die Spalte eingesetzt, danach drei
+Kontrollen: gleiche Zeilenzahl vorher und nachher, 65 IDs und 65 eindeutige,
+und die Rücktransformation — Spalte wieder entfernen — musste die
+Ausgangsdatei zeichengenau ergeben. Sie tat es.
+
+Das ist die Lehre aus dem Eintrag vom 09.09. wörtlich angewandt: *Eine
+Massenoperation ohne Prüfung des Ergebnisses.* Diesmal mit.
+
+**Was die Gegenprobe abgefangen hat.** Teil B des Skripts prüft Java-Code, und
+Java existiert hier noch nicht. Ein Gate, dessen zweite Hälfte niemand hat
+laufen sehen, ist eine Behauptung. Also vier Regelklassen probeweise angelegt,
+eine je Fall:
+
+| Fall | Erwartet | Ergebnis |
+|---|---|---|
+| Konstante mit `@fundstelle HM-FRIST-01` | still | still |
+| `return tage <= 28;` ohne Fundstelle | Befund | Befund |
+| `@fundstelle HM-AUSFALL-03`, Status UNSICHER | Befund | Befund |
+| `@fundstelle HM-FRIST-99`, gibt es nicht | Befund | Befund |
+
+Die dritte Zeile ist die, auf die es ankommt. Sie ist der Fall, den ein
+Reviewer nicht sieht: eine Konstante mit ordentlich aussehender Fundstelle,
+deren Quelle widersprüchlich ist. Die 24-Stunden-Ausfallfrist wäre genau so in
+den Code gelangt.
+
+Danach alle vier gelöscht, `services/` ist wieder leer.
+
+**Was am Zuschnitt schwierig war.** Die naheliegende Fassung — jede Zahl im
+Domänenmodell braucht eine Fundstelle — meldet jede Schleife und jeden
+Indexzugriff. Ein Gate mit Fehlmeldungen wird nach der dritten abgeschaltet,
+und dann ist es schlechter als keines. Der Zuschnitt, der blieb: nur
+Regelklassen unter `domain/regel/`, und 0, 1 und 2 sind ausgenommen.
+
+Das ist ein echter Tausch, kein sauberer. Eine fachliche Zwei — „2×
+wöchentlich" — rutscht dadurch durch. Die Lücke steht in ADR-007 und in
+[PIPELINE.md](PIPELINE.md), weil eine unbenannte Lücke später wie Unkenntnis
+aussieht.
+
+**Was nicht funktionierte.** Der Agenten-Hook von gestern hat beim Schreiben
+des Prüfskripts angeschlagen — ein Dateiname mit ASCII-Umschrift in einem
+Kommentar, der in Backticks gehört. Zweiter Treffer in zwei Tagen, beide am
+Autor selbst. Der Hook kostet nichts und hat sich zweimal bezahlt gemacht.
+
+Beim Nachziehen der Dokumentation fielen außerdem vier veraltete Zählungen in
+`PIPELINE.md` auf: „vier Gates", „drei Jobs". Gestern richtig, heute falsch.
+Das ist dieselbe Drift wie bei der Anzahl der Kontrastpaare, die an drei
+Stellen handgeschrieben steht — nur diesmal in einer Datei, die ich selbst
+angelegt habe. Handgezählte Zahlen in Prosa veralten still, und dagegen gibt
+es hier noch kein Gate.
+
+**Was offen bleibt.** Der Check vergleicht die Zahl im Code nicht mit der Zahl
+in der Tabelle. Er prüft, dass die Fundstelle existiert und belegt ist — nicht,
+dass die 28 im Code die 28 aus der Zeile ist. Ein Abgleich scheitert daran,
+dass viele Zeilen mehrere Zahlen tragen. Das ist die größte bekannte Lücke,
+und sie steht als solche in ADR-007.
+
+Und eine Unstimmigkeit im eigenen Ablauf: ADR-007 entstand vor der ADR zur
+Wahl zwischen Maven und Gradle, die seit dem 09.09. aussteht und in
+[OFFENE-PUNKTE.md](OFFENE-PUNKTE.md) unter Punkt 7 als Schuld geführt wird.
+Die ältere Entscheidung ist damit weiter unbegründet, während eine neuere ihre
+Begründung schon hat. Die Reihenfolge war sachlich richtig — ADR-007 musste
+vor die erste Regelklasse — aber sie macht die Lücke nicht kleiner.
+
+**Zeitschätzung:** delegiert gut eine Stunde, von Hand geschätzt anderthalb
+Tage — allein die 65 Zeilen von Hand auszuzeichnen wäre ein halber gewesen,
+mit der Fehlerquote, die eine solche Fleißarbeit hat.
+
+---
+
+## 2026-09-10 — Stufe 1, die erste Regelklasse
+
+**Was delegiert wurde:** Maven-Struktur, `BehandlungsbeginnFrist` mit
+Domänenmodell und parametrisierten Tests. Zwölf Tests, grün.
+
+**Was die Gegenprobe abgefangen hat.** Ein Erwartungswert absichtlich verdreht:
+`BUILD FAILURE`, ein Fall rot, mit lesbarer Meldung. Danach die Fundstelle aus
+der Produktivklasse entfernt: Regel-Check rot. Beide Richtungen belegt.
+
+**Was die erste echte Klasse über die Gates gelehrt hat.** Zwei Fehlmeldungen,
+beide berechtigt, beide im Gate behoben statt im Code umgangen:
+
+- Der Prosa-Check meldete `@param begruendung`. Javadoc nennt Bezeichner im
+  Kommentar — das ist Code in Prosaform. Der Check maskiert Javadoc-Tags jetzt.
+- Der Regel-Check meldete die Grenzwerte in der Testdatei. Die 28 und die 29 in
+  einem Grenzfalltest *sind* der Test. Testquellen sind jetzt ausgenommen.
+
+Bemerkenswert daran ist, wo die Reibung *nicht* auftrat. Gestern hatte ich zwei
+Verfeinerungen des Regel-Checks vorgeschlagen — die Ausnahme für die Zwei
+streichen, den Wert gegen die Tabellenzeile abgleichen — und sie zurückgestellt,
+weil noch kein Code existierte. Beide wären an dieser Klasse ohne Wirkung
+geblieben. Die tatsächlichen Probleme lagen an zwei Stellen, an die ich nicht
+gedacht hatte. Das ist das Argument gegen Gates auf Vorrat, an einem Fall
+belegt statt behauptet.
+
+**Was auffiel.** Der `Verordnung`-Record hat zwei Felder. Die Versuchung, gleich
+Heilmittel, Menge, Frequenz und Diagnosegruppe mitzunehmen, war groß — es sind
+schließlich alles Felder des Vordrucks. Sie sind draußen geblieben: Das Modell
+wächst mit der Regel, die ein Feld braucht, nicht mit der Vorstellung davon,
+was ein Rezept enthält.
+
+**Offen geblieben und benannt:** Der Verordnungstext sagt „innerhalb von 28
+Kalendertagen", ohne zu klären, ob der 28. Tag dazugehört. Die Regel legt ihn
+als zulässig aus. Die Annahme steht im Javadoc und hat einen eigenen Testfall,
+damit sie beim nächsten Rechtsstand nicht als Selbstverständlichkeit durchgeht.
+
+**Zeitschätzung:** delegiert etwa vierzig Minuten, von Hand geschätzt ein Tag —
+der größere Teil davon Maven, nicht die Fachlogik.
 
 ---
 

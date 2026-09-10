@@ -5,11 +5,9 @@ out/
 dist/
 *.class
 *.jar
-!gradle/wrapper/gradle-wrapper.jar
 
-# Gradle / Maven
-.gradle/
-.mvn/wrapper/maven-wrapper.jar
+# Maven (ADR-008)
+!.mvn/wrapper/maven-wrapper.jar
 
 # Node
 node_modules/
@@ -34,7 +32,7 @@ coverage/
 evals/ergebnisse/*.json
 !evals/ergebnisse/.gitkeep
 
-# Geheimnisse - hier landet nie ein Schluessel
+# Geheimnisse - hier landet nie ein Schlüssel
 .env
 .env.*
 !.env.example
