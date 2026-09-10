@@ -478,6 +478,61 @@ aber es zeigt, dass die schnelle Stufe Lücken hat, die die langsame schließt.
 
 ---
 
+## 2026-09-10 — Stufe 1, die Dimension Therapeut
+
+**Was delegiert wurde:** Etappe A der Slot-Berechnung — Heilmittel,
+Zertifikatsleistung, Therapeut und die Qualifikationsregel. 84 Tests grün,
+davon 10 neu.
+
+**Wie eine unsichere Quelle das bessere Modell erzwungen hat.** Der erste
+Entwurf hätte die Weiterbildungsstunden je Zertifikatsleistung modelliert. Das
+ging nicht: `HM-QUAL-02` steht auf UNSICHER, weil Anlage 1 für die
+Lymphdrainage 170 Stunden nennt und die ab Juni 2026 wirksame Anlage 7 140
+Unterrichtseinheiten. Nach ADR-007 darf daraus keine Konstante werden.
+
+Der erzwungene Umweg ist fachlich der richtigere Weg. Eine Praxis rechnet keine
+Weiterbildungsstunden nach; sie prüft, ob die Arbeitsgemeinschaft die
+Abrechnungserlaubnis erteilt hat, und die ist personengebunden
+(`HM-QUAL-06`, BELEGT). Das Modell kennt jetzt nur noch die Erlaubnis als
+Tatsache. Die unsichere Zeile hat nichts offen gelassen, sondern eine falsche
+Modellierung verhindert.
+
+**Was die Testsuite abgefangen hat.** Zwei eigene Fehler in derselben Datei,
+beide beim Schreiben entstanden: ein `.formatted()`, das an das zweite
+String-Literal statt an die Verkettung band — das `%s` wäre wörtlich in der
+Begründung gelandet — und ein `waere` in einem Nutzertext, den der Prosa-Check
+nicht sieht, weil er in einem String und nicht in einem Kommentar steht.
+
+Das zweite ist ein benannter blinder Fleck: Der Prosa-Check prüft in Java nur
+reine Kommentarzeilen. Die Begründungen der Regeln stehen aber in Strings und
+werden der Rezeption vorgelesen. Bisher aufgefallen ist es beim Nachlesen.
+
+**Was die Gates gelehrt haben, fünfter und sechster Fall.**
+
+Erstens: Der Regel-Check meldete `@fundstelle HM-QUAL-02 hat Status UNSICHER`
+an der Stelle, an der die Zeile *zitiert* wird, um zu erklären, warum dort
+keine Konstante steht. ADR-007 verbietet aber nur, eine unsichere Quelle als
+Konstante zu verwenden — sie zu nennen ist genau das gewünschte Verhalten. Der
+Status wird jetzt nur noch geprüft, wo eine Fundstelle tatsächlich eine Zahl
+begründet.
+
+Zweitens, und das ist der ernstere: Die Gegenprobe blieb stumm. Eine entfernte
+Fundstelle in der Heilmittel-Tabelle wurde nicht gemeldet, weil das
+Drei-Zeilen-Fenster bis zur Fundstelle der Nachbarkonstante reichte. In einer
+dicht gepackten Aufzählung borgte sich damit jede Konstante die Quelle ihres
+Vorgängers, und die einzelnen Fundstellen waren gar nicht erzwungen. Das Fenster
+endet jetzt am Ende der vorherigen Deklaration.
+
+Bemerkenswert daran ist, wie es aufgefallen ist: nicht durch einen roten Lauf,
+sondern durch einen **stummen**. Ein Gate, das nichts meldet, sieht aus wie ein
+Gate, das zufrieden ist. Nur weil die Gegenprobe zur Gewohnheit gehört, kam der
+Unterschied heraus.
+
+**Zeitschätzung:** delegiert etwa vierzig Minuten, von Hand geschätzt anderthalb
+Tage — die Heilmittel-Tabelle allein wäre ein halber gewesen.
+
+---
+
 ## Vorlage für weitere Einträge
 
 ```

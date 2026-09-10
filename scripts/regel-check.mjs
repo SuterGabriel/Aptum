@@ -167,35 +167,32 @@ function codePruefen(pfad, katalog) {
   const zeilen = inhalt.split(/\r?\n/);
   const ort = relative(wurzel, pfad).replace(/\\/g, '/');
 
-  // Welche Fundstellen nennt diese Datei überhaupt?
+  // Eine Fundstelle steht oft mitten in Javadoc: `{@code @fundstelle HM-X}`,
+  // in Klammern, am Satzende. Die Auszeichnung drumherum gehört nicht zur ID —
+  // sonst zwingt das Gate dazu, Javadoc schlechter zu schreiben.
+  const idAusZeile = (roh) =>
+    roh.replace(/^[`*("'[{<]+/, '').replace(/[`*.,;:)\]}>"']+$/, '');
+
+  // Jede genannte ID muss es geben. Der Status wird hier absichtlich nicht
+  // geprüft: ADR-007 verbietet, eine unsichere Quelle als *Konstante* in den
+  // Code zu nehmen — sie zu nennen, um zu erklären, warum dort keine Zahl
+  // steht, ist genau das gewünschte Verhalten. Der Status wird deshalb erst
+  // unten geprüft, wo eine Fundstelle tatsächlich eine Zahl begründet.
   zeilen.forEach((zeile, index) => {
     for (const treffer of zeile.matchAll(/@fundstelle\s+(\S+)/g)) {
-      // Eine Fundstelle steht oft mitten in Javadoc: `{@code @fundstelle HM-X}`,
-      // in Klammern, am Satzende. Die Auszeichnung drumherum gehört nicht zur
-      // ID — sonst zwingt das Gate dazu, Javadoc schlechter zu schreiben.
-      const id = treffer[1].replace(/^[`*("'[{<]+/, '').replace(/[`*.,;:)\]}>"']+$/, '');
-      const eintrag = katalog.get(id);
-      if (!eintrag) {
+      const id = idAusZeile(treffer[1]);
+      if (!katalog.has(id)) {
         befund(
           `${ort}:${index + 1}`,
           `@fundstelle ${id} steht nicht in regeln.md`,
           'Entweder die ID ist falsch geschrieben, oder die Regel ist nicht recherchiert.',
-        );
-        continue;
-      }
-      if (eintrag.status !== 'BELEGT') {
-        befund(
-          `${ort}:${index + 1}`,
-          `@fundstelle ${id} hat Status ${eintrag.roh}`,
-          'Nur BELEGT darf als Konstante in den Code. Bei UNSICHER wird die Regel '
-          + 'ein Parameter je Praxis — siehe die Ausfallregel als Vorbild.',
         );
       }
     }
   });
 
   // Nackte Zahlen. Eine Konstantendeklaration ist erlaubt, wenn in den drei
-  // Zeilen davor eine Fundstelle steht.
+  // Zeilen davor eine Fundstelle steht — und diese Fundstelle muss BELEGT sein.
   let imBlockkommentar = false;
   zeilen.forEach((zeile, index) => {
     const nurCode = zeile.replace(/"[^"]*"/g, '""');
@@ -209,15 +206,41 @@ function codePruefen(pfad, katalog) {
       .filter((z) => !UNVERDAECHTIG.has(z));
     if (zahlen.length === 0) return;
 
-    const umgebung = zeilen.slice(Math.max(0, index - 3), index + 1).join('\n');
-    if (/@fundstelle\s+HM-/.test(umgebung)) return;
+    // Eine Fundstelle gilt für die Deklaration, die auf sie folgt — und nur
+    // bis zum Ende der vorherigen. Ohne diese Grenze borgt sich in einer dicht
+    // gepackten Aufzählung jede Konstante die Quelle ihres Vorgängers, und die
+    // einzelnen Fundstellen wären gar nicht erzwungen.
+    const umgebung = [];
+    for (let zurueck = index - 1; zurueck >= 0 && index - zurueck <= 3; zurueck--) {
+      const vorher = zeilen[zurueck].replace(/"[^"]*"/g, '""').trim();
+      if (/[,;]$/.test(vorher)) break;
+      umgebung.unshift(zeilen[zurueck]);
+    }
+    umgebung.push(zeile);
+    const genannt = [...umgebung.join('\n').matchAll(/@fundstelle\s+(\S+)/g)]
+      .map((t) => idAusZeile(t[1]));
 
-    befund(
-      `${ort}:${index + 1}`,
-      `Zahl ohne Fundstelle: ${zahlen.join(', ')}`,
-      'In einer Regelklasse steht keine nackte Zahl. Benannte Konstante mit '
-      + '/** @fundstelle HM-... */ darüber — oder die Zahl gehört nicht hierher.',
-    );
+    if (genannt.length === 0) {
+      befund(
+        `${ort}:${index + 1}`,
+        `Zahl ohne Fundstelle: ${zahlen.join(', ')}`,
+        'In einer Regelklasse steht keine nackte Zahl. Benannte Konstante mit '
+        + '/** @fundstelle HM-... */ darüber — oder die Zahl gehört nicht hierher.',
+      );
+      return;
+    }
+
+    for (const id of genannt) {
+      const eintrag = katalog.get(id);
+      if (eintrag && eintrag.status !== 'BELEGT') {
+        befund(
+          `${ort}:${index + 1}`,
+          `Zahl ${zahlen.join(', ')} stützt sich auf ${id} mit Status ${eintrag.roh}`,
+          'Nur BELEGT darf als Konstante in den Code. Bei UNSICHER wird die Regel '
+          + 'ein Parameter je Praxis — siehe die Ausfallregel als Vorbild.',
+        );
+      }
+    }
   });
 }
 
