@@ -1,5 +1,8 @@
 package de.aptum.scheduling.domain.regel;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import de.aptum.scheduling.domain.model.Diagnosegruppe;
 import de.aptum.scheduling.domain.model.Pruefergebnis;
 import de.aptum.scheduling.domain.model.Therapieform;
@@ -7,9 +10,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /** Die harte Mengengrenze je Rezept - und die weiche, die keine ist. */
 class HoechstmengeGrenzeTest {
@@ -26,9 +26,9 @@ class HoechstmengeGrenzeTest {
     void anDerGrenzeJederGruppe(Diagnosegruppe gruppe) {
         int hoechstmenge = gruppe.hoechstmengeJeVerordnung();
 
-        assertTrue(pruefe(gruppe, hoechstmenge).istErfuellt(),
-                "genau die Hoechstmenge ist zulaessig");
-        assertEquals(Pruefergebnis.Ausgang.VERLETZT,
+        assertTrue(pruefe(gruppe, hoechstmenge).istErfuellt(), "genau die Hoechstmenge ist zulaessig");
+        assertEquals(
+                Pruefergebnis.Ausgang.VERLETZT,
                 pruefe(gruppe, hoechstmenge + 1).ausgang(),
                 "eine Einheit darueber nicht mehr");
     }
@@ -36,10 +36,11 @@ class HoechstmengeGrenzeTest {
     @Test
     @DisplayName("Die ZNS-Gruppen duerfen mehr als die uebrigen Physio-Gruppen")
     void znsGruppenHabenEineHoehereGrenze() {
-        assertEquals(Pruefergebnis.Ausgang.VERLETZT, pruefe(Diagnosegruppe.WS, 10).ausgang(),
+        assertEquals(
+                Pruefergebnis.Ausgang.VERLETZT,
+                pruefe(Diagnosegruppe.WS, 10).ausgang(),
                 "zehn Einheiten sind fuer die Wirbelsaeule zu viel");
-        assertTrue(pruefe(Diagnosegruppe.ZN, 10).istErfuellt(),
-                "fuer die ZNS-Gruppe sind zehn zulaessig");
+        assertTrue(pruefe(Diagnosegruppe.ZN, 10).istErfuellt(), "fuer die ZNS-Gruppe sind zehn zulaessig");
     }
 
     @Test
@@ -50,7 +51,8 @@ class HoechstmengeGrenzeTest {
         // und trotzdem unzulässig - wer hier gegen die orientierende Menge
         // prüft, lässt ein ungültiges Rezept durch.
         assertTrue(Diagnosegruppe.ZN.orientierendeBehandlungsmenge() > 20);
-        assertEquals(Pruefergebnis.Ausgang.VERLETZT, pruefe(Diagnosegruppe.ZN, 20).ausgang());
+        assertEquals(
+                Pruefergebnis.Ausgang.VERLETZT, pruefe(Diagnosegruppe.ZN, 20).ausgang());
     }
 
     @Test

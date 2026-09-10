@@ -1,23 +1,22 @@
 package de.aptum.scheduling.domain.regel;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import de.aptum.scheduling.domain.model.Behandlungstermin;
 import de.aptum.scheduling.domain.model.Behandlungsverlauf;
 import de.aptum.scheduling.domain.model.Frequenz;
 import de.aptum.scheduling.domain.model.Pruefergebnis;
 import de.aptum.scheduling.domain.model.Therapieform;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
-
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 /** Die Frequenzregel. Sie warnt, sie blockiert nie. */
 class FrequenzGrenzeTest {
@@ -38,23 +37,19 @@ class FrequenzGrenzeTest {
     }
 
     private Pruefergebnis pruefe(Frequenz frequenz, Behandlungsverlauf verlauf, LocalDate geplant) {
-        return regel.pruefe(
-                Verlauf.verordnung(Therapieform.PHYSIOTHERAPIE, EINHEITEN, frequenz),
-                verlauf,
-                geplant);
+        return regel.pruefe(Verlauf.verordnung(Therapieform.PHYSIOTHERAPIE, EINHEITEN, frequenz), verlauf, geplant);
     }
 
     @DisplayName("Bis zur oberen Grenze der Verordnung ist der Termin unauffaellig")
     @ParameterizedTest(name = "{3}")
     @CsvSource({
-            "2, 0, ERFUELLT, Erster Termin bei zweimal woechentlich",
-            "2, 1, ERFUELLT, Zweiter Termin bei zweimal woechentlich",
-            "2, 2, WARNUNG,  Dritter Termin bei zweimal woechentlich",
-            "3, 2, ERFUELLT, Dritter Termin bei bis zu dreimal woechentlich",
-            "3, 3, WARNUNG,  Vierter Termin bei bis zu dreimal woechentlich",
+        "2, 0, ERFUELLT, Erster Termin bei zweimal woechentlich",
+        "2, 1, ERFUELLT, Zweiter Termin bei zweimal woechentlich",
+        "2, 2, WARNUNG,  Dritter Termin bei zweimal woechentlich",
+        "3, 2, ERFUELLT, Dritter Termin bei bis zu dreimal woechentlich",
+        "3, 3, WARNUNG,  Vierter Termin bei bis zu dreimal woechentlich",
     })
-    void obereGrenze(int maxProWoche, int schonInDerWoche,
-                     Pruefergebnis.Ausgang erwartet, String situation) {
+    void obereGrenze(int maxProWoche, int schonInDerWoche, Pruefergebnis.Ausgang erwartet, String situation) {
         Pruefergebnis ergebnis = pruefe(
                 Frequenz.spanne(1, maxProWoche),
                 behandlungenAb(MONTAG, schonInDerWoche),
@@ -76,10 +71,12 @@ class FrequenzGrenzeTest {
         // vierte Behandlung und damit auffällig.
         Behandlungsverlauf verlauf = behandlungenAb(MONTAG, 3);
 
-        assertEquals(Pruefergebnis.Ausgang.WARNUNG,
+        assertEquals(
+                Pruefergebnis.Ausgang.WARNUNG,
                 pruefe(Frequenz.genau(2), verlauf, sonntag).ausgang(),
                 "noch dieselbe Kalenderwoche");
-        assertEquals(Pruefergebnis.Ausgang.ERFUELLT,
+        assertEquals(
+                Pruefergebnis.Ausgang.ERFUELLT,
                 pruefe(Frequenz.genau(2), verlauf, naechsterMontag).ausgang(),
                 "die neue Woche zaehlt bei null wieder los");
     }
@@ -88,7 +85,8 @@ class FrequenzGrenzeTest {
     @DisplayName("Termine aus anderen Wochen zaehlen nicht mit")
     void andereWochenBleibenAussen() {
         Behandlungsverlauf vorwoche = behandlungenAb(MONTAG.minusDays(7), 5);
-        assertTrue(pruefe(Frequenz.genau(1), vorwoche, MONTAG).istErfuellt(),
+        assertTrue(
+                pruefe(Frequenz.genau(1), vorwoche, MONTAG).istErfuellt(),
                 "fuenf Behandlungen in der Vorwoche beruehren diese Woche nicht");
     }
 
@@ -100,8 +98,10 @@ class FrequenzGrenzeTest {
         // Lücke im Verlauf gar nichts melden - HM-UNTBR-07.
         Behandlungsverlauf langePause = Verlauf.mitAbstaenden(90);
 
-        assertTrue(pruefe(Frequenz.genau(3), langePause, Verlauf.ERSTER_TAG.plusDays(180))
-                .istErfuellt(), "zu wenig Behandlung ist hier keine Meldung wert");
+        assertTrue(
+                pruefe(Frequenz.genau(3), langePause, Verlauf.ERSTER_TAG.plusDays(180))
+                        .istErfuellt(),
+                "zu wenig Behandlung ist hier keine Meldung wert");
     }
 
     @Test
@@ -115,16 +115,17 @@ class FrequenzGrenzeTest {
 
         assertNotEquals(Pruefergebnis.Ausgang.VERLETZT, ergebnis.ausgang());
         assertEquals(Pruefergebnis.Ausgang.WARNUNG, ergebnis.ausgang());
-        assertTrue(ergebnis.begruendung().contains("Absprache"),
+        assertTrue(
+                ergebnis.begruendung().contains("Absprache"),
                 "die Begruendung nennt den Weg, auf dem die Abweichung zulaessig wird");
     }
 
     @Test
     @DisplayName("Die Begruendung nennt die Angabe vom Vordruck")
     void begruendungNenntDieVerordneteAngabe() {
-        Pruefergebnis ergebnis = pruefe(
-                Frequenz.spanne(1, 3), Behandlungsverlauf.leer(), MONTAG);
-        assertTrue(ergebnis.begruendung().contains("1-3x wöchentlich"),
+        Pruefergebnis ergebnis = pruefe(Frequenz.spanne(1, 3), Behandlungsverlauf.leer(), MONTAG);
+        assertTrue(
+                ergebnis.begruendung().contains("1-3x wöchentlich"),
                 "die Rezeption soll die Angabe wiedererkennen, die auf dem Rezept steht");
     }
 }

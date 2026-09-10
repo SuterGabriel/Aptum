@@ -3,7 +3,6 @@ package de.aptum.scheduling.domain.regel;
 import de.aptum.scheduling.domain.model.Behandlungsverlauf;
 import de.aptum.scheduling.domain.model.Pruefergebnis;
 import de.aptum.scheduling.domain.model.Verordnung;
-
 import java.time.LocalDate;
 
 /**
@@ -47,28 +46,25 @@ public final class VerordnungsGueltigkeit {
 
     public Pruefergebnis pruefe(Verordnung verordnung, Behandlungsverlauf verlauf, LocalDate stichtag) {
         if (!verordnung.therapieform().istPhysiotherapie()) {
-            return Pruefergebnis.erfuellt(NAME,
+            return Pruefergebnis.erfuellt(
+                    NAME,
                     "Für die Ergotherapie ist keine absolute Gültigkeitsdauer belegt. "
                             + "Dort begrenzt stattdessen die Summe der Unterbrechungen.");
         }
 
         if (verlauf.istLeer()) {
-            return Pruefergebnis.erfuellt(NAME,
-                    "Die Laufzeit beginnt mit der ersten Behandlung; es gab noch keine.");
+            return Pruefergebnis.erfuellt(NAME, "Die Laufzeit beginnt mit der ersten Behandlung; es gab noch keine.");
         }
 
         LocalDate ersterTag = verlauf.ersterBehandlungstag().orElseThrow();
-        int monate = verordnung.verordneteEinheiten() <= EINHEITEN_GRENZE
-                ? MONATE_BIS_GRENZE
-                : MONATE_UEBER_GRENZE;
+        int monate = verordnung.verordneteEinheiten() <= EINHEITEN_GRENZE ? MONATE_BIS_GRENZE : MONATE_UEBER_GRENZE;
         LocalDate verfallstag = ersterTag.plusMonths(monate);
 
         String lage = "%d Einheiten verordnet, Laufzeit %d Monate ab %s, also bis %s"
                 .formatted(verordnung.verordneteEinheiten(), monate, ersterTag, verfallstag);
 
         if (stichtag.isAfter(verfallstag)) {
-            return Pruefergebnis.verletzt(NAME,
-                    lage + ". Am " + stichtag + " ist die Verordnung verfallen.");
+            return Pruefergebnis.verletzt(NAME, lage + ". Am " + stichtag + " ist die Verordnung verfallen.");
         }
         return Pruefergebnis.erfuellt(NAME, lage + ".");
     }

@@ -4,7 +4,6 @@ import de.aptum.scheduling.domain.model.Behandlungstermin;
 import de.aptum.scheduling.domain.model.Behandlungsverlauf;
 import de.aptum.scheduling.domain.model.Pruefergebnis;
 import de.aptum.scheduling.domain.model.Verordnung;
-
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
@@ -49,10 +48,8 @@ public final class FrequenzGrenze {
 
     private static final String NAME = "Frequenz";
 
-    public Pruefergebnis pruefe(Verordnung verordnung, Behandlungsverlauf verlauf,
-                                LocalDate geplanterTermin) {
-        LocalDate wochenbeginn =
-                geplanterTermin.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+    public Pruefergebnis pruefe(Verordnung verordnung, Behandlungsverlauf verlauf, LocalDate geplanterTermin) {
+        LocalDate wochenbeginn = geplanterTermin.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
         LocalDate naechsteWoche = wochenbeginn.plusWeeks(1);
 
         long bereitsInDieserWoche = verlauf.termine().stream()
@@ -68,8 +65,10 @@ public final class FrequenzGrenze {
             return Pruefergebnis.erfuellt(NAME, lage + ".");
         }
 
-        return Pruefergebnis.warnung(NAME, lage
-                + ". Eine Abweichung ist nur nach vorheriger Absprache mit der "
-                + "verordnenden Person zulässig und auf dem Vordruck zu dokumentieren.");
+        return Pruefergebnis.warnung(
+                NAME,
+                lage
+                        + ". Eine Abweichung ist nur nach vorheriger Absprache mit der "
+                        + "verordnenden Person zulässig und auf dem Vordruck zu dokumentieren.");
     }
 }

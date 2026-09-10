@@ -22,11 +22,7 @@ import java.util.Set;
  * @param wochentage  welche Tage überhaupt
  */
 public record Wunschfenster(
-        LocalDate von,
-        LocalDate bis,
-        LocalTime fruehestens,
-        LocalTime spaetestens,
-        Set<DayOfWeek> wochentage) {
+        LocalDate von, LocalDate bis, LocalTime fruehestens, LocalTime spaetestens, Set<DayOfWeek> wochentage) {
 
     public Wunschfenster {
         Objects.requireNonNull(von, "von");
@@ -38,15 +34,16 @@ public record Wunschfenster(
             throw new IllegalArgumentException("Wunschfenster endet vor seinem Beginn: " + von + " bis " + bis);
         }
         if (!spaetestens.isAfter(fruehestens)) {
-            throw new IllegalArgumentException("Tageszeit endet vor ihrem Beginn: " + fruehestens + " bis " + spaetestens);
+            throw new IllegalArgumentException(
+                    "Tageszeit endet vor ihrem Beginn: " + fruehestens + " bis " + spaetestens);
         }
         wochentage = Set.copyOf(wochentage);
     }
 
     /** Jeder Werktag zwischen den beiden Daten, zu jeder Tageszeit. */
     public static Wunschfenster werktags(LocalDate von, LocalDate bis) {
-        return new Wunschfenster(von, bis, LocalTime.MIN, LocalTime.MAX,
-                EnumSet.range(DayOfWeek.MONDAY, DayOfWeek.FRIDAY));
+        return new Wunschfenster(
+                von, bis, LocalTime.MIN, LocalTime.MAX, EnumSet.range(DayOfWeek.MONDAY, DayOfWeek.FRIDAY));
     }
 
     public Wunschfenster zwischen(LocalTime fruehestens, LocalTime spaetestens) {

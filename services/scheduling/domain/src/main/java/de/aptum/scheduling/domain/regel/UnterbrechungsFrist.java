@@ -36,10 +36,11 @@ public final class UnterbrechungsFrist {
             if (unterbrechung.istBegruendetBei(verordnung.therapieform())) {
                 continue;
             }
-            return Pruefergebnis.verletzt(NAME,
+            return Pruefergebnis.verletzt(
+                    NAME,
                     ("Unterbrechung von %d Tagen zwischen %s und %s, "
-                            + "zulässig sind %d ohne Begründung (%s). "
-                            + "Die Verordnung ist für die Restmenge verfallen.")
+                                    + "zulässig sind %d ohne Begründung (%s). "
+                                    + "Die Verordnung ist für die Restmenge verfallen.")
                             .formatted(
                                     unterbrechung.tage(),
                                     unterbrechung.von(),
@@ -59,7 +60,6 @@ public final class UnterbrechungsFrist {
                 .mapToLong(Unterbrechung::tage)
                 .max()
                 .orElse(0L);
-        return "Längste Unterbrechung %d Tage, Grenze %d ohne Begründung."
-                .formatted(laengste, MAX_UNTERBRECHUNG_TAGE);
+        return "Längste Unterbrechung %d Tage, Grenze %d ohne Begründung.".formatted(laengste, MAX_UNTERBRECHUNG_TAGE);
     }
 }

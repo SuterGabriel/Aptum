@@ -38,22 +38,23 @@ public final class QualifikationsGrenze {
 
     public Pruefergebnis pruefe(Heilmittel heilmittel, Therapeut therapeut) {
         if (!heilmittel.brauchtAbrechnungserlaubnis()) {
-            return Pruefergebnis.erfuellt(NAME,
-                    ("%s ist keine Zertifikatsleistung und darf ohne Zusatzqualifikation "
-                            + "erbracht werden.").formatted(heilmittel.bezeichnung()));
+            return Pruefergebnis.erfuellt(
+                    NAME,
+                    ("%s ist keine Zertifikatsleistung und darf ohne Zusatzqualifikation " + "erbracht werden.")
+                            .formatted(heilmittel.bezeichnung()));
         }
 
         String leistung = heilmittel.zertifikatsleistung().bezeichnung();
 
         if (therapeut.darfAbrechnen(heilmittel.zertifikatsleistung())) {
-            return Pruefergebnis.erfuellt(NAME,
-                    "Abrechnungserlaubnis für %s liegt bei %s vor."
-                            .formatted(leistung, therapeut.kuerzel()));
+            return Pruefergebnis.erfuellt(
+                    NAME, "Abrechnungserlaubnis für %s liegt bei %s vor.".formatted(leistung, therapeut.kuerzel()));
         }
 
-        return Pruefergebnis.verletzt(NAME,
+        return Pruefergebnis.verletzt(
+                NAME,
                 ("%s ist eine Zertifikatsleistung; %s hat dafür keine Abrechnungserlaubnis. "
-                        + "Die Behandlung wäre nicht abrechenbar.")
+                                + "Die Behandlung wäre nicht abrechenbar.")
                         .formatted(heilmittel.bezeichnung(), therapeut.kuerzel()));
     }
 }

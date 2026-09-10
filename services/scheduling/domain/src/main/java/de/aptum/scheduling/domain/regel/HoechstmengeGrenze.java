@@ -47,8 +47,8 @@ public final class HoechstmengeGrenze {
                 .formatted(verordnet, verordnung.diagnosegruppe(), hoechstmenge);
 
         if (verordnet > hoechstmenge) {
-            return Pruefergebnis.verletzt(NAME,
-                    lage + ". Die überzähligen Einheiten gehören auf eine weitere Verordnung.");
+            return Pruefergebnis.verletzt(
+                    NAME, lage + ". Die überzähligen Einheiten gehören auf eine weitere Verordnung.");
         }
         return Pruefergebnis.erfuellt(NAME, lage + ".");
     }

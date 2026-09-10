@@ -27,11 +27,15 @@ public record Pruefbericht(List<Pruefergebnis> ergebnisse) {
     }
 
     public List<Pruefergebnis> warnungen() {
-        return ergebnisse.stream().filter((e) -> e.ausgang() == Pruefergebnis.Ausgang.WARNUNG).toList();
+        return ergebnisse.stream()
+                .filter((e) -> e.ausgang() == Pruefergebnis.Ausgang.WARNUNG)
+                .toList();
     }
 
     /** Die erste verletzte Regel — der Grund, den die Oberfläche nennt. */
     public Optional<Pruefergebnis> ersterVerstoss() {
-        return ergebnisse.stream().filter((e) -> e.ausgang() == Pruefergebnis.Ausgang.VERLETZT).findFirst();
+        return ergebnisse.stream()
+                .filter((e) -> e.ausgang() == Pruefergebnis.Ausgang.VERLETZT)
+                .findFirst();
     }
 }

@@ -30,5 +30,16 @@
       <artifactId>junit-jupiter</artifactId>
       <scope>test</scope>
     </dependency>
+    <!--
+      ArchUnit macht ADR-001 maschinell pruefbar: kein Framework, keine
+      Datenbank, keine Legacy-Zeitklassen im Domaenenkern. Nur im Test-Scope -
+      das Domain-Modul selbst bleibt ohne Abhaengigkeit.
+    -->
+    <dependency>
+      <groupId>com.tngtech.archunit</groupId>
+      <artifactId>archunit-junit5</artifactId>
+      <version>${archunit.version}</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 </project>

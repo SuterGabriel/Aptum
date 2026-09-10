@@ -1,17 +1,16 @@
 package de.aptum.scheduling.domain.regel;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import de.aptum.scheduling.domain.model.Behandlungsverlauf;
 import de.aptum.scheduling.domain.model.Pruefergebnis;
 import de.aptum.scheduling.domain.model.Therapieform;
 import de.aptum.scheduling.domain.model.Unterbrechungskennzeichen;
 import de.aptum.scheduling.domain.model.Verordnung;
+import java.time.LocalDate;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import java.time.LocalDate;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Derselbe Behandlungsverlauf, zwei Therapieformen, gegenläufiges Ergebnis.
@@ -48,12 +47,13 @@ class PhysioErgoAsymmetrieTest {
         // Vier Behandlungen mit drei begründeten Pausen von je 25 Tagen.
         // Summe der Unterbrechungen: 75 Tage. Gesamtdauer: 75 Tage, also gut
         // unter drei Monaten.
-        Behandlungsverlauf verlauf =
-                Verlauf.mitAbstaenden(Unterbrechungskennzeichen.K, 25, 25, 25);
+        Behandlungsverlauf verlauf = Verlauf.mitAbstaenden(Unterbrechungskennzeichen.K, 25, 25, 25);
 
-        assertTrue(verfallen(Therapieform.ERGOTHERAPIE, 10, verlauf),
+        assertTrue(
+                verfallen(Therapieform.ERGOTHERAPIE, 10, verlauf),
                 "75 Tage Unterbrechung reissen die 70-Tage-Summe der Ergotherapie");
-        assertTrue(!verfallen(Therapieform.PHYSIOTHERAPIE, 6, verlauf),
+        assertTrue(
+                !verfallen(Therapieform.PHYSIOTHERAPIE, 6, verlauf),
                 "in der Physiotherapie gibt es diese Summengrenze nicht, "
                         + "und die Laufzeit ist nicht ausgeschoepft");
     }
@@ -65,12 +65,13 @@ class PhysioErgoAsymmetrieTest {
         // Ergotherapie gar nicht berühren, und eine von 50 Tagen. Zählbare
         // Summe also 50 Tage, unter der Grenze von 70. Gesamtdauer dagegen
         // 106 Tage, damit über den drei Monaten der Physio-Verordnung.
-        Behandlungsverlauf verlauf =
-                Verlauf.mitAbstaenden(Unterbrechungskennzeichen.K, 14, 14, 14, 14, 50);
+        Behandlungsverlauf verlauf = Verlauf.mitAbstaenden(Unterbrechungskennzeichen.K, 14, 14, 14, 14, 50);
 
-        assertTrue(verfallen(Therapieform.PHYSIOTHERAPIE, 6, verlauf),
+        assertTrue(
+                verfallen(Therapieform.PHYSIOTHERAPIE, 6, verlauf),
                 "die Physio-Verordnung ueber sechs Einheiten laeuft nach drei Monaten ab");
-        assertTrue(!verfallen(Therapieform.ERGOTHERAPIE, 10, verlauf),
+        assertTrue(
+                !verfallen(Therapieform.ERGOTHERAPIE, 10, verlauf),
                 "in der Ergotherapie zaehlen nur Pausen ueber 14 Tagen, also 50 von 70");
     }
 
@@ -81,8 +82,11 @@ class PhysioErgoAsymmetrieTest {
         UnterbrechungsFrist grundregel = new UnterbrechungsFrist();
 
         for (Therapieform form : Therapieform.values()) {
-            assertEquals(Pruefergebnis.Ausgang.VERLETZT,
-                    grundregel.pruefe(Verlauf.verordnung(form, 6), ohneBegruendung).ausgang(),
+            assertEquals(
+                    Pruefergebnis.Ausgang.VERLETZT,
+                    grundregel
+                            .pruefe(Verlauf.verordnung(form, 6), ohneBegruendung)
+                            .ausgang(),
                     "eine unbegruendete Pause von 20 Tagen verfaellt in beiden Formen: " + form);
         }
     }

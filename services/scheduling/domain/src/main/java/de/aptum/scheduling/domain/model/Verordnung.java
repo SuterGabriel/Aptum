@@ -39,8 +39,7 @@ public record Verordnung(
         Objects.requireNonNull(frequenz, "frequenz");
         if (verordneteEinheiten <= 0) {
             throw new IllegalArgumentException(
-                    "Eine Verordnung ohne Behandlungseinheiten gibt es nicht: "
-                            + verordneteEinheiten);
+                    "Eine Verordnung ohne Behandlungseinheiten gibt es nicht: " + verordneteEinheiten);
         }
     }
 

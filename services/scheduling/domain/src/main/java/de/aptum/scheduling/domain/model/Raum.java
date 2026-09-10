@@ -21,11 +21,7 @@ import java.util.Set;
  * @param geraeteAnzahl die Anzahl der Trainingsgeräte im Raum
  * @param eignungen     wofür der Raum ausgestattet ist
  */
-public record Raum(
-        String bezeichnung,
-        int flaecheQm,
-        int geraeteAnzahl,
-        Set<Raumanforderung> eignungen) {
+public record Raum(String bezeichnung, int flaecheQm, int geraeteAnzahl, Set<Raumanforderung> eignungen) {
 
     public Raum {
         Objects.requireNonNull(bezeichnung, "bezeichnung");
@@ -34,16 +30,14 @@ public record Raum(
             throw new IllegalArgumentException("Ein Raum ohne Fläche ist kein Raum: " + flaecheQm);
         }
         if (geraeteAnzahl < 0) {
-            throw new IllegalArgumentException(
-                    "Negative Geräteanzahl: " + geraeteAnzahl);
+            throw new IllegalArgumentException("Negative Geräteanzahl: " + geraeteAnzahl);
         }
         eignungen = Set.copyOf(eignungen);
     }
 
     /** Ein gewöhnlicher Behandlungsraum ohne besondere Ausstattung. */
     public static Raum behandlungsraum(String bezeichnung, int flaecheQm) {
-        return new Raum(bezeichnung, flaecheQm, 0,
-                EnumSet.of(Raumanforderung.GRUNDAUSSTATTUNG));
+        return new Raum(bezeichnung, flaecheQm, 0, EnumSet.of(Raumanforderung.GRUNDAUSSTATTUNG));
     }
 
     public boolean istGeeignetFuer(Raumanforderung anforderung) {

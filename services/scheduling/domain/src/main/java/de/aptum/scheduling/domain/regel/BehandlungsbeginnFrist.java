@@ -2,7 +2,6 @@ package de.aptum.scheduling.domain.regel;
 
 import de.aptum.scheduling.domain.model.Pruefergebnis;
 import de.aptum.scheduling.domain.model.Verordnung;
-
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
@@ -43,9 +42,7 @@ public final class BehandlungsbeginnFrist {
      * @return das Ergebnis mit Begründung im Klartext, nie nur ein Ja oder Nein
      */
     public Pruefergebnis pruefe(Verordnung verordnung, LocalDate behandlungsbeginn) {
-        int frist = verordnung.dringlicherBedarf()
-                ? FRIST_TAGE_DRINGLICH
-                : FRIST_TAGE_REGELFALL;
+        int frist = verordnung.dringlicherBedarf() ? FRIST_TAGE_DRINGLICH : FRIST_TAGE_REGELFALL;
 
         long tage = ChronoUnit.DAYS.between(verordnung.ausstellungsdatum(), behandlungsbeginn);
 
@@ -53,23 +50,21 @@ public final class BehandlungsbeginnFrist {
         // unmöglicher Fall. Er bekommt trotzdem eine eigene Begründung, weil
         // "Frist verletzt" die Rezeption in die Irre schicken würde.
         if (tage < 0) {
-            return Pruefergebnis.verletzt(NAME,
-                    "Der Behandlungsbeginn liegt vor dem Ausstellungsdatum der Verordnung.");
+            return Pruefergebnis.verletzt(
+                    NAME, "Der Behandlungsbeginn liegt vor dem Ausstellungsdatum der Verordnung.");
         }
 
-        String zusatz = verordnung.dringlicherBedarf()
-                ? " (dringlicher Behandlungsbedarf ist gekennzeichnet)"
-                : "";
+        String zusatz = verordnung.dringlicherBedarf() ? " (dringlicher Behandlungsbedarf ist gekennzeichnet)" : "";
 
         if (tage <= frist) {
-            return Pruefergebnis.erfuellt(NAME,
-                    "Behandlungsbeginn %d Tage nach Ausstellung, zulässig sind %d%s."
-                            .formatted(tage, frist, zusatz));
+            return Pruefergebnis.erfuellt(
+                    NAME,
+                    "Behandlungsbeginn %d Tage nach Ausstellung, zulässig sind %d%s.".formatted(tage, frist, zusatz));
         }
 
-        return Pruefergebnis.verletzt(NAME,
-                "Behandlungsbeginn %d Tage nach Ausstellung, zulässig sind %d%s. "
-                        .formatted(tage, frist, zusatz)
+        return Pruefergebnis.verletzt(
+                NAME,
+                "Behandlungsbeginn %d Tage nach Ausstellung, zulässig sind %d%s. ".formatted(tage, frist, zusatz)
                         + "Die Verordnung hat ihre Gültigkeit verloren.");
     }
 }

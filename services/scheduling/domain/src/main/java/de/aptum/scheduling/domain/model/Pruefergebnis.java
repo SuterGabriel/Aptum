@@ -27,7 +27,11 @@ public record Pruefergebnis(Ausgang ausgang, String regel, String begruendung) {
      * zulässig nach Rücksprache mit der verordnenden Person, also kann die
      * Domäne sie nicht allein ablehnen.
      */
-    public enum Ausgang { ERFUELLT, WARNUNG, VERLETZT }
+    public enum Ausgang {
+        ERFUELLT,
+        WARNUNG,
+        VERLETZT
+    }
 
     public Pruefergebnis {
         Objects.requireNonNull(ausgang, "ausgang");

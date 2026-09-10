@@ -77,8 +77,9 @@ Dazu die Token-Entscheidung:
   `--slot-frei-bg`, nicht `--slot-free-bg`. Dieselbe Trennung wie im
   Java-Code.
 
-Die Palette wurde nicht geschätzt. Alle 31 geforderten Paare sind
-nachgerechnet; die Werte stehen im Ausgabeprotokoll des Prüfskripts.
+Die Palette wurde nicht geschätzt. Alle geforderten Paare sind nachgerechnet;
+wie viele es sind und welche Werte sie erreichen, steht im Ausgabeprotokoll
+des Prüfskripts — absichtlich nicht hier, damit die Zahl nicht veraltet.
 
 ## Konsequenzen
 

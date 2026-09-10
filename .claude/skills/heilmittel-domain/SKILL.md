@@ -68,13 +68,17 @@ Dazu **Rüstzeiten** zwischen Behandlungen und **Serientermine mit Ausnahmen**
 Diese Liste ist das eigentliche Vorzeigestück. Jeder Fall bekommt einen Test,
 bevor die Regel implementiert wird:
 
-- Überlappende Abwesenheiten desselben Therapeuten
-- Termin exakt an der Frequenzgrenze (unten und oben)
-- Verordnung läuft mitten in einer Serie ab
-- Sommerzeitumstellung innerhalb eines Serientermins
-- Rüstzeit kollidiert mit dem Folgetermin
-- Raum verfügbar, Therapeut qualifiziert, aber Verordnungskontingent erschöpft
-- Gleichzeitige Buchung desselben Slots durch zwei Mandanten
+- Überlappende Abwesenheiten desselben Therapeuten — *offen*
+- Termin exakt an der Frequenzgrenze (unten und oben) — `FrequenzGrenzeTest`
+- Verordnung läuft mitten in einer Serie ab — *offen, es gibt noch keine Serien*
+- Sommerzeitumstellung innerhalb eines Serientermins — `SommerzeitTest` hält
+  das Zeitmodell fest; die Serie selbst ist *offen*
+- Rüstzeit kollidiert mit dem Folgetermin — `TherapeutVerfuegbarTest`
+- Raum verfügbar, Therapeut qualifiziert, aber Verordnungskontingent erschöpft — `RestkontingentGrenzeTest`
+- Gleichzeitige Buchung desselben Slots durch zwei Mandanten — *offen, es gibt noch keinen Mandanten*
+
+Der Status steht dabei, damit die Liste nicht so liest, als wäre nichts davon
+gebaut — oder alles.
 
 ## Zeitrechnung
 

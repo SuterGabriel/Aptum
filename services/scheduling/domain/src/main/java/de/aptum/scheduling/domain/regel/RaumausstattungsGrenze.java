@@ -54,31 +54,33 @@ public final class RaumausstattungsGrenze {
         Raumanforderung anforderung = heilmittel.raumanforderung();
 
         if (!raum.istGeeignetFuer(anforderung)) {
-            return Pruefergebnis.verletzt(NAME,
+            return Pruefergebnis.verletzt(
+                    NAME,
                     "%s verlangt %s; %s ist dafür nicht ausgestattet."
-                            .formatted(heilmittel.bezeichnung(), anforderung.bezeichnung(),
-                                    raum.bezeichnung()));
+                            .formatted(heilmittel.bezeichnung(), anforderung.bezeichnung(), raum.bezeichnung()));
         }
 
         if (anforderung == Raumanforderung.GERAETEBEREICH) {
             return pruefeGeraetebereich(heilmittel, raum);
         }
 
-        return Pruefergebnis.erfuellt(NAME,
-                "%s ist als %s ausgewiesen."
-                        .formatted(raum.bezeichnung(), anforderung.bezeichnung()));
+        return Pruefergebnis.erfuellt(
+                NAME, "%s ist als %s ausgewiesen.".formatted(raum.bezeichnung(), anforderung.bezeichnung()));
     }
 
     private Pruefergebnis pruefeGeraetebereich(Heilmittel heilmittel, Raum raum) {
         int ueberzaehligeGeraete = Math.max(0, raum.geraeteAnzahl() - GERAETEBEREICH_PFLICHTGERAETE);
-        int gefordert = GERAETEBEREICH_GRUNDFLAECHE_QM
-                + ueberzaehligeGeraete * GERAETEBEREICH_ZUSCHLAG_QM_JE_GERAET;
+        int gefordert = GERAETEBEREICH_GRUNDFLAECHE_QM + ueberzaehligeGeraete * GERAETEBEREICH_ZUSCHLAG_QM_JE_GERAET;
 
         if (raum.geraeteAnzahl() < GERAETEBEREICH_PFLICHTGERAETE) {
-            return Pruefergebnis.verletzt(NAME,
+            return Pruefergebnis.verletzt(
+                    NAME,
                     ("%s verlangt %d Pflichtgeräte; %s hat %d.")
-                            .formatted(heilmittel.bezeichnung(), GERAETEBEREICH_PFLICHTGERAETE,
-                                    raum.bezeichnung(), raum.geraeteAnzahl()));
+                            .formatted(
+                                    heilmittel.bezeichnung(),
+                                    GERAETEBEREICH_PFLICHTGERAETE,
+                                    raum.bezeichnung(),
+                                    raum.geraeteAnzahl()));
         }
 
         String lage = "%s hat %d m² bei %d Geräten, gefordert sind %d m²"

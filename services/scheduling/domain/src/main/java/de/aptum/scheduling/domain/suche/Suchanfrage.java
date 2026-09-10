@@ -9,7 +9,6 @@ import de.aptum.scheduling.domain.model.Termin;
 import de.aptum.scheduling.domain.model.Therapeut;
 import de.aptum.scheduling.domain.model.Verordnung;
 import de.aptum.scheduling.domain.model.Wunschfenster;
-
 import java.time.Duration;
 import java.util.List;
 import java.util.Map;

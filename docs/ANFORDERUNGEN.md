@@ -41,7 +41,7 @@ Projekt-ID 3038770 · Projekt-Nr. a1WSZ0000088BoH2AU · Start 09.09.2026 ·
 | # | Anforderung (wörtlich) | Status | Beleg im Repo |
 |---|---|---|---|
 | S6 | Erfahrung mit ag-grid von Vorteil | offen | Abrechnungsübersicht in `frontend/` |
-| S7 | Kenntnisse in barrierefreier Software-Entwicklung (WCAG) von Vorteil | in Arbeit | Kontrastprüfung läuft in CI (Job `kontrast`, 31 Paare); axe-core folgt mit der ersten Komponente |
+| S7 | Kenntnisse in barrierefreier Software-Entwicklung (WCAG) von Vorteil | in Arbeit | Kontrastprüfung läuft in CI (Job `kontrast`, jedes `@kontrast`-Paar aus `tokens.css`); axe-core folgt mit der ersten Komponente |
 
 ### A.3 Aufgaben aus der Ausschreibung (was das Projekt abbildet)
 

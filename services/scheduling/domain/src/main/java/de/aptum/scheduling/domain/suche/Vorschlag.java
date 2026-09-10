@@ -4,7 +4,6 @@ import de.aptum.scheduling.domain.model.Pruefbericht;
 import de.aptum.scheduling.domain.model.Raum;
 import de.aptum.scheduling.domain.model.Therapeut;
 import de.aptum.scheduling.domain.model.Zeitraum;
-
 import java.util.Objects;
 
 /**

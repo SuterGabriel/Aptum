@@ -1,5 +1,9 @@
 package de.aptum.scheduling.domain.regel;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import de.aptum.scheduling.domain.model.Heilmittel;
 import de.aptum.scheduling.domain.model.Pruefergebnis;
 import de.aptum.scheduling.domain.model.Therapeut;
@@ -10,35 +14,32 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 /** Wer darf was erbringen. Die erste Regel zur Dimension Therapeut. */
 class QualifikationsGrenzeTest {
 
     private final QualifikationsGrenze regel = new QualifikationsGrenze();
 
     private static final Therapeut ALPHA = Therapeut.ohneZertifikate("T. Alpha");
-    private static final Therapeut BETA =
-            Therapeut.mit("T. Beta", Zertifikatsleistung.LYMPHDRAINAGE);
+    private static final Therapeut BETA = Therapeut.mit("T. Beta", Zertifikatsleistung.LYMPHDRAINAGE);
 
     @Test
     @DisplayName("Der Fall aus dem README: Lymphdrainage darf nicht jeder abrechnen")
     void lymphdrainageBrauchtDieErlaubnis() {
         Heilmittel mld = Heilmittel.MLD_GROSSBEHANDLUNG;
 
-        assertEquals(Pruefergebnis.Ausgang.VERLETZT, regel.pruefe(mld, ALPHA).ausgang(),
+        assertEquals(
+                Pruefergebnis.Ausgang.VERLETZT,
+                regel.pruefe(mld, ALPHA).ausgang(),
                 "ohne Abrechnungserlaubnis nicht erbringbar");
-        assertTrue(regel.pruefe(mld, BETA).istErfuellt(),
-                "mit Erlaubnis erbringbar");
+        assertTrue(regel.pruefe(mld, BETA).istErfuellt(), "mit Erlaubnis erbringbar");
     }
 
     @Test
     @DisplayName("Die Erlaubnis gilt nur fuer die Leistung, fuer die sie erteilt wurde")
     void erlaubnisIstNichtUebertragbar() {
         assertTrue(regel.pruefe(Heilmittel.MLD_GROSSBEHANDLUNG, BETA).istErfuellt());
-        assertEquals(Pruefergebnis.Ausgang.VERLETZT,
+        assertEquals(
+                Pruefergebnis.Ausgang.VERLETZT,
                 regel.pruefe(Heilmittel.MANUELLE_THERAPIE, BETA).ausgang(),
                 "Lymphdrainage berechtigt nicht zur Manuellen Therapie");
     }
@@ -55,8 +56,7 @@ class QualifikationsGrenzeTest {
     @EnumSource(value = Heilmittel.class, names = "ERGO_.*", mode = EnumSource.Mode.MATCH_ALL)
     void ergotherapieHatKeineZertifikatspositionen(Heilmittel heilmittel) {
         assertEquals(Therapieform.ERGOTHERAPIE, heilmittel.therapieform());
-        assertFalse(heilmittel.brauchtAbrechnungserlaubnis(),
-                "die Ergotherapie kennt keine Zertifikatspositionen");
+        assertFalse(heilmittel.brauchtAbrechnungserlaubnis(), "die Ergotherapie kennt keine Zertifikatspositionen");
         assertTrue(regel.pruefe(heilmittel, ALPHA).istErfuellt());
     }
 

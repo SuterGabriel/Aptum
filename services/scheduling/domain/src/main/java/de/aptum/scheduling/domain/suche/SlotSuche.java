@@ -7,7 +7,6 @@ import de.aptum.scheduling.domain.model.Raum;
 import de.aptum.scheduling.domain.model.Therapeut;
 import de.aptum.scheduling.domain.model.Zeitraum;
 import de.aptum.scheduling.domain.regel.Regelwerk;
-
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -45,15 +44,20 @@ public final class SlotSuche {
 
     public Suchergebnis suche(Suchanfrage anfrage) {
         Regelwerk.Kontext kontext = new Regelwerk.Kontext(
-                anfrage.verordnung(), anfrage.verlauf(), anfrage.heilmittel(),
-                anfrage.bestehende(), anfrage.einstellung());
+                anfrage.verordnung(),
+                anfrage.verlauf(),
+                anfrage.heilmittel(),
+                anfrage.bestehende(),
+                anfrage.einstellung());
         Duration dauer = anfrage.heilmittel().regeldauer();
 
         List<Vorschlag> vorschlaege = new ArrayList<>();
         Map<String, Integer> ausgeschlossen = new LinkedHashMap<>();
         int geprueft = 0;
 
-        for (LocalDate tag = anfrage.wunsch().von(); !tag.isAfter(anfrage.wunsch().bis()); tag = tag.plusDays(1)) {
+        for (LocalDate tag = anfrage.wunsch().von();
+                !tag.isAfter(anfrage.wunsch().bis());
+                tag = tag.plusDays(1)) {
             if (!anfrage.wunsch().erlaubt(tag)) {
                 continue;
             }
@@ -65,7 +69,8 @@ public final class SlotSuche {
                 // gegeben hätte - sonst wiegt ein verfallener Tag weniger als
                 // ein belegter Raum.
                 int kandidaten = beginnzeiten(anfrage, tag, dauer).size()
-                        * anfrage.therapeuten().size() * anfrage.raeume().size();
+                        * anfrage.therapeuten().size()
+                        * anfrage.raeume().size();
                 geprueft += kandidaten;
                 zaehle(ausgeschlossen, verordnung, kandidaten);
                 continue;
@@ -73,7 +78,8 @@ public final class SlotSuche {
 
             for (ZonedDateTime beginn : beginnzeiten(anfrage, tag, dauer)) {
                 Zeitraum behandlung = Zeitraum.ab(beginn, dauer);
-                for (Map.Entry<Therapeut, Dienstplan> person : anfrage.therapeuten().entrySet()) {
+                for (Map.Entry<Therapeut, Dienstplan> person :
+                        anfrage.therapeuten().entrySet()) {
                     for (Raum raum : anfrage.raeume()) {
                         geprueft++;
                         Regelwerk.Kandidat kandidat =
@@ -100,7 +106,9 @@ public final class SlotSuche {
         List<ZonedDateTime> zeiten = new ArrayList<>();
         LocalTime fruehestens = anfrage.wunsch().fruehestens();
         LocalTime spaetestens = anfrage.wunsch().spaetestens();
-        for (LocalTime t = fruehestens; !t.plus(dauer).isAfter(spaetestens) && t.plus(dauer).isAfter(t); t = t.plus(anfrage.raster())) {
+        for (LocalTime t = fruehestens;
+                !t.plus(dauer).isAfter(spaetestens) && t.plus(dauer).isAfter(t);
+                t = t.plus(anfrage.raster())) {
             zeiten.add(tag.atTime(t).atZone(Zeitraum.PRAXIS));
             if (t.plus(anfrage.raster()).isBefore(t)) {
                 break; // über Mitternacht gewickelt

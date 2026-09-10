@@ -232,10 +232,15 @@ function codePruefen(pfad, katalog) {
     // dem Klassenkommentar, wo sie oft nur zitiert wird. Beide Lücken waren da,
     // beide haben nichts gemeldet, und beide sind nur durch eine Gegenprobe
     // aufgefallen. Die Testsuite hält sie fest.
+    //
+    // Ein Komma ist nur dann ein Anweisungsende, wenn davor eine Klammer
+    // zugeht: `...),` beendet eine Enum-Konstante, ein nacktes `28,` ist
+    // eine Argumentzeile in einem Aufruf, den der Formatter umgebrochen hat.
+    // Die Fundstelle über dem Aufruf gilt für alle Zahlen darin.
     const umgebung = [];
     for (let zurueck = index - 1; zurueck >= 0 && index - zurueck <= 10; zurueck--) {
       const vorher = zeilen[zurueck].replace(/"[^"]*"/g, '""').trim();
-      if (/[,;{]$/.test(vorher)) break;
+      if (/[;{]$/.test(vorher) || /[)\]}],$/.test(vorher)) break;
       umgebung.unshift(zeilen[zurueck]);
     }
     umgebung.push(zeile);

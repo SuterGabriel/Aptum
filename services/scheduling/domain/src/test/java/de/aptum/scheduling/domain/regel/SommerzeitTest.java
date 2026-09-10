@@ -1,15 +1,14 @@
 package de.aptum.scheduling.domain.regel;
 
-import de.aptum.scheduling.domain.model.Zeitraum;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import de.aptum.scheduling.domain.model.Zeitraum;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 /**
  * Der Grenzfall aus dem Skill heilmittel-domain: Eine Serie „jeden Dienstag
@@ -25,6 +24,7 @@ class SommerzeitTest {
 
     /** Dienstag vor und Dienstag nach der Umstellung am 29. März 2026. */
     private static final LocalDate DAVOR = LocalDate.of(2026, 3, 24);
+
     private static final LocalDate DANACH = LocalDate.of(2026, 3, 31);
 
     @Test
@@ -35,7 +35,9 @@ class SommerzeitTest {
 
         assertEquals(LocalTime.of(14, 0), danach.toLocalTime(), "plusWeeks rechnet in Ortszeit");
         assertEquals(DANACH, danach.toLocalDate());
-        assertEquals(Duration.ofHours(167), Duration.between(davor, danach),
+        assertEquals(
+                Duration.ofHours(167),
+                Duration.between(davor, danach),
                 "die Woche der Umstellung hat 167 Stunden - und genau das ist richtig");
     }
 
@@ -45,7 +47,9 @@ class SommerzeitTest {
         ZonedDateTime davor = DAVOR.atTime(14, 0).atZone(Zeitraum.PRAXIS);
         ZonedDateTime falsch = davor.plusHours(168);
 
-        assertEquals(LocalTime.of(15, 0), falsch.toLocalTime(),
+        assertEquals(
+                LocalTime.of(15, 0),
+                falsch.toLocalTime(),
                 "das ist der Fehler, den der Skill beschreibt - hier absichtlich festgehalten");
     }
 

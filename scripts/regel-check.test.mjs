@@ -142,6 +142,10 @@ test('Code: Fundstelle in Javadoc-Auszeichnung wird erkannt', () => {
   erwarteGruen({ dateien: ['JavadocAuszeichnung.java'] });
 });
 
+test('Code: umgebrochener Aufruf - Kommas in Klammern sind kein Anweisungsende', () => {
+  erwarteGruen({ dateien: ['MehrzeiligerAufruf.java'] });
+});
+
 test('Code: Testquellen werden nicht geprüft', () => {
   const aus = erwarteGruen({ dateien: ['src/test/java/Testquelle.java'] });
   assert.match(aus, /keine Klassen/, 'die Testquelle darf gar nicht erst gezählt werden');
@@ -154,7 +158,7 @@ test('Code: alle Fixtures auf einmal ergeben genau die erwarteten Befunde', () =
     'Nackt.java', 'Belegt.java', 'NachbarBorgt.java', 'KlassenkommentarBorgt.java',
     'Mehrzeilig.java', 'UnsichereKonstante.java', 'UnsicherZitiert.java',
     'UnbekannteId.java', 'FalscherWert.java', 'Ausgenommen.java',
-    'StringUndKommentar.java', 'JavadocAuszeichnung.java',
+    'StringUndKommentar.java', 'JavadocAuszeichnung.java', 'MehrzeiligerAufruf.java',
   ];
   const { status, aus } = lauf({ dateien: alle });
   assert.equal(status, 1);

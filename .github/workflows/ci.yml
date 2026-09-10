@@ -5,6 +5,16 @@ on:
     branches: [main]
   pull_request:
 
+# Die Pipeline prüft, sie veröffentlicht nichts. Mehr Rechte braucht sie nicht.
+permissions:
+  contents: read
+
+# Ein zweiter Push auf denselben Zweig bricht den ersten Lauf ab, statt beide
+# zu bezahlen.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 # Die Pipeline hat zwei Zwecke: Qualität sichern und als Guardrail für
 # agentische Änderungen dienen. Ein Agent, der gegen eine Projektregel
 # verstößt, bekommt hier ein rotes Ergebnis statt eines Review-Kommentars,
@@ -29,7 +39,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: '24'
       # Der Git-Hook prüft nur vorgemerkte Dateien und ist mit --no-verify
       # umgehbar. Hier läuft dieselbe Prüfung über den ganzen Baum — das
       # fängt die Datei, die nie durch den Hook gegangen ist.
@@ -52,7 +62,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: '24'
       - name: Fundstellen prüfen
         run: node scripts/regel-check.mjs
       # Das Gate wird selbst getestet: 21 Fälle, darunter zwei Lücken, die
@@ -71,7 +81,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: '24'
       - name: Kontraste nachrechnen
         run: node scripts/kontrast-check.mjs
 
@@ -88,18 +98,24 @@ jobs:
           distribution: temurin
           java-version: '21'
           cache: maven
-      - name: Domain-Tests
-        run: mvn -B --file services/scheduling/pom.xml test
+      # Formatierung, Domain-Tests und ArchUnit in einem Lauf. ArchUnit ist
+      # ein gewöhnlicher Test im Domain-Modul; ADR-001 wird damit bei jedem
+      # Lauf geprüft, nicht nur behauptet.
+      - name: Format, Domain-Tests, ArchUnit
+        run: mvn -B --file services/scheduling/pom.xml spotless:check test
+      # Wenn ein Test rot ist, gehört der Bericht dazu - nicht nur das Log.
+      - name: Testberichte sichern
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: surefire-reports
+          path: services/scheduling/**/target/surefire-reports/
+          retention-days: 7
 
   # --- Ab Stufe 1 ---------------------------------------------------------
   # Bewusst als auskommentiertes Gerüst, nicht als leerer Job, der immer
   # grün ist. Ein Job, der nichts prüft und trotzdem grün meldet, ist
   # schlimmer als kein Job.
-  #
-  # archunit:
-  #   Prüft die Regeln aus ADR-001 maschinell: keine Framework-Abhängigkeit
-  #   im Domain-Modul, Abhängigkeitsrichtung nach innen. Fällt an, sobald
-  #   application und infrastructure existieren.
   #
   # backend-it:
   #   Testcontainers mit echtem Postgres, inklusive Multi-Tenant-Isolationstest:

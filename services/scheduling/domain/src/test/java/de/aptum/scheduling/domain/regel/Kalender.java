@@ -9,7 +9,6 @@ import de.aptum.scheduling.domain.model.Raumanforderung;
 import de.aptum.scheduling.domain.model.Termin;
 import de.aptum.scheduling.domain.model.Therapeut;
 import de.aptum.scheduling.domain.model.Zeitraum;
-
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -35,14 +34,12 @@ final class Kalender {
     static final Raum BAD = new Raum("Bewegungsbad", 40, 0, EnumSet.of(Raumanforderung.BEWEGUNGSBAD));
 
     /** Zehn Minuten Rüstzeit, zwanzig Minuten Nachruhe. */
-    static final Praxiseinstellung EINSTELLUNG =
-            new Praxiseinstellung(Duration.ofMinutes(10), Duration.ofMinutes(20));
+    static final Praxiseinstellung EINSTELLUNG = new Praxiseinstellung(Duration.ofMinutes(10), Duration.ofMinutes(20));
 
     static final Dienstplan ACHT_BIS_SIEBZEHN =
             Dienstplan.mit(Arbeitszeit.werktags(LocalTime.of(8, 0), LocalTime.of(17, 0)));
 
-    private Kalender() {
-    }
+    private Kalender() {}
 
     static ZonedDateTime um(int stunde, int minute) {
         return DIENSTAG.atTime(stunde, minute).atZone(Zeitraum.PRAXIS);

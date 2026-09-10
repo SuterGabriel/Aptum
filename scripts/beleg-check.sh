@@ -125,6 +125,15 @@ pruefe "ADR-007 begründet die Fundstellen-ID" datei docs/adr/ADR-007-fundstelle
 # Ein Gate, das nichts meldet, sieht aus wie ein Gate, das zufrieden ist.
 # Deshalb hat der Regel-Check Tests, und die beiden stummen Lücken sind Fixtures.
 pruefe "Regel-Check hat eine Testsuite" datei scripts/regel-check.test.mjs
+
+echo
+echo "Was CLAUDE.md verlangt, gibt es auch"
+# "ArchUnit prüft das bei jedem Lauf" und "Formatiert" standen in CLAUDE.md,
+# bevor es beides gab. Zwei Behauptungen ohne Gate in der Datei, die jeder
+# Agent zuerst liest. Jetzt sind sie geprüft.
+pruefe "ArchUnit prüft ADR-001" datei services/scheduling/domain/src/test/java/de/aptum/scheduling/domain/ArchitekturTest.java
+pruefe "Formatter ist im Build" enthaelt services/scheduling/pom.xml "spotless"
+pruefe "ADR-009 entscheidet Blockieren gegen Warnen" datei docs/adr/ADR-009-blockieren-mit-uebersteuerung.md
 pruefe "stumme Lücke 1 ist Fixture" datei scripts/fixtures/regel-check/domain/NachbarBorgt.java
 pruefe "stumme Lücke 2 ist Fixture" datei scripts/fixtures/regel-check/domain/KlassenkommentarBorgt.java
 pruefe "Wertabgleich ist Fixture" datei scripts/fixtures/regel-check/domain/FalscherWert.java

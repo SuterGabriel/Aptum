@@ -14,7 +14,6 @@ package de.aptum.scheduling.domain.model;
  * Datenpflege hinzu, aber keine neue Regelstruktur.
  */
 public enum Therapieform {
-
     PHYSIOTHERAPIE,
     ERGOTHERAPIE;
 

@@ -25,6 +25,7 @@
     <maven.compiler.release>21</maven.compiler.release>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <junit.version>5.11.4</junit.version>
+    <archunit.version>1.3.0</archunit.version>
   </properties>
 
   <dependencyManagement>
@@ -54,5 +55,35 @@
         </plugin>
       </plugins>
     </pluginManagement>
+
+    <plugins>
+      <!--
+        "Formatiert" ist die erste Bedingung in CLAUDE.md unter "Was jede
+        Aenderung erfuellen muss". Ohne Werkzeug war das eine Behauptung.
+        `mvn spotless:apply` formatiert, `mvn spotless:check` prueft - in der
+        CI und im Hook, sobald Java-Dateien vorgemerkt sind.
+      -->
+      <plugin>
+        <groupId>com.diffplug.spotless</groupId>
+        <artifactId>spotless-maven-plugin</artifactId>
+        <version>2.44.3</version>
+        <configuration>
+          <java>
+            <palantirJavaFormat>
+              <version>2.50.0</version>
+            </palantirJavaFormat>
+            <removeUnusedImports />
+          </java>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>check</goal>
+            </goals>
+            <phase>verify</phase>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
   </build>
 </project>

@@ -12,7 +12,6 @@ import de.aptum.scheduling.domain.model.Termin;
 import de.aptum.scheduling.domain.model.Therapeut;
 import de.aptum.scheduling.domain.model.Verordnung;
 import de.aptum.scheduling.domain.model.Zeitraum;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,8 +48,7 @@ public final class Regelwerk {
             Behandlungsverlauf verlauf,
             Heilmittel heilmittel,
             List<Termin> bestehende,
-            Praxiseinstellung einstellung) {
-    }
+            Praxiseinstellung einstellung) {}
 
     private final BehandlungsbeginnFrist behandlungsbeginn = new BehandlungsbeginnFrist();
     private final UnterbrechungsFrist unterbrechung = new UnterbrechungsFrist();
@@ -70,8 +68,8 @@ public final class Regelwerk {
         List<Pruefergebnis> e = new ArrayList<>();
         e.add(hoechstmenge.pruefe(k.verordnung()));
         e.add(restkontingent.pruefe(k.verordnung(), k.verlauf()));
-        e.add(behandlungsbeginn.pruefe(k.verordnung(),
-                k.verlauf().ersterBehandlungstag().orElse(tag)));
+        e.add(behandlungsbeginn.pruefe(
+                k.verordnung(), k.verlauf().ersterBehandlungstag().orElse(tag)));
         e.add(unterbrechung.pruefe(k.verordnung(), mitKandidat));
         e.add(unterbrechungsSumme.pruefe(k.verordnung(), mitKandidat));
         e.add(gueltigkeit.pruefe(k.verordnung(), mitKandidat, tag));
@@ -83,17 +81,17 @@ public final class Regelwerk {
     public Pruefbericht pruefeRessourcen(Kontext k, Kandidat kandidat) {
         List<Pruefergebnis> e = new ArrayList<>();
         e.add(qualifikation.pruefe(k.heilmittel(), kandidat.therapeut()));
-        e.add(therapeutVerfuegbar.pruefe(kandidat.therapeut(), kandidat.dienstplan(),
-                k.bestehende(), kandidat.behandlung(), k.einstellung()));
+        e.add(therapeutVerfuegbar.pruefe(
+                kandidat.therapeut(), kandidat.dienstplan(), k.bestehende(), kandidat.behandlung(), k.einstellung()));
         e.add(raumausstattung.pruefe(k.heilmittel(), kandidat.raum()));
-        e.add(raumFrei.pruefe(kandidat.raum(), k.heilmittel(), k.bestehende(),
-                kandidat.behandlung(), k.einstellung()));
+        e.add(raumFrei.pruefe(kandidat.raum(), k.heilmittel(), k.bestehende(), kandidat.behandlung(), k.einstellung()));
         return new Pruefbericht(e);
     }
 
     /** Alles auf einmal. Für die Buchung von Hand und für jeden Vorschlag von außen. */
     public Pruefbericht pruefe(Kontext k, Kandidat kandidat) {
-        List<Pruefergebnis> alle = new ArrayList<>(pruefeVerordnung(k, kandidat.tag()).ergebnisse());
+        List<Pruefergebnis> alle =
+                new ArrayList<>(pruefeVerordnung(k, kandidat.tag()).ergebnisse());
         alle.addAll(pruefeRessourcen(k, kandidat).ergebnisse());
         return new Pruefbericht(alle);
     }

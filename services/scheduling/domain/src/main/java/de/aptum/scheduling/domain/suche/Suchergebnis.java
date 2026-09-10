@@ -35,11 +35,14 @@ public record Suchergebnis(List<Vorschlag> vorschlaege, Map<String, Integer> aus
         StringBuilder s = new StringBuilder();
         s.append(vorschlaege.size()).append(vorschlaege.size() == 1 ? " Vorschlag" : " Vorschläge");
         if (!ausgeschlossen.isEmpty()) {
-            int summe = ausgeschlossen.values().stream().mapToInt(Integer::intValue).sum();
+            int summe =
+                    ausgeschlossen.values().stream().mapToInt(Integer::intValue).sum();
             s.append(", ").append(summe).append(" ausgeschlossen: ");
-            s.append(String.join(", ", ausgeschlossen.entrySet().stream()
-                    .map((e) -> e.getKey() + " " + e.getValue())
-                    .toList()));
+            s.append(String.join(
+                    ", ",
+                    ausgeschlossen.entrySet().stream()
+                            .map((e) -> e.getKey() + " " + e.getValue())
+                            .toList()));
         }
         return s.toString();
     }

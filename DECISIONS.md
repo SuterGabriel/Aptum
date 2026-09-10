@@ -16,6 +16,7 @@ rekonstruiert Begründungen, die er nie hatte — und das merkt man ihnen an.
 | [ADR-006](docs/adr/ADR-006-frontend-fundament-und-token.md) | Angular CDK mit eigenen Komponenten, Token als CSS Custom Properties | angenommen | 2026-09-09 |
 | [ADR-007](docs/adr/ADR-007-fundstellen-id-im-domaenenmodell.md) | Fachliche Zahlen tragen eine Fundstellen-ID aus `regeln.md` | angenommen | 2026-09-10 |
 | [ADR-008](docs/adr/ADR-008-maven-statt-gradle.md) | Maven statt Gradle, Module je Service | angenommen | 2026-09-09 |
+| [ADR-009](docs/adr/ADR-009-blockieren-mit-uebersteuerung.md) | Verletzte Regeln blockieren, Übersteuerung nur mit Begründung | angenommen | 2026-09-10 |
 
 > **Zur Nummerierung:** ADR-006 entstand als zweite Entscheidung, trägt aber
 > die sechste Nummer. Die Nummern 002 bis 005 waren im Voraus für Themen

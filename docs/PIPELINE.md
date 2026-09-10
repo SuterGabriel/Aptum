@@ -38,6 +38,7 @@ zwar aus einem Grund je Zeile:
 | `scripts/beleg-check.sh` | ganzer Baum | Arbeitet von Natur aus so |
 | `scripts/regel-check.mjs` | ganzer Baum | Der Katalog und der Code, der ihn zitiert, liegen selten im selben Commit |
 | `scripts/kontrast-check.mjs` | nur bei geänderter Token-Datei | Prüft ausschließlich `tokens.css` |
+| `mvn spotless:check` | nur bei vorgemerktem Java | Der JVM-Start kostet Sekunden; ein Hook, der bei jedem Markdown-Commit wartet, wird umgangen |
 
 Zusammen unter zwei Sekunden, weil dieses Repo bisher aus Text besteht.
 
@@ -74,6 +75,7 @@ Ergebnisses, nicht nur Werkzeug.
 | `dokumente` | Ausgeschriebene Umlaute in Prosa · tote Verweise zwischen Markdown-Dateien |
 | `regeln` | Der Regelkatalog ist vollständig ausgezeichnet, und kein Domänencode nennt eine Zahl ohne belegte Fundstelle |
 | `kontrast` | Jedes geforderte Farbpaar aus `tokens.css` hält seine WCAG-Schwelle |
+| `domain` | Formatierung (Spotless), Domain-Tests, ArchUnit gegen ADR-001 — der einzige Job mit JVM |
 
 Ab Stufe 1 kommen Kompilieren, Domain-Tests und ArchUnit dazu, später
 Testcontainers, Playwright mit axe-core und die Eval-Suite. Sie stehen als

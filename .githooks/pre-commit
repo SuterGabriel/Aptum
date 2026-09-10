@@ -68,6 +68,13 @@ if printf '%s\n' "$vorgemerkt" | grep -q 'frontend/src/styles/tokens.css'; then
   lauf "Kontrast" node scripts/kontrast-check.mjs
 fi
 
+# "Formatiert" ist die erste Bedingung in CLAUDE.md. Nur wenn Java vorgemerkt
+# ist - der JVM-Start kostet Sekunden, und ein Hook, der bei jedem
+# Markdown-Commit wartet, wird umgangen.
+if printf '%s\n' "$vorgemerkt" | grep -q '\.java$'; then
+  lauf "Format" mvn -q --file services/scheduling/pom.xml spotless:check
+fi
+
 if [ "$fehler" -gt 0 ]; then
   cat <<'HINWEIS'
 

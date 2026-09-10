@@ -36,7 +36,8 @@ public final class UnterbrechungsSumme {
 
     public Pruefergebnis pruefe(Verordnung verordnung, Behandlungsverlauf verlauf) {
         if (!verordnung.therapieform().istErgotherapie()) {
-            return Pruefergebnis.erfuellt(NAME,
+            return Pruefergebnis.erfuellt(
+                    NAME,
                     "Für die Physiotherapie ist keine Summenobergrenze für "
                             + "Unterbrechungen vertraglich geregelt. Begrenzt wird dort "
                             + "stattdessen die Gesamtlaufzeit der Verordnung.");
@@ -56,8 +57,7 @@ public final class UnterbrechungsSumme {
                 .formatted(gezaehlt, MINDESTLAENGE_ZUM_ZAEHLEN_TAGE, summe, MAX_SUMME_TAGE);
 
         if (summe > MAX_SUMME_TAGE) {
-            return Pruefergebnis.verletzt(NAME,
-                    zaehlweise + " Kalendertagen. Die Verordnung ist verfallen.");
+            return Pruefergebnis.verletzt(NAME, zaehlweise + " Kalendertagen. Die Verordnung ist verfallen.");
         }
         return Pruefergebnis.erfuellt(NAME, zaehlweise + " Kalendertagen.");
     }

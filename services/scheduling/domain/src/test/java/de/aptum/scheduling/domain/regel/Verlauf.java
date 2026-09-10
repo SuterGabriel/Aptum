@@ -7,7 +7,6 @@ import de.aptum.scheduling.domain.model.Frequenz;
 import de.aptum.scheduling.domain.model.Therapieform;
 import de.aptum.scheduling.domain.model.Unterbrechungskennzeichen;
 import de.aptum.scheduling.domain.model.Verordnung;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,8 +27,7 @@ final class Verlauf {
     /** Ein fester Startpunkt, damit Tests nicht am Kalender des Tages hängen. */
     static final LocalDate ERSTER_TAG = LocalDate.of(2026, 1, 5);
 
-    private Verlauf() {
-    }
+    private Verlauf() {}
 
     /** Behandlungen im Abstand der angegebenen Tage, ohne Kennzeichen. */
     static Behandlungsverlauf mitAbstaenden(long... abstaende) {

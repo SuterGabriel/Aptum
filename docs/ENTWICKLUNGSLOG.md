@@ -763,6 +763,67 @@ Serientermine. Das Zeitmodell trägt sie, die Suche baut sie noch nicht.
 
 ---
 
+## 2026-09-10 — Nachtrag: die Behauptungen in CLAUDE.md einlösen
+
+**Was delegiert wurde:** Eine Durchsicht vor der Anwendungsschicht — was ist
+veraltet, was fehlt, was behauptet das Repo, ohne es zu prüfen. Danach die
+vier Punkte, die dabei herauskamen. 148 Tests grün, davon 9 neu.
+
+**Zwei Behauptungen ohne Gate, in der Datei, die jeder Agent zuerst liest.**
+`CLAUDE.md` sagt seit Stufe 0 *„ArchUnit prüft das bei jedem Lauf"* und nennt
+*„Formatiert"* als erste Bedingung für jede Änderung. Beides gab es nicht. Das
+ist die unangenehmste Sorte Befund in einem Repo, dessen Argument lautet, dass
+hier nichts behauptet wird, was nicht prüfbar ist — und sie stand einen Tag
+lang da, während vierzig Klassen entstanden.
+
+Jetzt gibt es beides. ArchUnit prüft ADR-001 als gewöhnlichen Test im
+Domain-Modul; Spotless mit Palantir formatiert und prüft, in der CI und im
+Hook, sobald Java vorgemerkt ist. Der Formatter hat 44 Dateien angefasst. Das
+ist der Preis dafür, ihn einen Tag zu spät eingeführt zu haben, und er ist
+klein gegen den, ihn nie einzuführen.
+
+**Was die Gegenprobe abgefangen hat — an mir.** Die erste Sonde für ArchUnit
+setzte ein statisches Feld vor die Enum-Konstanten. Das ist kein gültiges
+Java. Der Build wurde rot, und in der gefilterten Ausgabe sah das aus wie ein
+Treffer. War es nicht: Ein Compile-Fehler ist keine Architekturverletzung. Erst
+die rohe Ausgabe zeigte `BUILD FAILURE` ohne Testzeile. Die zweite Sonde, in
+einem Methodenrumpf, löste die Regel aus — mit der Begründung aus dem Skill im
+Fehlertext.
+
+Das ist dieselbe Lehre wie bei den stummen Gates, nur gespiegelt: Ein rotes
+Ergebnis aus dem falschen Grund beweist so wenig wie ein grünes aus dem
+falschen Grund. Eine Gegenprobe ist erst dann eine, wenn man weiß, *warum* sie
+rot wurde.
+
+**Der Formatter und das Gate, das ihn nicht kannte.** Spotless bricht lange
+Aufrufe um, und dann endet jede Argumentzeile mit einem Komma. Der Regel-Check
+las ein Komma am Zeilenende als Anweisungsende — die Fundstelle über einer
+umgebrochenen Enum-Konstante hätte ihre Zahlen nicht mehr gedeckt, und die
+ganze Heilmittel-Tabelle wäre rot geworden. Die Klammertiefe lässt sich beim
+Rückwärtslesen nicht aus dem Text darunter bestimmen; die richtige Regel ist
+einfacher: Ein Komma beendet eine Anweisung, wenn davor eine Klammer zugeht.
+Das steht als 22. Fixture in der Suite, *bevor* der Formatter lief.
+
+**ADR-009, mit Verspätungsvermerk.** Die Produktsicht hatte die Frage
+„blockieren oder warnen" am 09.09. offen markiert, mit dem Zusatz, sie gehöre
+in eine ADR, sobald die erste Regel entsteht. Elf Regeln später hatte
+`Pruefbericht.blockiert()` die Entscheidung stillschweigend getroffen. Jetzt
+ist sie begründet, und die Übersteuerung mit Begründungspflicht, die das
+Wireframe zeigt, existiert im Modell. Zweiter Fall dieser Art nach ADR-008.
+
+**Kleinigkeiten, die nicht klein sind.** Die „31 Kontrastpaare" standen zum
+vierten Mal zur Debatte und sind jetzt aus dem Fließtext heraus — die Zahl
+gehört dem Skript, das sie zählt. Die Grenzfallliste im Skill trägt je Zeile
+ihren Status, damit sie nicht so liest, als wäre nichts gebaut oder alles. Die
+CI hat `permissions`, `concurrency` und sichert Testberichte bei Rot. Node ist
+auf 24, wie lokal.
+
+**Zeitschätzung:** delegiert etwa anderthalb Stunden, von Hand geschätzt zwei
+Tage — die meiste Zeit wäre in die Frage gegangen, warum der Regel-Check nach
+dem Formatieren rot ist.
+
+---
+
 ## Vorlage für weitere Einträge
 
 ```

@@ -7,7 +7,6 @@ import de.aptum.scheduling.domain.model.Raum;
 import de.aptum.scheduling.domain.model.Termin;
 import de.aptum.scheduling.domain.model.Therapeut;
 import de.aptum.scheduling.domain.model.Zeitraum;
-
 import java.time.ZonedDateTime;
 import java.util.List;
 
@@ -31,8 +30,12 @@ public final class RaumFrei {
 
     private static final String NAME = "Raum frei";
 
-    public Pruefergebnis pruefe(Raum raum, Heilmittel heilmittel, List<Termin> bestehende,
-                                Zeitraum behandlung, Praxiseinstellung einstellung) {
+    public Pruefergebnis pruefe(
+            Raum raum,
+            Heilmittel heilmittel,
+            List<Termin> bestehende,
+            Zeitraum behandlung,
+            Praxiseinstellung einstellung) {
         // Der neue Termin belegt den Raum genauso, wie er es als gebuchter
         // Termin täte - ein Platzhalter mit Raum und Heilmittel reicht dafür.
         Zeitraum belegt = new Termin(PLATZHALTER, raum, heilmittel, behandlung).belegtRaum(einstellung);
@@ -46,14 +49,15 @@ public final class RaumFrei {
                 String wodurch = bestehend.heilmittel().brauchtNachruhe()
                         ? bestehend.heilmittel().bezeichnung() + " einschließlich Nachruhe"
                         : bestehend.heilmittel().bezeichnung();
-                return Pruefergebnis.verletzt(NAME,
+                return Pruefergebnis.verletzt(
+                        NAME,
                         "%s ist von %s bis %s belegt: %s."
                                 .formatted(raum.bezeichnung(), uhr(andere.von()), uhr(andere.bis()), wodurch));
             }
         }
 
-        return Pruefergebnis.erfuellt(NAME,
-                "%s ist von %s bis %s frei.".formatted(raum.bezeichnung(), uhr(belegt.von()), uhr(belegt.bis())));
+        return Pruefergebnis.erfuellt(
+                NAME, "%s ist von %s bis %s frei.".formatted(raum.bezeichnung(), uhr(belegt.von()), uhr(belegt.bis())));
     }
 
     /** Nur für die Belegungsrechnung; welche Person behandelt, spielt für den Raum keine Rolle. */

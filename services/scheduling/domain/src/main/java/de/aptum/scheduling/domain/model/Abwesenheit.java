@@ -40,7 +40,10 @@ public record Abwesenheit(LocalDate von, LocalDate bis, String grund) {
     /** Berührt der Zeitraum einen Tag der Abwesenheit? Gerechnet in der Zone der Praxis. */
     public boolean beruehrt(Zeitraum zeitraum) {
         LocalDate erster = zeitraum.von().withZoneSameInstant(Zeitraum.PRAXIS).toLocalDate();
-        LocalDate letzter = zeitraum.bis().withZoneSameInstant(Zeitraum.PRAXIS).minusNanos(1).toLocalDate();
+        LocalDate letzter = zeitraum.bis()
+                .withZoneSameInstant(Zeitraum.PRAXIS)
+                .minusNanos(1)
+                .toLocalDate();
         return !letzter.isBefore(von) && !erster.isAfter(bis);
     }
 }

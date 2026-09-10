@@ -7,7 +7,6 @@ import de.aptum.scheduling.domain.model.Pruefergebnis;
 import de.aptum.scheduling.domain.model.Termin;
 import de.aptum.scheduling.domain.model.Therapeut;
 import de.aptum.scheduling.domain.model.Zeitraum;
-
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -34,25 +33,37 @@ public final class TherapeutVerfuegbar {
 
     private static final String NAME = "Therapeut verfügbar";
 
-    public Pruefergebnis pruefe(Therapeut therapeut, Dienstplan dienstplan,
-                                List<Termin> bestehende, Zeitraum behandlung,
-                                Praxiseinstellung einstellung) {
+    public Pruefergebnis pruefe(
+            Therapeut therapeut,
+            Dienstplan dienstplan,
+            List<Termin> bestehende,
+            Zeitraum behandlung,
+            Praxiseinstellung einstellung) {
         Zeitraum belegt = behandlung.erweitertUm(einstellung.ruestzeit(), einstellung.ruestzeit());
 
         if (!dienstplan.arbeitszeit().deckt(belegt)) {
-            return Pruefergebnis.verletzt(NAME,
+            return Pruefergebnis.verletzt(
+                    NAME,
                     "%s arbeitet am %s nicht von %s bis %s (einschließlich Rüstzeit)."
-                            .formatted(therapeut.kuerzel(),
-                                    belegt.von().withZoneSameInstant(Zeitraum.PRAXIS).getDayOfWeek(),
-                                    uhr(belegt.von()), uhr(belegt.bis())));
+                            .formatted(
+                                    therapeut.kuerzel(),
+                                    belegt.von()
+                                            .withZoneSameInstant(Zeitraum.PRAXIS)
+                                            .getDayOfWeek(),
+                                    uhr(belegt.von()),
+                                    uhr(belegt.bis())));
         }
 
         Optional<Abwesenheit> abwesend = dienstplan.abwesenheitWaehrend(behandlung);
         if (abwesend.isPresent()) {
-            return Pruefergebnis.verletzt(NAME,
+            return Pruefergebnis.verletzt(
+                    NAME,
                     "%s ist abwesend: %s (%s bis %s)."
-                            .formatted(therapeut.kuerzel(), abwesend.get().grund(),
-                                    abwesend.get().von(), abwesend.get().bis()));
+                            .formatted(
+                                    therapeut.kuerzel(),
+                                    abwesend.get().grund(),
+                                    abwesend.get().von(),
+                                    abwesend.get().bis()));
         }
 
         for (Termin bestehend : bestehende) {
@@ -61,14 +72,19 @@ public final class TherapeutVerfuegbar {
             }
             Zeitraum andere = bestehend.belegtTherapeutin(einstellung);
             if (andere.ueberschneidet(belegt)) {
-                return Pruefergebnis.verletzt(NAME,
+                return Pruefergebnis.verletzt(
+                        NAME,
                         "%s hat von %s bis %s bereits %s (einschließlich Rüstzeit)."
-                                .formatted(therapeut.kuerzel(), uhr(andere.von()), uhr(andere.bis()),
+                                .formatted(
+                                        therapeut.kuerzel(),
+                                        uhr(andere.von()),
+                                        uhr(andere.bis()),
                                         bestehend.heilmittel().bezeichnung()));
             }
         }
 
-        return Pruefergebnis.erfuellt(NAME,
+        return Pruefergebnis.erfuellt(
+                NAME,
                 "%s ist von %s bis %s frei.".formatted(therapeut.kuerzel(), uhr(belegt.von()), uhr(belegt.bis())));
     }
 

@@ -20,13 +20,11 @@ public record Frequenz(int minProWoche, int maxProWoche) {
     public Frequenz {
         if (minProWoche < 1) {
             throw new IllegalArgumentException(
-                    "Eine Frequenz unter einer Behandlung je Woche ist keine Frequenz: "
-                            + minProWoche);
+                    "Eine Frequenz unter einer Behandlung je Woche ist keine Frequenz: " + minProWoche);
         }
         if (maxProWoche < minProWoche) {
             throw new IllegalArgumentException(
-                    "Die obere Grenze liegt unter der unteren: "
-                            + minProWoche + " bis " + maxProWoche);
+                    "Die obere Grenze liegt unter der unteren: " + minProWoche + " bis " + maxProWoche);
         }
     }
 

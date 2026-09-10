@@ -33,13 +33,14 @@ public final class RestkontingentGrenze {
         int rest = verordnet - erbracht;
 
         if (rest <= 0) {
-            return Pruefergebnis.verletzt(NAME,
+            return Pruefergebnis.verletzt(
+                    NAME,
                     ("Alle %d verordneten Einheiten sind erbracht, das Restkontingent ist "
-                            + "aufgebraucht. Für weitere Behandlungen braucht es eine neue "
-                            + "Verordnung.").formatted(verordnet));
+                                    + "aufgebraucht. Für weitere Behandlungen braucht es eine neue "
+                                    + "Verordnung.")
+                            .formatted(verordnet));
         }
 
-        return Pruefergebnis.erfuellt(NAME,
-                "Noch %d von %d Einheiten offen.".formatted(rest, verordnet));
+        return Pruefergebnis.erfuellt(NAME, "Noch %d von %d Einheiten offen.".formatted(rest, verordnet));
     }
 }

@@ -152,11 +152,11 @@ Abbildung behauptet wird, das im Repo nicht existiert, wird die CI rot.
 
 Ehrlich offen, nicht rhetorisch:
 
-- **Wie streng darf das System sein?** Eine Buchung, die gegen eine Regel
-  verstößt: blockieren oder warnen und dokumentieren lassen? Es gibt legitime
-  Fälle für die Übersteuerung. Aktuelle Annahme: blockieren mit
-  begründungspflichtiger Übersteuerung — ungeprüft, gehört in eine ADR, sobald
-  die erste Regel gebaut wird.
+- **Wie streng darf das System sein?** Entschieden in
+  [ADR-009](adr/ADR-009-blockieren-mit-uebersteuerung.md): Eine verletzte
+  Regel blockiert, eine Übersteuerung braucht Begründung und Urheber und wird
+  protokolliert. Offen bleibt darin, ob es Regeln gibt, die *nie* übersteuert
+  werden dürfen — die Qualifikationsregel ist die erste Kandidatin.
 - **Ausfallregel als Praxiseinstellung.** Fachlich zwingend, weil es keine
   sozialrechtliche Grundlage gibt (siehe [OFFENE-PUNKTE.md](OFFENE-PUNKTE.md),
   Punkt 5). Offen ist, wie viele weitere Parameter dieselbe Behandlung brauchen,

@@ -111,7 +111,7 @@ Bitte nicht Inter, Roboto oder Arial. Eine Schrift, die bei 11 bis 12 Pixeln
 noch klar bleibt, ist wichtiger als eine, die in der Überschrift beeindruckt.
 
 **Farbe ist bereits festgelegt** — siehe die Palette unten. Sie ist nicht
-geschätzt, sondern durchgerechnet: Alle 31 geforderten Kontrastpaare halten
+geschätzt, sondern durchgerechnet: Alle geforderten Kontrastpaare halten
 die WCAG-Schwellen ein, geprüft von einem Skript, das in der Continuous
 Integration mitläuft. Verwende diese Werte. Wenn du eine Farbe ergänzen musst,
 nenne sie und gib den Kontrastwert an, gegen den sie geprüft gehört.

@@ -1,15 +1,5 @@
 package de.aptum.scheduling.domain.regel;
 
-import de.aptum.scheduling.domain.model.Heilmittel;
-import de.aptum.scheduling.domain.model.Pruefergebnis;
-import de.aptum.scheduling.domain.model.Termin;
-import de.aptum.scheduling.domain.model.Zeitraum;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-
-import java.time.Duration;
-import java.util.List;
-
 import static de.aptum.scheduling.domain.regel.Kalender.ACHT_BIS_SIEBZEHN;
 import static de.aptum.scheduling.domain.regel.Kalender.ALPHA;
 import static de.aptum.scheduling.domain.regel.Kalender.BAD;
@@ -19,6 +9,15 @@ import static de.aptum.scheduling.domain.regel.Kalender.termin;
 import static de.aptum.scheduling.domain.regel.Kalender.um;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import de.aptum.scheduling.domain.model.Heilmittel;
+import de.aptum.scheduling.domain.model.Pruefergebnis;
+import de.aptum.scheduling.domain.model.Termin;
+import de.aptum.scheduling.domain.model.Zeitraum;
+import java.time.Duration;
+import java.util.List;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 /**
  * Derselbe Termin, zwei Ressourcen, verschiedene Belegung.
@@ -52,7 +51,9 @@ class NachruheAsymmetrieTest {
 
         assertTrue(therapeutin.istErfuellt(), "die Therapeutin ist nach der Ruestzeit frei");
         assertTrue(nebenan.istErfuellt(), "Raum 1 war nie belegt");
-        assertEquals(Pruefergebnis.Ausgang.VERLETZT, imBad.ausgang(),
+        assertEquals(
+                Pruefergebnis.Ausgang.VERLETZT,
+                imBad.ausgang(),
                 "das Bad ist bis 11:00 belegt, weil noch jemand darin ruht");
     }
 
@@ -62,20 +63,23 @@ class NachruheAsymmetrieTest {
         // 11:10 bis 11:40, Rüstzeit ab 11:00 - genau wenn die Nachruhe endet.
         Zeitraum spaeter = Zeitraum.ab(um(11, 10), Duration.ofMinutes(30));
 
-        assertTrue(raumRegel.pruefe(BAD, Heilmittel.KG_BEWEGUNGSBAD, bad, spaeter, EINSTELLUNG).istErfuellt());
+        assertTrue(raumRegel
+                .pruefe(BAD, Heilmittel.KG_BEWEGUNGSBAD, bad, spaeter, EINSTELLUNG)
+                .istErfuellt());
     }
 
     @Test
     @DisplayName("Der Termin weiss selbst, was er je Ressource belegt")
     void terminKenntBeideBelegungen() {
         Termin t = bad.get(0);
-        assertEquals(Duration.ofMinutes(50), t.belegtTherapeutin(EINSTELLUNG).dauer(),
-                "30 Behandlung + 2 x 10 Ruestzeit");
-        assertEquals(Duration.ofMinutes(70), t.belegtRaum(EINSTELLUNG).dauer(),
-                "dasselbe plus 20 Nachruhe");
+        assertEquals(
+                Duration.ofMinutes(50), t.belegtTherapeutin(EINSTELLUNG).dauer(), "30 Behandlung + 2 x 10 Ruestzeit");
+        assertEquals(Duration.ofMinutes(70), t.belegtRaum(EINSTELLUNG).dauer(), "dasselbe plus 20 Nachruhe");
 
         Termin ohneBad = termin(ALPHA, RAUM_1, Heilmittel.KG_EINZEL, 10, 0);
-        assertEquals(ohneBad.belegtTherapeutin(EINSTELLUNG), ohneBad.belegtRaum(EINSTELLUNG),
+        assertEquals(
+                ohneBad.belegtTherapeutin(EINSTELLUNG),
+                ohneBad.belegtRaum(EINSTELLUNG),
                 "ohne Nachruhe belegt ein Termin beides gleich lang");
     }
 }
