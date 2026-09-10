@@ -1373,6 +1373,17 @@ T. Alpha um 08:15 war der erste Vorschlag T. Beta um 08:15. Der Code war
 richtig, die Behauptung zu grob; sie vergleicht jetzt den ganzen Vorschlag
 und wartet auf die neue Suche.
 
+**Zwei Lehren über e2e-Tests gegen ein echtes Backend.** Playwright lässt
+Dateien in mehreren Workern laufen; zwei Tests buchten sich in derselben
+Woche die Slots weg, und einer sah eine 409, die keiner geschrieben hatte.
+Ein Backend, ein Worker — steht als Kommentar in der Konfiguration. Und
+nach dem zehnten Lauf gegen dieselbe lokale Datenbank war die Zelle, die
+der Tastaturtest „als frei kannte", nicht mehr frei: Die Rüstzeit einer
+früheren Buchung berührte sie. In der CI mit frischer Datenbank wäre das
+nie aufgefallen — und irgendwann doch. Der Test sucht jetzt die erste freie
+Zelle, statt sie zu kennen. Tests gegen echte Daten dürfen keine Daten
+kennen, nur Eigenschaften.
+
 **Zeitschätzung:** delegiert etwa anderthalb Stunden. Von Hand ein Tag,
 und der Fokus käme nicht zurück auf den Auslöser.
 
