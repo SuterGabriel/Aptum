@@ -6,7 +6,7 @@ Kontrast geprüft; das Kalender-Grid wird selbst gebaut (ADR-003).
 
 ```bash
 npm install
-npm start              # http://localhost:4200, leitet /termine und /verordnungen an :8080 weiter
+npm start              # http://localhost:4200, leitet /termine, /verordnungen und /kalender/woche an :8080 weiter
 npm test               # Unit-Tests, einmalig, headless
 npm run lint
 npm run api:types      # TypeScript-Typen aus ../docs/api/openapi.json erzeugen

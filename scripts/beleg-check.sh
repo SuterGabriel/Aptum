@@ -171,6 +171,8 @@ pruefe "Suchflow wird einzeln getestet" datei frontend/src/app/suche/termin-such
 pruefe "Terminsuche hat einen axe-Test" enthaelt frontend/src/app/suche/termin-suche.spec.ts "axe.run"
 pruefe "Grid ist ein Grid-Widget" enthaelt frontend/src/app/kalender/kalender-grid.html 'role="gridcell"'
 pruefe "Grid hat Roving Tabindex und einen axe-Test" enthaelt frontend/src/app/kalender/kalender-grid.spec.ts "axe.run"
+pruefe "Ende-zu-Ende fährt per Tastatur durch das Grid" enthaelt frontend/e2e/kalender.spec.ts "ArrowDown"
+pruefe "CI hat den Job e2e" enthaelt .github/workflows/ci.yml "  e2e:"
 pruefe "Wochenansicht nimmt die Grenzen aus Termin" enthaelt services/scheduling/domain/src/main/java/de/aptum/scheduling/domain/kalender/Wochenansicht.java "belegtRaum"
 pruefe "stumme Lücke 1 ist Fixture" datei scripts/fixtures/regel-check/domain/NachbarBorgt.java
 pruefe "stumme Lücke 2 ist Fixture" datei scripts/fixtures/regel-check/domain/KlassenkommentarBorgt.java

@@ -69,7 +69,8 @@ export function rasterFuer(woche: Woche, tag: string): Raster {
 function zelle(spalte: Spalte, tag: string, uhrzeit: string, wochentag: string): Zelle {
   const beginn = `${tag}T${uhrzeit}`;
   const therapeut = spalte.therapeut ?? '';
-  const belegung = (spalte.belegungen ?? []).find((b) => deckt(b, beginn));
+  const ende = nachher(tag, uhrzeit);
+  const belegung = massgeblich((spalte.belegungen ?? []).filter((b) => beruehrt(b, beginn, ende)));
   if (!belegung) {
     return {
       beginn,
@@ -82,8 +83,7 @@ function zelle(spalte: Spalte, tag: string, uhrzeit: string, wochentag: string):
     };
   }
   const zustand = zustandVon(belegung.art);
-  const blockbeginn =
-    wandzeit(belegung.von) <= beginn && wandzeit(belegung.von) > vorher(tag, uhrzeit);
+  const blockbeginn = wandzeit(belegung.von) >= beginn && wandzeit(belegung.von) < ende;
   const raum = belegung.raum ?? undefined;
   const teile = [wochentag, uhrzeit, therapeut, ZUSTAND_LABEL[zustand]];
   if (belegung.text) teile.push(belegung.text);
@@ -100,8 +100,23 @@ function zelle(spalte: Spalte, tag: string, uhrzeit: string, wochentag: string):
   };
 }
 
-function deckt(b: Belegung, beginn: string): boolean {
-  return wandzeit(b.von) <= beginn && beginn < wandzeit(b.bis);
+/** Berührt die Belegung die Viertelstunde - auch nur mit fünf Minuten? */
+function beruehrt(b: Belegung, beginn: string, ende: string): boolean {
+  return wandzeit(b.von) < ende && wandzeit(b.bis) > beginn;
+}
+
+/**
+ * Wenn mehrere Belegungen dieselbe Viertelstunde berühren, zeigt die Zelle
+ * die wichtigste: Behandlung vor Nachruhe vor Rüstzeit. Eine Rüstzeit von
+ * fünf Minuten liegt unter dem Raster; sie darf trotzdem nicht verschwinden,
+ * sonst sähe das Gitter den Termin kürzer, als die Suche ihn rechnet.
+ */
+const VORRANG: readonly string[] = ['BELEGT', 'ABWESENHEIT', 'GESPERRT', 'NACHRUHE', 'RUESTZEIT'];
+
+function massgeblich(kandidaten: Belegung[]): Belegung | undefined {
+  return [...kandidaten].sort(
+    (a, b) => VORRANG.indexOf(a.art ?? '') - VORRANG.indexOf(b.art ?? ''),
+  )[0];
 }
 
 /** 2026-03-02T09:00:00+01:00 wird zu 2026-03-02T09:00 - Minutengenauigkeit reicht dem Raster. */
@@ -109,10 +124,9 @@ function wandzeit(iso: string | undefined): string {
   return (iso ?? '').slice(0, 16);
 }
 
-function vorher(tag: string, uhrzeit: string): string {
+function nachher(tag: string, uhrzeit: string): string {
   const [h, m] = uhrzeit.split(':').map(Number);
-  const gesamt = h * 60 + m - RASTER_MINUTEN;
-  if (gesamt < 0) return `${tag}T00:00`;
+  const gesamt = h * 60 + m + RASTER_MINUTEN;
   return `${tag}T${String(Math.floor(gesamt / 60)).padStart(2, '0')}:${String(gesamt % 60).padStart(2, '0')}`;
 }
 

@@ -92,10 +92,12 @@ describe('rasterFuer', () => {
     expect(zelle('09:15').blockbeginn).toBeFalse();
   });
 
-  it('Rüstzeit unterhalb des Rasters fällt in die Zelle, in der sie beginnt', () => {
-    // 08:55 bis 09:00 liegt in der Zelle 08:45; die Zelle zeigt die Rüstzeit nicht,
-    // weil die Behandlung um 09:00 die Zelle 09:00 füllt - fachlich richtig.
-    expect(zelle('08:45').zustand).toBe('frei');
+  it('Rüstzeit unter dem Raster verschwindet nicht: die berührte Zelle zeigt sie', () => {
+    // 08:55 bis 09:00 berührt die Zelle 08:45. Die Nachbereitung 09:20 bis 09:25
+    // berührt 09:15, aber dort hat die Behandlung Vorrang.
+    expect(zelle('08:45').zustand).toBe('ruestzeit');
+    expect(zelle('08:45').blockbeginn).toBeTrue();
+    expect(zelle('09:15').zustand).toBe('belegt');
   });
 
   it('zeigt am Dienstag die Abwesenheit über den ganzen Tag', () => {

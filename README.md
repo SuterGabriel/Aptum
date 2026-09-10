@@ -147,7 +147,7 @@ verletzten Regeln; dieselbe Anfrage mit `X-Mandant: praxis-b` antwortet mit
 |---|---|---|
 | 0 | Setup, Regeln, Skills, CI-Grundgerüst, ADR-001 | **erledigt** |
 | 1 | Domänenkern in reinem Java, dann Spring, Multi-Tenancy, Angular-Suchflow | **abgeschlossen** — Domänenkern mit Slot-Suche, Spring Boot in drei Modulen, RLS gegen echtes Postgres, REST mit OpenAPI, Terminsuche in Angular |
-| 2 | Kalender-Grid, Tabelle, WCAG, End-to-End-Tests | **in Arbeit** — Kalender-Grid steht, mit `GET /kalender/woche` aus dem Backend; Buchungsdialog, Playwright und Tabelle offen |
+| 2 | Kalender-Grid, Tabelle, WCAG, End-to-End-Tests | **in Arbeit** — Kalender-Grid mit `GET /kalender/woche`, Playwright mit axe als CI-Job; Buchungsdialog und Tabelle offen |
 | 3 | AI-Layer, MCP-Server, Evals, Provider-Vergleich | offen |
 | 4 | Terraform, Helm, ArgoCD, Observability | offen |
 | 5 | Demo, ADRs vervollständigen, Mapping | offen |

@@ -1290,6 +1290,47 @@ ein halber für die Tastaturnavigation und ihre Tests draufginge.
 
 ---
 
+## 2026-09-10 — Stufe 2, Schritt 3: Ende-zu-Ende mit axe
+
+**Was delegiert wurde:** Playwright gegen Backend und Frontend zusammen, im
+echten Chromium, als CI-Job `e2e`. Sechs Tests: über die API buchen, den
+Termin im Grid finden, mit der Tastatur hindurchfahren, die Reiter, die
+Suche, und axe über beide Seiten.
+
+**Was der echte Browser gefunden hat, was 29 Unit-Tests nicht fanden.** Zwei
+Dinge, beide in der ersten Viertelstunde.
+
+Erstens die Wegkreuzung: Die Seite heißt `/kalender`, der API-Pfad auch.
+Kaum stand `/kalender` im Dev-Proxy, ging der Seitenaufruf ans Backend statt
+an Angular. Der Proxy kennt jetzt `/kalender/woche`, nicht das Präfix. Das
+ist kein Testproblem, das wäre beim ersten `npm start` mit Backend jedem
+aufgefallen — nur hatte das bis dahin niemand getan. Genau der Moment, den
+ich am Nachmittag als fehlend benannt habe: das Ding einmal selbst in der
+Hand halten. Der e2e-Job tut das jetzt bei jedem Lauf.
+
+Zweitens ein fachlicher Fehler im Raster. Die Rüstzeit beträgt fünf
+Minuten, das Raster fünfzehn. Eine Zelle nahm die Belegung, die ihren
+Anfang deckt — 08:55 bis 09:00 deckt 08:45 nicht, also war die Zelle frei,
+und die Rüstzeit war im Gitter unsichtbar. Der Unit-Test hatte das sogar
+als „fachlich richtig" festgeschrieben; ich hatte den Fall gesehen und
+falsch beurteilt. Der e2e-Test suchte den Block „Rüstzeit, Vorbereitung"
+und fand ihn nicht. Jetzt zeigt eine Zelle, was sie berührt, mit Vorrang
+Behandlung vor Nachruhe vor Rüstzeit — sonst sähe das Gitter den Termin
+kürzer, als die Suche ihn rechnet, und das ist genau der Widerspruch, den
+die Wochenansicht vermeiden sollte.
+
+**Was gut lief.** Der Job startet Postgres als Service, baut das Jar, legt
+die Anwendungsrolle an wie im Isolationstest, wartet auf `/actuator/health`
+und lässt Playwright den Dev-Server mit Proxy hochfahren. Die Tests bauen
+ihre Daten über die API auf, keine Fixtures. Ein Query-Parameter `?tag=`
+an der Kalenderseite, damit ein Test in eine bekannte Woche springt — und
+damit gibt es nebenbei Deep-Links.
+
+**Zeitschätzung:** delegiert etwa eine Stunde. Von Hand ein Tag, weil der
+Start des Backends im CI-Job das ist, was man drei Mal falsch macht.
+
+---
+
 ## Vorlage für weitere Einträge
 
 ```

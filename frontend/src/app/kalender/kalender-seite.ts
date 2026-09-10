@@ -10,6 +10,7 @@ import {
   signal,
 } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { AptumApi, Woche } from '../api/aptum-api';
@@ -49,7 +50,8 @@ export class KalenderSeite {
   readonly label = ZUSTAND_LABEL;
 
   /** Der gewählte Tag; der Montag seiner Woche bestimmt, was geladen wird. */
-  readonly tag = signal(heute());
+  /** Startwert aus ?tag=, damit Links und Tests in eine bekannte Woche springen. */
+  readonly tag = signal(inject(ActivatedRoute).snapshot.queryParamMap.get('tag') ?? heute());
   readonly montag = computed(() => montagVon(this.tag()));
 
   readonly zustand = toSignal(

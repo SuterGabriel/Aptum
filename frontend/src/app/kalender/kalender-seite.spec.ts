@@ -1,6 +1,7 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import axe from 'axe-core';
 import { lokalDeutsch } from '../lokal';
 import { KalenderSeite } from './kalender-seite';
@@ -12,7 +13,12 @@ describe('KalenderSeite', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [KalenderSeite],
-      providers: [provideHttpClient(), provideHttpClientTesting(), ...lokalDeutsch],
+      providers: [
+        provideRouter([]),
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        ...lokalDeutsch,
+      ],
     }).compileComponents();
     fixture = TestBed.createComponent(KalenderSeite);
     http = TestBed.inject(HttpTestingController);

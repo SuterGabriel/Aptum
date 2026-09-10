@@ -41,7 +41,7 @@ Projekt-ID 3038770 · Projekt-Nr. a1WSZ0000088BoH2AU · Start 09.09.2026 ·
 | # | Anforderung (wörtlich) | Status | Beleg im Repo |
 |---|---|---|---|
 | S6 | Erfahrung mit ag-grid von Vorteil | offen | Abrechnungsübersicht in `frontend/` |
-| S7 | Kenntnisse in barrierefreier Software-Entwicklung (WCAG) von Vorteil | in Arbeit | Kontrastprüfung läuft in CI (Job `kontrast`, jedes `@kontrast`-Paar aus `tokens.css`); axe-core im Unit-Test jeder Seite und des Grids (`frontend/src/app/kalender/kalender-grid.spec.ts`: Rollen, Roving Tabindex, Tastatur, Namen je Zelle), ESLint mit Template-Regeln; Playwright über das Grid folgt |
+| S7 | Kenntnisse in barrierefreier Software-Entwicklung (WCAG) von Vorteil | in Arbeit | Kontrastprüfung läuft in CI (Job `kontrast`, jedes `@kontrast`-Paar aus `tokens.css`); axe-core im Unit-Test jeder Seite und des Grids (`frontend/src/app/kalender/kalender-grid.spec.ts`: Rollen, Roving Tabindex, Tastatur, Namen je Zelle), ESLint mit Template-Regeln; Playwright mit axe im echten Chromium über Suche und Grid (`frontend/e2e/kalender.spec.ts`, CI-Job `e2e`) |
 
 ### A.3 Aufgaben aus der Ausschreibung (was das Projekt abbildet)
 
