@@ -6,7 +6,7 @@
 #
 # Es prüft absichtlich nur Existenz und einfache Struktur — keine Qualität.
 # Ein Beleg, der fehlt, fällt hier auf. Ein Beleg, der schlecht ist, fällt im
-# Review auf. Beides ist besser als eine Behauptung, die niemand prueft.
+# Review auf. Beides ist besser als eine Behauptung, die niemand prüft.
 
 set -uo pipefail
 cd "$(dirname "$0")/.."
@@ -29,6 +29,34 @@ datei() { [ -f "$1" ]; }
 ordner_nicht_leer() { [ -d "$1" ] && [ -n "$(ls -A "$1" 2>/dev/null)" ]; }
 enthaelt() { grep -q "$2" "$1" 2>/dev/null; }
 hoechstens_zeilen() { [ "$(wc -l < "$1")" -le "$2" ]; }
+existiert() { [ -e "$1" ]; }
+
+# Liefert alle Repo-Pfade aus der Belegspalte von docs/ANFORDERUNGEN.md, die
+# unbedingt behauptet werden.
+#
+# Unbedingt heißt: die Zeile trägt keinen Status, der die Sache als noch nicht
+# eingelöst kennzeichnet. Zeilen mit `offen`, `zu klären`, `teilweise belegbar`
+# oder `nicht belegbar` nennen in der Belegspalte ein Ziel, keinen Beleg — die
+# dürfen auf etwas zeigen, das es noch nicht gibt.
+#
+# Die Aufgaben-Tabellen (SA*, CA*) trugen anfangs keine Statusspalte. Damit galt
+# dort jede Zeile als Ist-Behauptung, und `services/` und `infra/` meldeten grün,
+# obwohl beide nur `.gitkeep` enthielten — ein falsch positiver Beleg, also genau
+# das, was dieses Skript verhindern soll. Seit die beiden Tabellen dieselbe
+# Statusspalte tragen wie die Must-have-Tabellen, greift die Filterung auch dort.
+#
+# Offen bleibt die zweite Hälfte: `existiert` ist `[ -e ]` und ist bei einem
+# Ordner mit nur `.gitkeep` zufrieden. Sobald der erste Service steht, wird
+# daraus eine Prüfung auf echten Inhalt — vorher wäre sie nur rot.
+behauptete_pfade() {
+  grep '^|' docs/ANFORDERUNGEN.md \
+    | grep -v '| offen |\|| zu klären |\|| teilweise belegbar |\|| nicht belegbar |' \
+    | grep -oE '`[^`]+`' \
+    | tr -d '`' \
+    | grep -E '/|\.md$' \
+    | grep -v '^/' \
+    | sort -u
+}
 
 echo
 echo "Beleg-Check"
@@ -40,6 +68,15 @@ pruefe "docs/ANFORDERUNGEN.md existiert" datei docs/ANFORDERUNGEN.md
 pruefe "beide Ausschreibungen sind erfasst (SOLCOM)" enthaelt docs/ANFORDERUNGEN.md "SOLCOM"
 pruefe "beide Ausschreibungen sind erfasst (consultingheads)" enthaelt docs/ANFORDERUNGEN.md "consultingheads"
 pruefe "die nicht belegbaren Punkte sind benannt" enthaelt docs/ANFORDERUNGEN.md "nicht \*belegt\|nicht belegbar\|nicht \*\*nicht\*\*"
+pruefe "docs/PRODUKT.md existiert" datei docs/PRODUKT.md
+
+# Die Belegspalte ist der Ort, an dem sich das Mapping selbst überholen kann:
+# Ein Pfad wird als Beleg eingetragen, die Datei entsteht nie. Von Hand fällt
+# das niemandem auf, weil niemand eine Tabelle gegen den Verzeichnisbaum liest.
+while read -r pfad; do
+  [ -n "$pfad" ] || continue
+  pruefe "Beleg $pfad existiert" existiert "$pfad"
+done <<< "$(behauptete_pfade)"
 
 echo
 echo "Schritt 3 — Entscheidungen sind dokumentiert"
@@ -62,6 +99,29 @@ for skill in heilmittel-domain java-spring-hexagonal angular-rxjs a11y-grid adr 
 done
 pruefe "Commands liegen im Repo" ordner_nicht_leer .claude/commands
 pruefe "Subagents liegen im Repo" ordner_nicht_leer .claude/agents
+pruefe "Claude-Hook ist verdrahtet" datei .claude/settings.json
+pruefe "Claude-Hook liegt im Repo" datei .claude/hooks/prosa-nach-schreiben.mjs
+
+echo
+echo "Stage 1 — die Gates laufen auch vor dem Commit"
+# Ohne Git-Hook läuft die erste Prüfung erst auf GitHub, also nach dem Commit.
+# Dass die Hooks versioniert im Repo liegen statt in .git/hooks/, ist Teil
+# derselben Zusage wie bei den Skills: nichts Wichtiges liegt außerhalb.
+pruefe "Git-Hook liegt im Repo" datei .githooks/pre-commit
+pruefe "Einrichtung ist mitgeliefert" datei scripts/hooks-installieren.sh
+pruefe "Prosa-Check liegt im Repo" datei scripts/prosa-check.mjs
+pruefe "Verweis-Check liegt im Repo" datei scripts/link-check.mjs
+pruefe "Regel-Check liegt im Repo" datei scripts/regel-check.mjs
+pruefe "docs/PIPELINE.md existiert" datei docs/PIPELINE.md
+
+echo
+echo "Fachregeln — keine Zahl ohne Fundstelle"
+# Die Zusage des Skills heilmittel-domain lautet: Was nicht mit Quelle und
+# Status BELEGT in regeln.md steht, gehört nicht in den Code. Der Regel-Check
+# prüft sie; hier steht nur, dass es ihn und seinen Katalog gibt.
+pruefe "Regelkatalog existiert" datei .claude/skills/heilmittel-domain/regeln.md
+pruefe "Regelzeilen tragen IDs" enthaelt .claude/skills/heilmittel-domain/regeln.md "HM-FRIST-01"
+pruefe "ADR-007 begründet die Fundstellen-ID" datei docs/adr/ADR-007-fundstellen-id-im-domaenenmodell.md
 
 echo
 echo "Schritt 6 — der KI-Einsatz wird protokolliert"

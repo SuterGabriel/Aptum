@@ -30,6 +30,19 @@ Für den Portfolio-Effekt zählt nicht, dass jede Frist tagesaktuell stimmt.
 Es zählt, dass sie als benannte, parametrisierte, austauschbare Regel
 modelliert ist — und dass die Quelle danebensteht.
 
+**Seit ADR-007 ist das geprüft, nicht nur verabredet.** Jede Zeile in
+`regeln.md` trägt eine ID, jede fachliche Konstante nennt sie:
+
+```java
+/** @fundstelle HM-FRIST-01 */
+private static final int BEGINN_FRIST_TAGE = 28;
+```
+
+`scripts/regel-check.mjs` lehnt ab, was dagegen verstößt: eine nackte Zahl in
+einer Regelklasse, eine ID, die es nicht gibt, oder eine ID mit Status
+`UNSICHER`. Die vier unsicheren Regeln werden Parameter je Praxis, nicht
+Konstanten — die Ausfallregel ist das Vorbild.
+
 ## Referenzdateien
 
 - `regeln.md` — Regeltabelle mit Wert, Quelle und Status je Regel
