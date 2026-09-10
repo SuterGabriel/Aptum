@@ -207,13 +207,19 @@ function codePruefen(pfad, katalog) {
     if (zahlen.length === 0) return;
 
     // Eine Fundstelle gilt für die Deklaration, die auf sie folgt — und nur
-    // bis zum Ende der vorherigen. Ohne diese Grenze borgt sich in einer dicht
-    // gepackten Aufzählung jede Konstante die Quelle ihres Vorgängers, und die
-    // einzelnen Fundstellen wären gar nicht erzwungen.
+    // bis zur nächsten Grenze darüber. Grenzen sind das Ende der vorherigen
+    // Anweisung (`;` oder `,`) und der Beginn eines Blocks (`{`).
+    //
+    // Beide sind teuer erkauft. Ohne die erste borgt sich in einer dicht
+    // gepackten Aufzählung jede Konstante die Quelle ihres Vorgängers. Ohne die
+    // zweite borgt sich die erste Konstante einer Klasse eine Fundstelle aus
+    // dem Klassenkommentar, wo sie oft nur zitiert wird. Beide Lücken waren da,
+    // beide haben nichts gemeldet, und beide sind nur durch eine Gegenprobe
+    // aufgefallen.
     const umgebung = [];
-    for (let zurueck = index - 1; zurueck >= 0 && index - zurueck <= 3; zurueck--) {
+    for (let zurueck = index - 1; zurueck >= 0 && index - zurueck <= 10; zurueck--) {
       const vorher = zeilen[zurueck].replace(/"[^"]*"/g, '""').trim();
-      if (/[,;]$/.test(vorher)) break;
+      if (/[,;{]$/.test(vorher)) break;
       umgebung.unshift(zeilen[zurueck]);
     }
     umgebung.push(zeile);

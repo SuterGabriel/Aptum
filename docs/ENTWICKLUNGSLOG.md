@@ -573,6 +573,43 @@ Gate.
 
 ---
 
+## 2026-09-10 — Nachtrag: war das stumme Gate wirklich behoben?
+
+**Was delegiert wurde:** Die Nachfrage, ob die Korrektur am Regel-Check die
+Fehlerklasse beseitigt oder nur den einen Fall. Beantwortet mit einer Sonde
+statt mit einer Behauptung: eine Wegwerf-Klasse im Domänenkern mit sechs
+absichtlich gebauten Fällen, einmal durch das Gate, danach gelöscht.
+
+**Ergebnis: ein weiterer stummer Fall, und er war derselbe eine Ebene höher.**
+Eine Konstante dicht unter einem Klassenkommentar borgte sich dessen
+Fundstelle — und in Klassenkommentaren wird eine Fundstelle oft nur *zitiert*,
+um zu erklären, warum dort keine Zahl steht. Beim ersten Durchgang hatte mich
+nur der Abstand gerettet, nicht die Regel.
+
+Dazu ein Fehlalarm in der Gegenrichtung: Eine mehrzeilige Deklaration, deren
+Zahl weiter als drei Zeilen unter ihrer Fundstelle stand, wurde gemeldet,
+obwohl sie belegt war.
+
+Beides behoben: Die Grenze für eine Fundstelle ist jetzt das Ende der
+vorherigen Anweisung *oder* der Beginn eines Blocks, und das Fenster reicht
+weiter, weil die Grenze es ohnehin begrenzt.
+
+**Was bleibt, und zwar bewusst.** Die Sonde hat den bekannten Hauptmangel noch
+einmal bestätigt: Eine Konstante mit dem Wert 82 und der Fundstelle
+`HM-FRIST-01`, die von 28 Tagen spricht, geht durch. Der Check prüft, *dass*
+eine belegte Quelle genannt ist, nicht *ob* sie den Wert trägt. Das steht seit
+dem ersten Tag als größte Lücke in ADR-007 und ist keine neue Erkenntnis — aber
+es ist gut, sie einmal gesehen statt nur gelesen zu haben.
+
+**Die eigentliche Lehre.** Zwei stumme Lücken in derselben Prüfung, beide durch
+eine Gegenprobe gefunden, keine durch einen roten Lauf. Ein Gate braucht keine
+Tests, weil es Fehler findet, sondern weil es sie übersehen kann, ohne dass
+jemand es merkt. Die Sonde gehört deshalb zur Gewohnheit: nicht nur prüfen, ob
+das Gate anschlägt, sondern ob es an den Stellen anschlägt, an denen man es
+nicht erwartet hat.
+
+---
+
 ## Vorlage für weitere Einträge
 
 ```
