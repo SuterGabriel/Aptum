@@ -115,7 +115,17 @@ function prosaZeilen(inhalt, art) {
     } else {
       // Nur reine Kommentarzeilen. Eine Zeile mit Code davor wird verworfen,
       // weil dort ein Bezeichner stehen kann.
-      if (!/^\s*(#|\/\/|\*|\/\*)/.test(zeile)) return '';
+      //
+      // Eine Zeile, die mit `*` beginnt, ist nur innerhalb eines Blockkommentars
+      // Prosa. Außerhalb ist sie eine Fortsetzungszeile mit Multiplikation —
+      // `* anfrage.raeume().size()` — und trägt Bezeichner.
+      const oeffnet = /^\s*\/\*/.test(zeile);
+      const schliesst = /\*\//.test(zeile);
+      const sternzeile = /^\s*\*/.test(zeile) && !oeffnet;
+      const istProsa = oeffnet || /^\s*(#|\/\/)/.test(zeile) || (sternzeile && imCodeblock);
+      if (oeffnet && !schliesst) imCodeblock = true;
+      if (schliesst) imCodeblock = false;
+      if (!istProsa) return '';
     }
 
     return zeile

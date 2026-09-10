@@ -705,6 +705,64 @@ zu merken, wo man sie falsch gemacht hat.
 
 ---
 
+## 2026-09-10 — Stufe 1, die Schnittmenge
+
+**Was delegiert wurde:** Etappe C2 — `Regelwerk`, `SlotSuche`, `Wunschfenster`
+und die Ergebnistypen. Damit ist der erste Absatz des README eingelöst: Ein
+freier Termin ist die Schnittmenge über vier Dimensionen. 139 Tests grün,
+davon 9 neu, als Szenarien an einer kleinen Praxis mit zwei Personen und zwei
+Räumen.
+
+**Die Vorgabe war: Show-Projekt, nicht Produktivbetrieb.** Das hat den
+Zuschnitt bestimmt. Die Suche ist vier verschachtelte Schleifen — Tage,
+Raster, Personen, Räume — und fragt je Kandidat das Regelwerk. Kein Index,
+keine Vorauswahl in einer Datenbank, keine Parallelisierung. Das ist in zwei
+Sätzen erklärbar und reicht für eine Praxis mit einer Handvoll Ressourcen; das
+README-Argument braucht die Schnittmenge, nicht ihre Geschwindigkeit. ADR-001
+nennt genau diese Grenze als den Punkt, an dem man anders entscheiden würde.
+
+**Was trotzdem nicht verhandelbar war.** Zwei Dinge, weil sie das Argument
+tragen und nicht die Leistung:
+
+- Das `Regelwerk` ist die eine Stelle, an der eine Buchung geprüft wird. Die
+  Suche, die Buchung von Hand und später der Vorschlag eines Sprachmodells
+  laufen durch dieselbe Methode. Das ist Regel 3 aus `CLAUDE.md` in Code, und
+  es gibt keinen zweiten Weg. In der Gegenprobe die Qualifikationsregel aus dem
+  Regelwerk gestrichen: drei Tests rot, darunter der, in dem plötzlich jede
+  Person Lymphdrainage abrechnen durfte.
+- Die Ausschlüsse werden gezählt, je Regel, die den Ausschlag gab. Das
+  Wireframe verlangt den Hinweis „zwei Termine weggelassen, weil die Verordnung
+  verfallen wäre". Ohne die Zählung sähe eine leere Trefferliste aus wie ein
+  leerer Kalender. Ein Test hält fest, dass ein verfallener Tag so viele
+  Kandidaten zählt, wie er gehabt hätte — sonst wöge er weniger als ein
+  belegter Raum.
+
+**Was die Testsuite abgefangen hat.** Zwei Szenarien waren fachlich
+widersprüchlich, und beide fielen durch die *richtige* Regel auf:
+
+- Im Verfall-Szenario lag die erste Behandlung vor dem Ausstellungsdatum. Die
+  Fristregel meldete das zuerst, nicht die Unterbrechungsregel, auf die der
+  Test wartete. Der Test war falsch, die Reihenfolge im Regelwerk richtig.
+- Im Gerätebereich-Szenario hatte niemand das Gerät-Zertifikat — ich hatte es
+  im Kommentar sogar selbst festgestellt und trotzdem eine leere Liste nicht
+  erwartet.
+
+**Was die Gates gelehrt haben.** Der Prosa-Check hielt eine Fortsetzungszeile
+mit führendem `*` — eine Multiplikation — für Javadoc und meldete den
+Bezeichner `raeume`. Ein echter Fehlalarm im Gate: Jede `*`-Zeile galt als
+Kommentar. Das Skript führt jetzt den Blockkommentar-Zustand mit; die
+Gegenprobe zeigt, dass Javadoc-Sternzeilen weiter geprüft werden.
+
+**Was bleibt.** Ob das Heilmittel zur Therapieform der Verordnung passt — eine
+Physio-Verordnung mit einem Ergo-Heilmittel — prüft nichts. Es gibt dafür
+keine Katalogzeile, und ohne Zeile keine Regel; es gehört als Plausibilität an
+die Erfassung, nicht in die Suche. Und die Slot-Suche kennt keine
+Serientermine. Das Zeitmodell trägt sie, die Suche baut sie noch nicht.
+
+**Zeitschätzung:** delegiert etwa eine Stunde, von Hand geschätzt zwei Tage.
+
+---
+
 ## Vorlage für weitere Einträge
 
 ```

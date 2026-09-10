@@ -50,7 +50,7 @@ Projekt-ID 3038770 · Projekt-Nr. a1WSZ0000088BoH2AU · Start 09.09.2026 ·
 | SA1 | Weiterentwicklung der Praxissoftware für Physio- und Ergotherapien | in Arbeit | Domäne des gesamten Projekts, `docs/PRODUKT.md` |
 | SA2 | Harmonisierung mehrerer Systeminstanzen | nicht belegbar | Bestandsaufgabe, setzt gewachsene Systeminstanzen voraus — siehe Abschnitt D |
 | SA3 | Ausbau der Multi-Mandanten-Architektur | offen | ADR-002 (noch nicht geschrieben), Isolationstest im CI-Job `backend-it` |
-| SA4 | Weiterentwicklung von Kalender- und Verfügbarkeitsfunktionen | offen | Slot-Berechnung + Kalender-Grid |
+| SA4 | Weiterentwicklung von Kalender- und Verfügbarkeitsfunktionen | in Arbeit | Slot-Suche über vier Dimensionen in `services/scheduling/domain/src/main/java/de/aptum/scheduling/domain/suche/`; Kalender-Grid folgt in Stufe 2 |
 | SA5 | Berücksichtigung fachlicher und regulatorischer Anforderungen der Branche | belegt | `.claude/skills/heilmittel-domain/regeln.md` — jede Regel mit Wert, Fundstelle und Beleg-Status |
 | SA6 | Entwicklung von Java-Backends und REST-APIs | offen | `services/`, OpenAPI |
 | SA7 | Umsetzung und Optimierung von Microservices | offen | drei Services, bewusst wenige |
