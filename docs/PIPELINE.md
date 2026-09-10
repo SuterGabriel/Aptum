@@ -13,7 +13,7 @@ kommt mit Stufe 4 des Stufenplans.
 
 Die Skript-Gates sind abhängigkeitsfreie Skripte in `bash` oder Node; die
 Java-Gates laufen über Maven, die Frontend-Gates über `npm run` in
-`frontend/`. An der Wurzel gibt es keinen Paketmanager; der Aufruf der
+`frontend/`, die des AI-Dienstes über `uv run` in `services/ai-assist/`. An der Wurzel gibt es keinen Paketmanager; der Aufruf der
 Skripte ist der direkte.
 
 ## Einrichten
@@ -88,6 +88,7 @@ Ergebnisses, nicht nur Werkzeug.
 | `kontrast` | Jedes geforderte Farbpaar aus `tokens.css` hält seine WCAG-Schwelle |
 | `backend` | Formatierung (Spotless), Tests aller drei Module, ArchUnit gegen ADR-001, und ein echtes Postgres über Testcontainers für den Isolationstest aus ADR-002 — der einzige Job mit JVM und Docker |
 | `frontend` | Prettier, ESLint mit den Template-Regeln zur Barrierefreiheit, API-Typen gegen `docs/api/openapi.json`, Unit-Tests mit axe-core über jede Seite, Build mit Budget |
+| `ai-assist` | Der Python-Dienst: Ruff (Format und Lint), mypy strict, pytest gegen aufgezeichnete Antworten — ohne Schlüssel, ohne Netz |
 | `e2e` | Backend und Frontend zusammen im echten Chromium: über die API buchen, den Termin im Grid finden, mit der Tastatur hindurchfahren, axe über jede Seite — erst nach `backend` und `frontend` |
 
 Was noch fehlt — Dependency-Scan, die Eval-Suite — steht als

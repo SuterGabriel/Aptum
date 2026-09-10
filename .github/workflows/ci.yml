@@ -142,6 +142,31 @@ jobs:
       - name: Build mit Budget
         run: npm run build
 
+  ai-assist:
+    name: AI-Layer prüfen und testen
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: services/ai-assist
+    # Der dritte Werkzeugkasten: uv, Ruff, mypy, pytest. Die Tests laufen
+    # ohne Schlüssel und ohne Netz gegen aufgezeichnete Antworten - sie
+    # prüfen die Pipeline, nicht das Modell. Das Modell prüft der Eval.
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: services/ai-assist/uv.lock
+      - run: uv sync --frozen
+      - name: Format
+        run: uv run ruff format --check .
+      - name: Lint
+        run: uv run ruff check .
+      - name: Typen
+        run: uv run mypy
+      - name: Tests
+        run: uv run pytest -q
+
   e2e:
     name: Ende-zu-Ende mit axe
     runs-on: ubuntu-latest

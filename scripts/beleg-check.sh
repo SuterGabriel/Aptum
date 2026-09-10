@@ -174,6 +174,13 @@ pruefe "Grid hat Roving Tabindex und einen axe-Test" enthaelt frontend/src/app/k
 pruefe "Ende-zu-Ende fährt per Tastatur durch das Grid" enthaelt frontend/e2e/kalender.spec.ts "ArrowDown"
 pruefe "CI hat den Job e2e" enthaelt .github/workflows/ci.yml "  e2e:"
 pruefe "Dialog prüft, bevor er bucht" enthaelt frontend/src/app/buchung/buchungs-dialog.ts "pruefen"
+
+echo
+echo "Stufe 3 — der AI-Layer"
+pruefe "Pseudonymisierung ist ein benannter Schritt" datei services/ai-assist/src/ai_assist/pseudonymisierung.py
+pruefe "Pipeline pseudonymisiert vor dem Aufruf" enthaelt services/ai-assist/src/ai_assist/erfassung.py "pseudonymisiere(text)"
+pruefe "Prompt ist eine Datei, keine Zeichenkette" datei services/ai-assist/src/ai_assist/prompts/erfassung.md
+pruefe "zwei echte Provider" datei services/ai-assist/src/ai_assist/provider/openai_provider.py
 pruefe "Prüfung ohne Buchung im Backend" enthaelt services/scheduling/infrastructure/src/main/java/de/aptum/scheduling/infrastructure/rest/TerminController.java "/pruefung"
 pruefe "Wochenansicht nimmt die Grenzen aus Termin" enthaelt services/scheduling/domain/src/main/java/de/aptum/scheduling/domain/kalender/Wochenansicht.java "belegtRaum"
 pruefe "stumme Lücke 1 ist Fixture" datei scripts/fixtures/regel-check/domain/NachbarBorgt.java

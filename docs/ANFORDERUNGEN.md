@@ -71,7 +71,7 @@ Verlängerung möglich · 80–100 % · AI-native Healthcare SaaS
 |---|---|---|---|
 | C1 | Mehrjährige Senior-Erfahrung als Full-Stack Engineer mit modernen Webanwendungen | teilweise belegbar | Portfolio + dieses Projekt |
 | C2 | Tiefe in mindestens einem Frontend-Stack (React oder Angular) | belegt | Angular 20 in `frontend/`: Terminsuche mit kanonischem Suchflow, selbst gebautes Kalender-Grid mit Roving Tabindex (ADR-003) |
-| C3 | Tiefe in einem Backend-Stack (Java/Spring Boot oder Python) | in Arbeit | Java 21 in `services/scheduling/domain/`, Spring Boot 3.5 in `services/scheduling/infrastructure/` |
+| C3 | Tiefe in einem Backend-Stack (Java/Spring Boot oder Python) | belegt | Beides: Java 21 und Spring Boot 3.5 in `services/scheduling/`, Python 3.12 mit FastAPI, Pydantic und mypy strict in `services/ai-assist/` |
 | C4 | Solide Kenntnisse der relevanten Cloud- und DevOps-Praktiken (u. a. Kubernetes, Helm, ArgoCD, Terraform) | offen | `infra/` |
 | C5 | Nachweisbarer, effektiver Einsatz von KI in der Softwareentwicklung | belegt | `docs/ENTWICKLUNGSLOG.md` — je Schritt, was delegiert wurde, was die Gates abgefangen haben und was nicht funktionierte; `.claude/` versioniert; `docs/PIPELINE.md` |
 | C6 | Abgeschlossenes Studium der Informatik, Software Engineering oder vergleichbarer technischer Fachrichtung | zu klären | nicht durch das Repo belegbar — siehe `docs/OFFENE-PUNKTE.md` |
@@ -83,7 +83,7 @@ Verlängerung möglich · 80–100 % · AI-native Healthcare SaaS
 |---|---|---|---|
 | C8 | Praxiserfahrung mit KI-Coding-Agenten sowie Aufbau von Agenten, Skills und Workflows | belegt | `.claude/skills/`, `.claude/commands/`, `.claude/agents/`, `.claude/hooks/prosa-nach-schreiben.mjs` als PostToolUse-Hook in `.claude/settings.json`; die Hooks haben im Log dokumentiert mehrfach den Agenten selbst korrigiert |
 | C9 | Erfahrung mit AI-Pipelines, Harnesses und Context Engineering | offen | `docs/AI-PIPELINE.md` |
-| C10 | Kenntnisse in LLM-Tooling (Azure OpenAI, Anthropic SDK, MCP) | offen | Provider-Interface mit zwei Implementierungen, eigener MCP-Server |
+| C10 | Kenntnisse in LLM-Tooling (Azure OpenAI, Anthropic SDK, MCP) | in Arbeit | Provider-Interface mit Anthropic SDK (Tool-Use als Structured Output) und OpenAI-kompatiblem Provider für Azure in `services/ai-assist/src/ai_assist/provider/`; MCP-Server folgt |
 | C11 | Verständnis von Product-Management-Prozessen | belegt | `docs/PRODUKT.md` |
 
 ### B.3 Aufgaben aus der Ausschreibung
@@ -91,7 +91,7 @@ Verlängerung möglich · 80–100 % · AI-native Healthcare SaaS
 | # | Aufgabe (wörtlich) | Status | Abbildung im Projekt |
 |---|---|---|---|
 | CA1 | Design, Entwicklung und Betrieb moderner Webanwendungen über Frontend, Backend und DevOps | offen | Gesamtprojekt |
-| CA2 | Integration KI-nativer Funktionen und agentischer Erfahrungen, LLMs, Retrieval, Tool-Use, strukturierte Workflows | offen | `services/ai-assist/` |
+| CA2 | Integration KI-nativer Funktionen und agentischer Erfahrungen, LLMs, Retrieval, Tool-Use, strukturierte Workflows | in Arbeit | Verordnungserfassung aus Freitext in `services/ai-assist/src/ai_assist/erfassung.py`: Pseudonymisierung, Tool-Use, Schema, nicht extrahierbar statt geraten; Evals und MCP folgen |
 | CA3 | Konzeption und Betrieb cloud-nativer Services, Zuverlässigkeit, Sicherheit, Entwicklerproduktivität | offen | `infra/`, Observability mit Tenant-ID |
 | CA4 | Mitgestaltung gemeinsam genutzter Agenten, Skills, Pipelines und Harnesses im Team | belegt | `.claude/skills/`, `.claude/agents/`, `.claude/commands/`, `.claude/hooks/` — versioniert im Repo, nicht global |
 | CA5 | Zusammenarbeit mit Product Management, UX, Architekten | in Arbeit | `docs/PRODUKT.md`, `docs/adr/`, `docs/mockups/` |

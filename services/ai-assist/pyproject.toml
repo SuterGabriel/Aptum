@@ -1,0 +1,45 @@
+[project]
+name = "aptum-ai-assist"
+version = "0.1.0"
+description = "Der AI-Layer von Aptum: schlägt vor, entscheidet nicht."
+requires-python = ">=3.12"
+dependencies = [
+  "anthropic>=0.40",
+  "fastapi>=0.115",
+  "httpx>=0.27",
+  "openai>=1.50",
+  "pydantic>=2.9",
+  "uvicorn>=0.30",
+]
+
+[dependency-groups]
+dev = [
+  "mypy>=1.11",
+  "pytest>=8.3",
+  "ruff>=0.6",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ai_assist"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+# Fehler, Stil, Importe, Modernisierung, Bugbear. Keine Docstring-Regeln:
+# Kommentare erklären hier das Warum, nicht jede Funktion ihre Existenz.
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.mypy]
+strict = true
+packages = ["ai_assist"]
+mypy_path = "src"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

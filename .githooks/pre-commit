@@ -75,6 +75,12 @@ if printf '%s\n' "$vorgemerkt" | grep -q '\.java$'; then
   lauf "Format" mvn -q --file services/scheduling/pom.xml spotless:check
 fi
 
+# Dasselbe für Python, nur wenn der AI-Dienst vorgemerkt ist. Ruff ist
+# schnell; mypy und pytest bleiben der CI.
+if printf '%s\n' "$vorgemerkt" | grep -q '^services/ai-assist/.*\.py$'; then
+  lauf "Ruff" sh -c 'cd services/ai-assist && uv run ruff format --check . && uv run ruff check .'
+fi
+
 if [ "$fehler" -gt 0 ]; then
   cat <<'HINWEIS'
 

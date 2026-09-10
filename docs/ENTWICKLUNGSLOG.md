@@ -1389,6 +1389,52 @@ und der Fokus käme nicht zurück auf den Auslöser.
 
 ---
 
+## 2026-09-10 — Stufe 3, Schritt 1: der AI-Layer als Dienst
+
+**Was delegiert wurde:** `services/ai-assist/` in Python — die
+Verordnungserfassung aus Freitext, wie der Skill `llm-evals` sie als
+Feature 1 festlegt. 15 Tests, ohne Schlüssel, ohne Netz.
+
+**Die Entscheidung davor.** Python statt Java für den zweiten Dienst, mit
+drei Gründen, die alle in der Ausschreibung stehen: „Java oder Python“
+belegt beides, Anthropic- und MCP-SDK sind dort die Referenz, und zwei
+Dienste in zwei Sprachen, die nur über den OpenAPI-Vertrag reden, sind der
+ehrlichere Beleg für Microservices als zwei Maven-Module. Der Preis: ein
+dritter Werkzeugkasten in der CI — uv, Ruff, mypy, pytest. Ein Job, zwanzig
+Zeilen.
+
+**Was gut lief.** Die Pipeline ist vier benannte Schritte, und der erste ist
+die Pseudonymisierung — Regel 2 aus `DATENSCHUTZ.md` als Funktion mit
+Test, nicht als Absatz. Der Test dafür ist der, den ich am liebsten mag:
+Der aufgezeichnete Provider kennt *nur* die pseudonymisierte Fassung des
+Textes. Bekäme er den Originaltext, gäbe es keine Aufzeichnung, und der
+Test wäre rot. So ist „das Modell sieht keinen Namen“ eine Zusage, die
+kaputtgehen kann.
+
+Structured Output über Tool-Use, bei beiden Providern mit demselben
+Schema aus demselben Pydantic-Modell — ein Schema, nicht drei. Und die
+Regel, die den Unterschied zu einer Demo macht: Ein fehlendes oder
+widersprüchliches Feld heißt „nicht extrahierbar“, nie ein geratener
+Wert. Die Pipeline setzt das durch, auch wenn das Modell es vergisst.
+
+**Was noch nicht stimmt, und ehrlich gesagt wird.** Kein Schlüssel, also
+kein echter Aufruf. Die 15 Tests prüfen die Pipeline, nicht das Modell.
+Ob der Prompt gut ist, weiß erst der Eval — Schritt 2. Die
+Pseudonymisierung erkennt vier Arten von Angaben mit regulären
+Ausdrücken; das steht so in ihrem Kopfkommentar und im README des
+Dienstes.
+
+**Was nicht funktionierte.** Nichts am Code — Ruff, mypy strict und pytest
+waren nach einer Runde grün. Aber zweimal ist mir ein Python-Skript zum
+Bearbeiten der Doku an typografischen Anführungszeichen in der Shell
+gestorben. Skripte in eine Datei, dann ausführen. Kleine Lehre, zwei Mal
+gelernt.
+
+**Zeitschätzung:** delegiert etwa eine Stunde. Von Hand ein Tag, und die
+Pseudonymisierung wäre „später“.
+
+---
+
 ## Vorlage für weitere Einträge
 
 ```

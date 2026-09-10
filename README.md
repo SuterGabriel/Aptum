@@ -149,7 +149,7 @@ verletzten Regeln; dieselbe Anfrage mit `X-Mandant: praxis-b` antwortet mit
 | 0 | Setup, Regeln, Skills, CI-Grundgerüst, ADR-001 | **erledigt** |
 | 1 | Domänenkern in reinem Java, dann Spring, Multi-Tenancy, Angular-Suchflow | **abgeschlossen** — Domänenkern mit Slot-Suche, Spring Boot in drei Modulen, RLS gegen echtes Postgres, REST mit OpenAPI, Terminsuche in Angular |
 | 2 | Kalender-Grid, Tabelle, WCAG, End-to-End-Tests | **in Arbeit** — Kalender-Grid, Buchungsdialog mit Regelprüfung, Playwright mit axe als CI-Job; Verordnungsübersicht und Tabelle offen |
-| 3 | AI-Layer, MCP-Server, Evals, Provider-Vergleich | offen |
+| 3 | AI-Layer, MCP-Server, Evals, Provider-Vergleich | **in Arbeit** — Verordnungserfassung aus Freitext in `services/ai-assist/` (Python), Pseudonymisierung vor dem Aufruf, zwei Provider; Evals, MCP und die Seite dazu folgen |
 | 4 | Terraform, Helm, ArgoCD, Observability | offen |
 | 5 | Demo, ADRs vervollständigen, Mapping | offen |
 
