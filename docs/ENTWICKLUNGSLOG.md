@@ -1045,6 +1045,43 @@ Lesen des ersten Fehlers zu sehen, nicht beim Lesen des letzten.
 
 ---
 
+## 2026-09-10 — Nachtrag: OpenAPI, und eine Durchsicht der Doku
+
+**Was delegiert wurde:** Die Frage, ob alles aktuell ist — und das
+OpenAPI-Dokument, damit SA6 belegt ist. 171 Tests grün, davon 2 neu.
+
+**Was die Durchsicht ergeben hat.** `PIPELINE.md` war an fünf Stellen
+veraltet: „solange `services/` leer ist", „unter zwei Sekunden, weil dieses
+Repo aus Text besteht", „vier Jobs" bei fünf, „Ab Stufe 1 kommen Kompilieren,
+Domain-Tests und ArchUnit dazu" — alles Sätze, die am Morgen stimmten und am
+Abend nicht mehr. Dazu vier Zeilen im Anforderungs-Mapping, die auf „in
+Arbeit" standen, obwohl der Beleg da war: Java, KI-Einsatz, Agenten und
+Skills, REST. Hochgestuft mit dem konkreten Pfad, nicht mit dem Ordner.
+
+Das Muster ist dasselbe wie bei den 31 Kontrastpaaren, nur in Sätzen statt
+Zahlen: Prosa über den Stand des Repos veraltet in dem Moment, in dem sich
+der Stand ändert, und kein Gate liest Prosa. Die Durchsicht am Ende eines
+Tages ist deshalb kein Aufräumen, sondern Teil der Arbeit.
+
+**Das OpenAPI-Dokument ist erzeugt, nicht geschrieben.** springdoc liest die
+Controller, ein Customizer hängt den `X-Mandant`-Header an jede Operation —
+einmal, an einer Stelle, wie im Code. Das Dokument liegt unter
+`docs/api/openapi.json`, und ein Test vergleicht es mit dem, was die
+laufende Anwendung liefert. Sonst wäre es die nächste Datei, die still
+veraltet. Gegenprobe: einen Pfad im Controller umbenannt, Test rot, mit dem
+Befehl zum Aktualisieren in der Meldung.
+
+**Was die Testsuite abgefangen hat.** Der erste Vergleich schlug fehl,
+obwohl nichts geändert war: springdoc trägt unter `servers` die URL mit dem
+zufälligen Port des Testlaufs ein. Der Eintrag ist keine Eigenschaft der
+Schnittstelle und wird vor dem Vergleich entfernt. Ein Drift-Gate, das bei
+jedem Lauf Drift meldet, wäre nach einem Tag abgeschaltet.
+
+**Zeitschätzung:** delegiert etwa vierzig Minuten, von Hand geschätzt ein
+Nachmittag — wie angekündigt.
+
+---
+
 ## Vorlage für weitere Einträge
 
 ```

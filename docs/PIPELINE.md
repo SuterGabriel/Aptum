@@ -11,9 +11,10 @@ kommt mit Stufe 4 des Stufenplans.
 | `.claude/hooks/` | jede Dateiänderung durch einen Agenten | die geschriebene Datei | nein, aber abschaltbar |
 | `.github/workflows/ci.yml` | Push auf `main`, Pull Request | der ganze Baum | nein |
 
-Alle Gates sind abhängigkeitsfreie Skripte in `bash` oder Node. Es gibt keinen
-Paketmanager an der Wurzel dieses Repos, solange `frontend/` und `services/`
-leer sind, und deshalb auch kein `npm run`. Der Aufruf ist überall der direkte.
+Die Skript-Gates sind abhängigkeitsfreie Skripte in `bash` oder Node; die
+Java-Gates laufen über Maven. Es gibt keinen Paketmanager an der Wurzel
+dieses Repos, solange `frontend/` leer ist, und deshalb kein `npm run`. Der
+Aufruf ist überall der direkte.
 
 ## Einrichten
 
@@ -36,8 +37,9 @@ Infrastruktur-Moduls setzt deshalb `api.version` in der Test-JVM.
 
 ## Stufe 1: der Git-Hook
 
-`.githooks/pre-commit` führt fünf Gates aus. Der Zuschnitt ist ungleich, und
-zwar aus einem Grund je Zeile:
+`.githooks/pre-commit` führt vier Gates immer aus und drei nur, wenn passende
+Dateien vorgemerkt sind. Der Zuschnitt ist ungleich, und zwar aus einem Grund
+je Zeile:
 
 | Gate | Umfang | Warum dieser Umfang |
 |---|---|---|
@@ -48,7 +50,8 @@ zwar aus einem Grund je Zeile:
 | `scripts/kontrast-check.mjs` | nur bei geänderter Token-Datei | Prüft ausschließlich `tokens.css` |
 | `mvn spotless:check` | nur bei vorgemerktem Java | Der JVM-Start kostet Sekunden; ein Hook, der bei jedem Markdown-Commit wartet, wird umgangen |
 
-Zusammen unter zwei Sekunden, weil dieses Repo bisher aus Text besteht.
+Die Skript-Gates zusammen unter zwei Sekunden; der Format-Check über Maven
+kostet den JVM-Start und läuft deshalb nur bei Java-Änderungen.
 
 **Der Hook ist mit `--no-verify` umgehbar, und das bleibt so.** Ein Hook, der
 eine halbe Minute braucht, wird umgangen; ein Hook, der routinemäßig umgangen
@@ -75,7 +78,7 @@ Ergebnisses, nicht nur Werkzeug.
 
 ## Stufe 3: GitHub Actions
 
-`.github/workflows/ci.yml`, vier Jobs, jeder ein Gate:
+`.github/workflows/ci.yml`, fünf Jobs, jeder ein Gate:
 
 | Job | Prüft |
 |---|---|
@@ -85,9 +88,9 @@ Ergebnisses, nicht nur Werkzeug.
 | `kontrast` | Jedes geforderte Farbpaar aus `tokens.css` hält seine WCAG-Schwelle |
 | `backend` | Formatierung (Spotless), Tests aller drei Module, ArchUnit gegen ADR-001, und ein echtes Postgres über Testcontainers für den Isolationstest aus ADR-002 — der einzige Job mit JVM und Docker |
 
-Ab Stufe 1 kommen Kompilieren, Domain-Tests und ArchUnit dazu, später
-Testcontainers, Playwright mit axe-core und die Eval-Suite. Sie stehen als
-auskommentiertes Gerüst in der Datei, nicht als leere Jobs — ein Job, der
+Was noch fehlt — Lint und Bundle-Budget fürs Frontend, Playwright mit axe-core
+über das Kalender-Grid, Dependency-Scan, die Eval-Suite — steht als
+auskommentiertes Gerüst in der Datei, nicht als leere Jobs: Ein Job, der
 nichts prüft und trotzdem grün meldet, ist schlimmer als kein Job.
 
 ## Die fünf Gates im Einzelnen
@@ -149,6 +152,11 @@ node scripts/link-check.mjs
 node scripts/regel-check.mjs
 node scripts/kontrast-check.mjs
 bash  scripts/beleg-check.sh
+node --test scripts/regel-check.test.mjs         # das Gate selbst
+
+cd services/scheduling
+mvn spotless:check test                          # Format, Tests, ArchUnit, Testcontainers
+mvn spotless:apply                               # formatieren
 ```
 
 ## Was die Pipeline nicht abfängt

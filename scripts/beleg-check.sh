@@ -154,6 +154,11 @@ pruefe "Anwendungsfälle ohne Framework" datei services/scheduling/application/s
 pruefe "REST über dasselbe Regelwerk" datei services/scheduling/infrastructure/src/main/java/de/aptum/scheduling/infrastructure/rest/TerminController.java
 pruefe "Ende-zu-Ende-Test über HTTP" datei services/scheduling/infrastructure/src/test/java/de/aptum/scheduling/infrastructure/rest/RestApiTest.java
 pruefe "Header-Stub ist als offen geführt" enthaelt docs/OFFENE-PUNKTE.md "X-Mandant"
+# Die Schnittstellenbeschreibung ist erzeugt, und ein Test vergleicht sie mit
+# der laufenden Anwendung. Ohne den Test wäre sie die nächste Datei, die
+# still veraltet.
+pruefe "OpenAPI-Dokument liegt im Repo" datei docs/api/openapi.json
+pruefe "OpenAPI wird gegen die Anwendung geprüft" datei services/scheduling/infrastructure/src/test/java/de/aptum/scheduling/infrastructure/rest/OpenApiTest.java
 pruefe "stumme Lücke 1 ist Fixture" datei scripts/fixtures/regel-check/domain/NachbarBorgt.java
 pruefe "stumme Lücke 2 ist Fixture" datei scripts/fixtures/regel-check/domain/KlassenkommentarBorgt.java
 pruefe "Wertabgleich ist Fixture" datei scripts/fixtures/regel-check/domain/FalscherWert.java

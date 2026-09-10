@@ -37,7 +37,10 @@ class MandantFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        return request.getRequestURI().startsWith("/actuator");
+        // Health und die Schnittstellenbeschreibung sind mandantenfrei: Sie
+        // sagen, was die Anwendung kann, nicht, was sie für jemanden weiß.
+        String pfad = request.getRequestURI();
+        return pfad.startsWith("/actuator") || pfad.startsWith("/v3/api-docs") || pfad.startsWith("/swagger-ui");
     }
 
     @Override

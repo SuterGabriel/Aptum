@@ -1,0 +1,374 @@
+{
+  "openapi" : "3.1.0",
+  "info" : {
+    "title" : "Aptum Scheduling",
+    "description" : "Terminsuche und Buchung für Physio- und Ergotherapiepraxen. Jeder Vorschlag und jede Buchung läuft durch dasselbe deterministische Regelwerk der Heilmittel-Richtlinie; die Antworten nennen je Regel Ausgang und Begründung. Daten sind je Mandant getrennt (Row Level Security).",
+    "version" : "0.1"
+  },
+  "paths" : {
+    "/verordnungen" : {
+      "post" : {
+        "tags" : [ "verordnung-controller" ],
+        "operationId" : "anlegen",
+        "parameters" : [ {
+          "name" : "X-Mandant",
+          "in" : "header",
+          "description" : "Die Praxis, für die die Anfrage gilt. Platzhalter für Authentifizierung: In einer echten Anwendung käme der Mandant aus einem signierten Token.",
+          "required" : true,
+          "example" : "praxis-a"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/VerordnungAnlage"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "400" : {
+            "description" : "Bad Request",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Fehler"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Fehler"
+                }
+              }
+            }
+          },
+          "201" : {
+            "description" : "Created",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/VerordnungAngelegt"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/termine" : {
+      "post" : {
+        "tags" : [ "termin-controller" ],
+        "operationId" : "buchen",
+        "parameters" : [ {
+          "name" : "X-Mandant",
+          "in" : "header",
+          "description" : "Die Praxis, für die die Anfrage gilt. Platzhalter für Authentifizierung: In einer echten Anwendung käme der Mandant aus einem signierten Token.",
+          "required" : true,
+          "example" : "praxis-a"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Buchung"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "400" : {
+            "description" : "Bad Request",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Fehler"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Fehler"
+                }
+              }
+            }
+          },
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Buchungsantwort"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/termine/suche" : {
+      "post" : {
+        "tags" : [ "termin-controller" ],
+        "operationId" : "suchen",
+        "parameters" : [ {
+          "name" : "X-Mandant",
+          "in" : "header",
+          "description" : "Die Praxis, für die die Anfrage gilt. Platzhalter für Authentifizierung: In einer echten Anwendung käme der Mandant aus einem signierten Token.",
+          "required" : true,
+          "example" : "praxis-a"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Suche"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "400" : {
+            "description" : "Bad Request",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Fehler"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Fehler"
+                }
+              }
+            }
+          },
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Suchantwort"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "Fehler" : {
+        "type" : "object",
+        "properties" : {
+          "fehler" : {
+            "type" : "string"
+          }
+        }
+      },
+      "VerordnungAnlage" : {
+        "type" : "object",
+        "properties" : {
+          "ausstellungsdatum" : {
+            "type" : "string",
+            "format" : "date"
+          },
+          "dringlicherBedarf" : {
+            "type" : "boolean"
+          },
+          "diagnosegruppe" : {
+            "type" : "string"
+          },
+          "verordneteEinheiten" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "frequenzMin" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "frequenzMax" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }
+      },
+      "VerordnungAngelegt" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "format" : "uuid"
+          }
+        }
+      },
+      "Buchung" : {
+        "type" : "object",
+        "properties" : {
+          "verordnung" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "heilmittel" : {
+            "type" : "string"
+          },
+          "therapeut" : {
+            "type" : "string"
+          },
+          "raum" : {
+            "type" : "string"
+          },
+          "beginn" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "uebersteuerung" : {
+            "$ref" : "#/components/schemas/Uebersteuerung"
+          }
+        }
+      },
+      "Uebersteuerung" : {
+        "type" : "object",
+        "properties" : {
+          "begruendung" : {
+            "type" : "string"
+          },
+          "von" : {
+            "type" : "string"
+          }
+        }
+      },
+      "Buchungsantwort" : {
+        "type" : "object",
+        "properties" : {
+          "termin" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "ausgang" : {
+            "type" : "string"
+          },
+          "regeln" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Regel"
+            }
+          }
+        }
+      },
+      "Regel" : {
+        "type" : "object",
+        "properties" : {
+          "regel" : {
+            "type" : "string"
+          },
+          "ausgang" : {
+            "type" : "string"
+          },
+          "begruendung" : {
+            "type" : "string"
+          }
+        }
+      },
+      "Suche" : {
+        "type" : "object",
+        "properties" : {
+          "verordnung" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "heilmittel" : {
+            "type" : "string"
+          },
+          "von" : {
+            "type" : "string",
+            "format" : "date"
+          },
+          "bis" : {
+            "type" : "string",
+            "format" : "date"
+          },
+          "fruehestens" : {
+            "type" : "string"
+          },
+          "spaetestens" : {
+            "type" : "string"
+          },
+          "wochentage" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string",
+              "enum" : [ "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY" ]
+            }
+          }
+        }
+      },
+      "Suchantwort" : {
+        "type" : "object",
+        "properties" : {
+          "zusammenfassung" : {
+            "type" : "string"
+          },
+          "vorschlaege" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Terminvorschlag"
+            }
+          },
+          "ausgeschlossen" : {
+            "type" : "object",
+            "additionalProperties" : {
+              "type" : "integer",
+              "format" : "int32"
+            }
+          },
+          "geprueft" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }
+      },
+      "Terminvorschlag" : {
+        "type" : "object",
+        "properties" : {
+          "beginn" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "ende" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "therapeut" : {
+            "type" : "string"
+          },
+          "raum" : {
+            "type" : "string"
+          },
+          "warnungen" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Regel"
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -27,7 +27,7 @@ Projekt-ID 3038770 · Projekt-Nr. a1WSZ0000088BoH2AU · Start 09.09.2026 ·
 | S1 | Sehr gute Kenntnisse in dem Frontend-Framework Angular | offen | `frontend/` |
 | S2 | Sehr gutes Verständnis von rxjs-Bibliothek | offen | `frontend/` — kanonischer Suchflow, kommentiert |
 | S3 | Erfahrung mit Spring Boot, REST-APIs sowie Microservices-Architekturen | in Arbeit | Spring Boot 3.5, JPA-Adapter hinter Ports, REST in `services/scheduling/infrastructure/src/main/java/de/aptum/scheduling/infrastructure/rest/`, Ende-zu-Ende-Test über HTTP gegen Postgres; von drei geplanten Services existiert einer |
-| S4 | Erfahrung in Java (Java 11 oder höher) | in Arbeit | Java 21, Maven nach ADR-008, erste Regelklasse mit 12 Tests: `services/scheduling/domain/` |
+| S4 | Erfahrung in Java (Java 11 oder höher) | belegt | Java 21 in drei Modulen: Domänenkern mit elf Regelklassen und Slot-Suche in `services/scheduling/domain/`, Anwendungsfälle in `services/scheduling/application/`, Spring Boot in `services/scheduling/infrastructure/` |
 | S5 | Erfahrung in der Weiterentwicklung von komplexen Anwendungen mit sehr viel Business-Logik | teilweise belegbar | `services/scheduling/domain/` — benannte Regel mit Fundstelle und parametrisierten Grenzfalltests. Siehe Hinweis unten. |
 
 > **Zu S5, offen benannt:** Das ist eine Erfahrungs-, keine Werkzeuganforderung.
@@ -52,7 +52,7 @@ Projekt-ID 3038770 · Projekt-Nr. a1WSZ0000088BoH2AU · Start 09.09.2026 ·
 | SA3 | Ausbau der Multi-Mandanten-Architektur | belegt | `docs/adr/ADR-002-multi-tenancy.md`; Row Level Security in `services/scheduling/infrastructure/src/main/resources/db/migration/V1__mandantentrennung.sql`; Isolationstest `services/scheduling/infrastructure/src/test/java/de/aptum/scheduling/infrastructure/mandant/MandantIsolationTest.java` gegen echtes Postgres |
 | SA4 | Weiterentwicklung von Kalender- und Verfügbarkeitsfunktionen | in Arbeit | Slot-Suche über vier Dimensionen in `services/scheduling/domain/src/main/java/de/aptum/scheduling/domain/suche/`; Kalender-Grid folgt in Stufe 2 |
 | SA5 | Berücksichtigung fachlicher und regulatorischer Anforderungen der Branche | belegt | `.claude/skills/heilmittel-domain/regeln.md` — jede Regel mit Wert, Fundstelle und Beleg-Status |
-| SA6 | Entwicklung von Java-Backends und REST-APIs | in Arbeit | `services/scheduling/infrastructure/src/main/java/de/aptum/scheduling/infrastructure/rest/`; OpenAPI folgt |
+| SA6 | Entwicklung von Java-Backends und REST-APIs | belegt | REST in `services/scheduling/infrastructure/src/main/java/de/aptum/scheduling/infrastructure/rest/`, OpenAPI erzeugt und gegen die laufende Anwendung geprüft: `docs/api/openapi.json` |
 | SA7 | Umsetzung und Optimierung von Microservices | offen | drei Services, bewusst wenige |
 | SA8 | Analyse und Umsetzung fachlicher Anforderungen aus dem Praxisumfeld | belegt | `docs/PRODUKT.md` |
 | SA9 | Erstellung technischer Konzepte und Architekturentscheidungen | belegt | `docs/adr/`, `DECISIONS.md` |
@@ -73,7 +73,7 @@ Verlängerung möglich · 80–100 % · AI-native Healthcare SaaS
 | C2 | Tiefe in mindestens einem Frontend-Stack (React oder Angular) | offen | `frontend/` (Angular) |
 | C3 | Tiefe in einem Backend-Stack (Java/Spring Boot oder Python) | in Arbeit | Java 21 in `services/scheduling/domain/`, Spring Boot 3.5 in `services/scheduling/infrastructure/` |
 | C4 | Solide Kenntnisse der relevanten Cloud- und DevOps-Praktiken (u. a. Kubernetes, Helm, ArgoCD, Terraform) | offen | `infra/` |
-| C5 | Nachweisbarer, effektiver Einsatz von KI in der Softwareentwicklung | in Arbeit | `.claude/` im Repo, `docs/ENTWICKLUNGSLOG.md`, CI-Guardrails |
+| C5 | Nachweisbarer, effektiver Einsatz von KI in der Softwareentwicklung | belegt | `docs/ENTWICKLUNGSLOG.md` — je Schritt, was delegiert wurde, was die Gates abgefangen haben und was nicht funktionierte; `.claude/` versioniert; `docs/PIPELINE.md` |
 | C6 | Abgeschlossenes Studium der Informatik, Software Engineering oder vergleichbarer technischer Fachrichtung | zu klären | nicht durch das Repo belegbar — siehe `docs/OFFENE-PUNKTE.md` |
 | C7 | Ausgeprägte Problemlösungskompetenz, Innovationsfreude und Proaktivität mit Bezug zum Gesundheitswesen | in Arbeit | `.claude/skills/heilmittel-domain/regeln.md` — Fristen, Unterbrechung, Frequenz, Mengen und Qualifikation je mit Fundstelle und Beleg-Status (`BELEGT`, `BELEGT als Nichtfund`, `UNSICHER`); `scripts/beleg-check.sh` hält das Mapping ehrlich |
 
@@ -81,7 +81,7 @@ Verlängerung möglich · 80–100 % · AI-native Healthcare SaaS
 
 | # | Anforderung (wörtlich) | Status | Beleg im Repo |
 |---|---|---|---|
-| C8 | Praxiserfahrung mit KI-Coding-Agenten sowie Aufbau von Agenten, Skills und Workflows | in Arbeit | `.claude/skills/`, `.claude/commands/`, `.claude/agents/`, `.claude/hooks/prosa-nach-schreiben.mjs` als PostToolUse-Hook, verdrahtet in `.claude/settings.json` |
+| C8 | Praxiserfahrung mit KI-Coding-Agenten sowie Aufbau von Agenten, Skills und Workflows | belegt | `.claude/skills/`, `.claude/commands/`, `.claude/agents/`, `.claude/hooks/prosa-nach-schreiben.mjs` als PostToolUse-Hook in `.claude/settings.json`; die Hooks haben im Log dokumentiert mehrfach den Agenten selbst korrigiert |
 | C9 | Erfahrung mit AI-Pipelines, Harnesses und Context Engineering | offen | `docs/AI-PIPELINE.md` |
 | C10 | Kenntnisse in LLM-Tooling (Azure OpenAI, Anthropic SDK, MCP) | offen | Provider-Interface mit zwei Implementierungen, eigener MCP-Server |
 | C11 | Verständnis von Product-Management-Prozessen | belegt | `docs/PRODUKT.md` |
