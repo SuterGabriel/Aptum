@@ -82,6 +82,13 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
           <version>3.13.0</version>
+          <!-- Parameternamen in den Klassen behalten. Spring liest daraus den
+               Namen eines @RequestParam; ohne dieses Flag heißt er arg0, und
+               ?tag=... wird nie gebunden. Der Boot-Parent setzt es still, das
+               BOM (ADR-008) nicht - deshalb steht es hier ausdrücklich. -->
+          <configuration>
+            <parameters>true</parameters>
+          </configuration>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>

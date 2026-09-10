@@ -116,9 +116,12 @@ curl $H -d '{"verordnung":"<id>","heilmittel":"KG_EINZEL","von":"2026-03-02","bi
              "fruehestens":"09:00","spaetestens":"11:00","wochentage":["MONDAY","TUESDAY"]}' localhost:8080/termine/suche
 curl $H -d '{"verordnung":"<id>","heilmittel":"KG_EINZEL","therapeut":"T. Alpha","raum":"Raum 1",
              "beginn":"2026-03-02T09:00:00+01:00"}' localhost:8080/termine
+curl -H X-Mandant:praxis-a 'localhost:8080/kalender/woche?tag=2026-03-04'
 ```
 
 Die Suche antwortet mit Vorschlägen und der Zählung der Ausschlüsse je Regel.
+Die Woche liefert je Therapeutin ihre Blöcke — Behandlung, Rüstzeit, Nachruhe,
+Abwesenheit, gesperrt — mit denselben Grenzen, die die Suche als belegt rechnet.
 Die zweite Buchung desselben Termins antwortet mit `409` und nennt die
 verletzten Regeln; dieselbe Anfrage mit `X-Mandant: praxis-b` antwortet mit
 `404`, weil die Verordnung für diesen Mandanten nicht existiert.

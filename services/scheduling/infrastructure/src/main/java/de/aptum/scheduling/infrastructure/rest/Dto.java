@@ -1,5 +1,7 @@
 package de.aptum.scheduling.infrastructure.rest;
 
+import de.aptum.scheduling.application.anwendungsfall.WocheAnzeigen;
+import de.aptum.scheduling.domain.kalender.Wochenansicht;
 import de.aptum.scheduling.domain.model.Buchungsentscheidung;
 import de.aptum.scheduling.domain.model.Pruefbericht;
 import de.aptum.scheduling.domain.model.Pruefergebnis;
@@ -98,4 +100,42 @@ final class Dto {
     }
 
     record Fehler(String fehler) {}
+
+    record Belegung(String art, ZonedDateTime von, ZonedDateTime bis, String text, String raum) {
+        static Belegung von(de.aptum.scheduling.domain.kalender.Belegung b) {
+            return new Belegung(
+                    b.art().name(),
+                    b.zeitraum().von().withZoneSameInstant(Zeitraum.PRAXIS),
+                    b.zeitraum().bis().withZoneSameInstant(Zeitraum.PRAXIS),
+                    b.text(),
+                    b.raum().orElse(null));
+        }
+    }
+
+    record Spalte(String therapeut, List<Belegung> belegungen) {
+        static Spalte von(Wochenansicht.Spalte s) {
+            return new Spalte(
+                    s.therapeut().kuerzel(),
+                    s.belegungen().stream().map(Belegung::von).toList());
+        }
+    }
+
+    /** Rüstzeit und Nachruhe in Minuten, damit das Gitter seine Legende beschriften kann. */
+    record Woche(
+            LocalDate montag,
+            LocalTime tagesbeginn,
+            LocalTime tagesende,
+            int ruestzeitMinuten,
+            int nachruheMinuten,
+            List<Spalte> spalten) {
+        static Woche von(WocheAnzeigen.Woche w) {
+            return new Woche(
+                    w.montag(),
+                    w.tagesbeginn(),
+                    w.tagesende(),
+                    (int) w.einstellung().ruestzeit().toMinutes(),
+                    (int) w.einstellung().nachruhe().toMinutes(),
+                    w.spalten().stream().map(Spalte::von).toList());
+        }
+    }
 }

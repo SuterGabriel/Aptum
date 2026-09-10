@@ -28,8 +28,8 @@
           "required" : true
         },
         "responses" : {
-          "400" : {
-            "description" : "Bad Request",
+          "404" : {
+            "description" : "Not Found",
             "content" : {
               "*/*" : {
                 "schema" : {
@@ -38,8 +38,8 @@
               }
             }
           },
-          "404" : {
-            "description" : "Not Found",
+          "400" : {
+            "description" : "Bad Request",
             "content" : {
               "*/*" : {
                 "schema" : {
@@ -83,8 +83,8 @@
           "required" : true
         },
         "responses" : {
-          "400" : {
-            "description" : "Bad Request",
+          "404" : {
+            "description" : "Not Found",
             "content" : {
               "*/*" : {
                 "schema" : {
@@ -93,8 +93,8 @@
               }
             }
           },
-          "404" : {
-            "description" : "Not Found",
+          "400" : {
+            "description" : "Bad Request",
             "content" : {
               "*/*" : {
                 "schema" : {
@@ -138,8 +138,8 @@
           "required" : true
         },
         "responses" : {
-          "400" : {
-            "description" : "Bad Request",
+          "404" : {
+            "description" : "Not Found",
             "content" : {
               "*/*" : {
                 "schema" : {
@@ -148,8 +148,8 @@
               }
             }
           },
-          "404" : {
-            "description" : "Not Found",
+          "400" : {
+            "description" : "Bad Request",
             "content" : {
               "*/*" : {
                 "schema" : {
@@ -164,6 +164,59 @@
               "*/*" : {
                 "schema" : {
                   "$ref" : "#/components/schemas/Suchantwort"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/kalender/woche" : {
+      "get" : {
+        "tags" : [ "kalender-controller" ],
+        "operationId" : "woche",
+        "parameters" : [ {
+          "name" : "tag",
+          "in" : "query",
+          "required" : false,
+          "schema" : {
+            "type" : "string",
+            "format" : "date"
+          }
+        }, {
+          "name" : "X-Mandant",
+          "in" : "header",
+          "description" : "Die Praxis, für die die Anfrage gilt. Platzhalter für Authentifizierung: In einer echten Anwendung käme der Mandant aus einem signierten Token.",
+          "required" : true,
+          "example" : "praxis-a"
+        } ],
+        "responses" : {
+          "404" : {
+            "description" : "Not Found",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Fehler"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Fehler"
+                }
+              }
+            }
+          },
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Woche"
                 }
               }
             }
@@ -365,6 +418,71 @@
             "type" : "array",
             "items" : {
               "$ref" : "#/components/schemas/Regel"
+            }
+          }
+        }
+      },
+      "Belegung" : {
+        "type" : "object",
+        "properties" : {
+          "art" : {
+            "type" : "string"
+          },
+          "von" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "bis" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "text" : {
+            "type" : "string"
+          },
+          "raum" : {
+            "type" : "string"
+          }
+        }
+      },
+      "Spalte" : {
+        "type" : "object",
+        "properties" : {
+          "therapeut" : {
+            "type" : "string"
+          },
+          "belegungen" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Belegung"
+            }
+          }
+        }
+      },
+      "Woche" : {
+        "type" : "object",
+        "properties" : {
+          "montag" : {
+            "type" : "string",
+            "format" : "date"
+          },
+          "tagesbeginn" : {
+            "type" : "string"
+          },
+          "tagesende" : {
+            "type" : "string"
+          },
+          "ruestzeitMinuten" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "nachruheMinuten" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "spalten" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Spalte"
             }
           }
         }

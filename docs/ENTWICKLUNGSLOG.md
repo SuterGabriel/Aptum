@@ -1195,6 +1195,45 @@ weglässt.
 
 ---
 
+## 2026-09-10 — Stufe 2, Schritt 1: die Woche aus dem Backend
+
+**Was delegiert wurde:** `GET /kalender/woche` — die Daten fürs Gitter, bevor
+es das Gitter gibt. 178 Tests grün, davon 7 neu.
+
+**Was gut lief.** Die Wochenansicht rechnet nichts Neues. Was ein Termin für
+die Therapeutin belegt und was er für den Raum belegt, sagt `Termin` seit
+der Slot-Suche; die Ansicht macht daraus Blöcke — Rüstzeit, Behandlung,
+Rüstzeit, und die Nachruhe, wenn das Heilmittel eine vorsieht. Dadurch kann
+das Gitter Rüstzeit und Nachruhe gar nicht anders zeichnen, als die Suche
+sie rechnet. Der Test dafür vergleicht die Blockgrenzen mit
+`belegtTherapeutin` und `belegtRaum`, nicht mit eigenen Zahlen. Frei wird
+nicht geliefert: Frei ist, was übrig bleibt.
+
+**Was nicht funktionierte.** Der neue Endpunkt antwortete 400 auf
+`?tag=2026-03-04`, und das OpenAPI-Dokument nannte den Parameter `arg0`.
+Beides derselbe Grund: Der Compiler behält Parameternamen nur mit
+`-parameters`, der Spring-Boot-Parent setzt das still, das BOM aus ADR-008
+nicht. Ein Flag im Compiler-Plugin, mit Begründung als Kommentar — nicht
+`@RequestParam("tag")` an jeder Stelle, an der es sonst wieder passiert.
+Dann die zweite Runde: Nach der Pom-Änderung hatte Maven nicht neu
+übersetzt, das Flag war da und die Klasse unverändert. `javap` zeigte
+keine `MethodParameters`; erst `clean` half.
+
+Drittens ein falscher Test: „genau ein belegter Block" — aber die anderen
+Tests der Klasse buchen in derselben Woche für denselben Mandanten, und die
+Klasse räumt nicht auf. Drei Blöcke, rot. Der Test sucht jetzt den Block,
+der zu seiner Buchung gehört, und prüft die Rüstzeiten direkt daneben. Das
+ist die präzisere Behauptung; die Zählung war nur die bequemere.
+
+**Was die Testsuite abgefangen hat.** Das Drift-Gate hat seine Arbeit
+getan: `OpenApiTest` rot, weil ein Pfad dazukam; nach dem Aktualisieren
+`api:types` im Frontend, drei neue Typen, elf Tests unverändert grün.
+
+**Zeitschätzung:** delegiert etwa eine Stunde, die Hälfte davon für
+`arg0`. Von Hand ein halber Tag.
+
+---
+
 ## Vorlage für weitere Einträge
 
 ```

@@ -3,6 +3,7 @@ package de.aptum.scheduling.infrastructure;
 import de.aptum.scheduling.application.anwendungsfall.TerminBuchen;
 import de.aptum.scheduling.application.anwendungsfall.TerminSuchen;
 import de.aptum.scheduling.application.anwendungsfall.VerordnungAnlegen;
+import de.aptum.scheduling.application.anwendungsfall.WocheAnzeigen;
 import de.aptum.scheduling.application.stammdaten.Stammdaten;
 import de.aptum.scheduling.domain.port.TerminRepository;
 import de.aptum.scheduling.domain.port.VerordnungRepository;
@@ -39,6 +40,11 @@ class AnwendungsfallKonfiguration {
     TerminSuchen terminSuchen(
             VerordnungRepository verordnungen, TerminRepository termine, Stammdaten stammdaten, SlotSuche suche) {
         return new TerminSuchen(verordnungen, termine, stammdaten, suche);
+    }
+
+    @Bean
+    WocheAnzeigen wocheAnzeigen(TerminRepository termine, Stammdaten stammdaten) {
+        return new WocheAnzeigen(termine, stammdaten);
     }
 
     @Bean

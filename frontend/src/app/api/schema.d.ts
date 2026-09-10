@@ -52,6 +52,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/kalender/woche": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["woche"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -129,6 +145,30 @@ export interface components {
             therapeut?: string;
             raum?: string;
             warnungen?: components["schemas"]["Regel"][];
+        };
+        Belegung: {
+            art?: string;
+            /** Format: date-time */
+            von?: string;
+            /** Format: date-time */
+            bis?: string;
+            text?: string;
+            raum?: string;
+        };
+        Spalte: {
+            therapeut?: string;
+            belegungen?: components["schemas"]["Belegung"][];
+        };
+        Woche: {
+            /** Format: date */
+            montag?: string;
+            tagesbeginn?: string;
+            tagesende?: string;
+            /** Format: int32 */
+            ruestzeitMinuten?: number;
+            /** Format: int32 */
+            nachruheMinuten?: number;
+            spalten?: components["schemas"]["Spalte"][];
         };
     };
     responses: never;
@@ -261,6 +301,52 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["Suchantwort"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Fehler"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Fehler"];
+                };
+            };
+        };
+    };
+    woche: {
+        parameters: {
+            query?: {
+                tag?: string;
+            };
+            header: {
+                /**
+                 * @description Die Praxis, für die die Anfrage gilt. Platzhalter für Authentifizierung: In einer echten Anwendung käme der Mandant aus einem signierten Token.
+                 * @example praxis-a
+                 */
+                "X-Mandant": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Woche"];
                 };
             };
             /** @description Bad Request */

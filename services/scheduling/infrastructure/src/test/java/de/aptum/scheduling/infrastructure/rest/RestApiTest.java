@@ -44,6 +44,63 @@ class RestApiTest extends MitDatenbank {
         return http.postForEntity(pfad, new HttpEntity<>(koerper, kopf), antwort);
     }
 
+    private <T> ResponseEntity<T> lese(String mandant, String pfad, Class<T> antwort) {
+        HttpHeaders kopf = new HttpHeaders();
+        kopf.set("X-Mandant", mandant);
+        return http.exchange(pfad, org.springframework.http.HttpMethod.GET, new HttpEntity<>(kopf), antwort);
+    }
+
+    @Test
+    @DisplayName("Die Woche zeigt den gebuchten Termin mit Rüstzeit - und dem anderen Mandanten nichts")
+    void dieWocheNachDerBuchung() {
+        UUID verordnung = verordnungAnlegen("praxis-a");
+        Dto.Terminvorschlag slot = als("praxis-a", "/termine/suche", dieseWoche(verordnung), Dto.Suchantwort.class)
+                .getBody()
+                .vorschlaege()
+                .get(0);
+        als(
+                "praxis-a",
+                "/termine",
+                new Dto.Buchung(verordnung, "KG_EINZEL", slot.therapeut(), slot.raum(), slot.beginn(), null),
+                Dto.Buchungsantwort.class);
+
+        ResponseEntity<Dto.Woche> woche =
+                lese("praxis-a", "/kalender/woche?tag=" + MONTAG.plusDays(2), Dto.Woche.class);
+        assertEquals(HttpStatus.OK, woche.getStatusCode());
+        assertEquals(MONTAG, woche.getBody().montag(), "ein Mittwoch ergibt die Woche seines Montags");
+        assertEquals(2, woche.getBody().spalten().size());
+
+        Dto.Spalte spalte = woche.getBody().spalten().stream()
+                .filter(s -> s.therapeut().equals(slot.therapeut()))
+                .findFirst()
+                .orElseThrow();
+        // Andere Tests buchen in derselben Woche; gezählt wird deshalb nicht,
+        // sondern der Block gesucht, der zu dieser Buchung gehört.
+        Dto.Belegung belegt = spalte.belegungen().stream()
+                .filter(b -> b.art().equals("BELEGT"))
+                .filter(b -> b.von().toInstant().equals(slot.beginn().toInstant()))
+                .findFirst()
+                .orElseThrow(() -> new AssertionError("gebuchter Termin fehlt im Gitter"));
+        assertEquals(slot.raum(), belegt.raum());
+        assertTrue(
+                spalte.belegungen().stream()
+                        .anyMatch(b -> b.art().equals("RUESTZEIT")
+                                && b.bis().toInstant().equals(belegt.von().toInstant())),
+                "Vorbereitung endet, wo die Behandlung beginnt");
+        assertTrue(
+                spalte.belegungen().stream()
+                        .anyMatch(b -> b.art().equals("RUESTZEIT")
+                                && b.von().toInstant().equals(belegt.bis().toInstant())),
+                "Nachbereitung beginnt, wo die Behandlung endet");
+
+        Dto.Woche fremd = lese("praxis-b", "/kalender/woche?tag=" + MONTAG, Dto.Woche.class)
+                .getBody();
+        assertTrue(
+                fremd.spalten().stream().flatMap(s -> s.belegungen().stream()).noneMatch(b -> b.art()
+                        .equals("BELEGT")),
+                "Mandant B sieht keinen Termin von A");
+    }
+
     private UUID verordnungAnlegen(String mandant) {
         ResponseEntity<Dto.VerordnungAngelegt> antwort = als(
                 mandant,
