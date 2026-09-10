@@ -1,8 +1,14 @@
-# therapie-scheduling
+# Aptum
 
 Terminplanung und Verordnungsverwaltung für Physio- und Ergotherapiepraxen.
 
-**Stand: Stufe 0.** Das Fundament steht, Produktivcode gibt es noch nicht. Was
+*Aptum*, lateinisch für „passend". Die Anwendung beantwortet eine einzige
+Frage: Passt dieser Termin zu Therapeut, Raum, Patient **und** Verordnung? Die
+vier Dimensionen unten sind der Grund für den Namen.
+
+**Stand: Stufe 0 abgeschlossen.** Der Domänenkern ist noch nicht geschrieben.
+Vorgezogen aus Stufe 2 sind die Gestaltungstoken und die Kontrastprüfung
+(ADR-006), weil der Auftrag an die Gestaltung eine Grundlage brauchte. Was
 hier behauptet wird, ist an der jeweiligen Stelle im Repo nachprüfbar oder als
 offen gekennzeichnet.
 
@@ -63,13 +69,21 @@ KI-Einsatz protokolliert wird.
 Fehlt ein Beleg, wird die CI rot. Entweder der Beleg wird nachgeliefert, oder
 die Behauptung gestrichen.
 
+Daneben stehen drei weitere Gates: die Kontrastprüfung aus den Farbtoken, ein
+Verweis-Check über die Markdown-Querverweise und eine Prosa-Prüfung gegen
+ausgeschriebene Umlaute. Alle vier laufen auch vor dem Commit auf der eigenen
+Maschine. Wie sie zugeschnitten sind und was sie *nicht* abfangen, steht in
+[docs/PIPELINE.md](docs/PIPELINE.md).
+
 ## Wegweiser
 
 | Datei | Inhalt |
 |---|---|
 | [docs/ANFORDERUNGEN.md](docs/ANFORDERUNGEN.md) | Die Anforderungen wörtlich, mit Status und Beleg. Auch die Punkte, die nicht belegbar sind. |
+| [docs/PRODUKT.md](docs/PRODUKT.md) | Für wen gebaut wird, was zuerst kommt, was bewusst nicht gebaut wird |
 | [DECISIONS.md](DECISIONS.md) | Übersicht der Architekturentscheidungen |
 | [docs/adr/](docs/adr/) | Die Entscheidungen im Volltext, mit Alternativen und dem Abschnitt "wann wir anders entscheiden würden" |
+| [docs/PIPELINE.md](docs/PIPELINE.md) | Die Gates zwischen einer Änderung und `main` — und was sie nicht abfangen |
 | [docs/ENTWICKLUNGSLOG.md](docs/ENTWICKLUNGSLOG.md) | Beobachtungen zum KI-Einsatz, ehrlich auch da wo es nicht gut aussieht |
 | [docs/DATENSCHUTZ.md](docs/DATENSCHUTZ.md) | Regeln für Testdaten und was in einer echten Anwendung zu klären wäre |
 | [CLAUDE.md](CLAUDE.md) | Die Projektregeln auf einer Bildschirmseite |

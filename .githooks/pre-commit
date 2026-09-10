@@ -1,0 +1,80 @@
+#!/usr/bin/env bash
+# Stage 1: die Prüfung auf dieser Maschine, vor dem Commit.
+#
+# Vier Gates, alle ohne Abhängigkeiten, zusammen unter zwei Sekunden. Der Hook
+# ist mit --no-verify umgehbar, und das ist Absicht: Ein Hook, der eine halbe
+# Minute braucht, wird umgangen, und ein Hook, der routinemäßig umgangen wird,
+# erzwingt nichts. Dieselben vier Gates laufen in der CI noch einmal, und dort
+# sind sie nicht umgehbar.
+#
+# Der Zuschnitt ist bewusst ungleich:
+#
+#   Prosa-Check    nur auf die vorgemerkten Dateien. Schnell, und er meldet
+#                  nichts über Dateien, die man gar nicht angefasst hat.
+#   Verweis-Check  über den ganzen Baum. Ein Verweis bricht durch eine
+#                  Umbenennung, und die kaputte Stelle steht dann in einer
+#                  Datei, die man nicht bearbeitet hat.
+#   Beleg-Check    über den ganzen Baum, weil er von Natur aus so arbeitet.
+#   Regel-Check    über den ganzen Baum. Der Katalog in regeln.md und der Code,
+#                  der ihn zitiert, liegen selten im selben Commit.
+#   Kontrast       nur wenn die Token-Datei vorgemerkt ist.
+#
+# Einrichten: bash scripts/hooks-installieren.sh
+
+set -uo pipefail
+cd "$(git rev-parse --show-toplevel)"
+
+fehler=0
+
+# Nur vorgemerkte Dateien, die es nach dem Commit noch gibt.
+vorgemerkt=$(git diff --cached --name-only --diff-filter=ACM)
+[ -n "$vorgemerkt" ] || exit 0
+
+lauf() {
+  local name="$1"; shift
+  local ausgabe
+  if ausgabe=$("$@" 2>&1); then
+    printf '  ok    %s\n' "$name"
+  else
+    printf '  ROT   %s\n' "$name"
+    printf '%s\n' "$ausgabe" | sed 's/^/        /'
+    fehler=$((fehler + 1))
+  fi
+}
+
+echo "Aptum, Prüfung vor dem Commit"
+echo "============================="
+
+# Prosa nur auf vorgemerkten Text-Dateien.
+prosa_dateien=$(printf '%s\n' "$vorgemerkt" \
+  | grep -E '\.(md|sh|mjs|js|cjs|css|yml|yaml|java|ts|html|xml|py)$|(^|/)\.gitignore$|(^|/)\.gitattributes$' \
+  || true)
+if [ -n "$prosa_dateien" ]; then
+  # shellcheck disable=SC2086
+  lauf "Prosa" node scripts/prosa-check.mjs $prosa_dateien
+fi
+
+lauf "Verweise" node scripts/link-check.mjs
+lauf "Belege" bash scripts/beleg-check.sh
+lauf "Regeln" node scripts/regel-check.mjs
+
+if printf '%s\n' "$vorgemerkt" | grep -q 'frontend/src/styles/tokens.css'; then
+  lauf "Kontrast" node scripts/kontrast-check.mjs
+fi
+
+if [ "$fehler" -gt 0 ]; then
+  cat <<'HINWEIS'
+
+Der Commit ist gestoppt. Diese Gates prüfen Zusagen, die dieses Repo an
+mehreren Stellen über sich selbst macht — sie sollen kaputtgehen, wenn die
+Zusage nicht mehr stimmt.
+
+Entweder die Stelle richtigstellen — oder die Behauptung streichen.
+
+Wenn der Commit trotzdem sein muss: git commit --no-verify. Die CI prüft
+dieselben Gates noch einmal, dort ist es keine Option.
+HINWEIS
+  exit 1
+fi
+
+echo "Alle Gates grün."
