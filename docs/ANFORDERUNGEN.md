@@ -26,7 +26,7 @@ Projekt-ID 3038770 · Projekt-Nr. a1WSZ0000088BoH2AU · Start 09.09.2026 ·
 |---|---|---|---|
 | S1 | Sehr gute Kenntnisse in dem Frontend-Framework Angular | offen | `frontend/` |
 | S2 | Sehr gutes Verständnis von rxjs-Bibliothek | offen | `frontend/` — kanonischer Suchflow, kommentiert |
-| S3 | Erfahrung mit Spring Boot, REST-APIs sowie Microservices-Architekturen | in Arbeit | Spring Boot 3.5 in `services/scheduling/infrastructure/`, drei Module nach ADR-001; REST-Endpunkte folgen |
+| S3 | Erfahrung mit Spring Boot, REST-APIs sowie Microservices-Architekturen | in Arbeit | Spring Boot 3.5, JPA-Adapter hinter Ports der Domäne in `services/scheduling/infrastructure/src/main/java/de/aptum/scheduling/infrastructure/persistenz/`, Flyway, Testcontainers; REST-Endpunkte folgen |
 | S4 | Erfahrung in Java (Java 11 oder höher) | in Arbeit | Java 21, Maven nach ADR-008, erste Regelklasse mit 12 Tests: `services/scheduling/domain/` |
 | S5 | Erfahrung in der Weiterentwicklung von komplexen Anwendungen mit sehr viel Business-Logik | teilweise belegbar | `services/scheduling/domain/` — benannte Regel mit Fundstelle und parametrisierten Grenzfalltests. Siehe Hinweis unten. |
 

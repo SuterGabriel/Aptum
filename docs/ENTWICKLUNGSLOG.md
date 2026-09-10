@@ -933,6 +933,49 @@ Datenbank zeigt und die Ursache im Transaktionsmanager lag.
 
 ---
 
+## 2026-09-10 — Stufe 1, die Adapter
+
+**Was delegiert wurde:** Schritt C — Ports im Domänenkern, JPA-Entities und
+Adapter im Infrastruktur-Modul, eine zweite Migration, die Stammdaten der
+Testpraxis, und vier Tests, die hin und zurück durch die Tabellen gehen. 162
+Tests grün, davon 4 neu.
+
+**Zwei Entscheidungen, benannt statt versteckt.** Die Mandanten-ID füllt die
+Datenbank selbst: `default current_setting('app.mandant_id', true)` an jeder
+Spalte. Kein Adapter, keine Entity kennt sie — die Persistenz weiß es, die
+Domäne nicht, so wörtlich wie ADR-002 es formuliert. Und Personen, Räume und
+Praxiseinstellung bleiben Stammdaten im Code, als Testpraxis „T. Alpha" und
+„T. Beta". Eine Stammdatenpflege wäre ein Formular über einer Tabelle und
+belegte nichts, was die Terminsuche nicht schon belegt.
+
+**Was die Testsuite abgefangen hat.** `speichere` rief `persist` auf, bevor
+die Felder gefüllt waren, und der Flush im Verlauf schrieb die leere Zeile.
+Hibernate meldete das Pflichtfeld. Erst füllen, dann persistieren — der
+Kommentar steht jetzt an der Stelle, damit der nächste, der die Reihenfolge
+„aufräumt", weiß, warum sie so ist.
+
+**ADR-001 hat eine Behauptung weniger.** *JPA-Entities werden nie als
+API-DTO durchgereicht* stand seit Stufe 0 in der ADR und im Skill. Jetzt
+prüft es ArchUnit: Nichts außerhalb des Persistenz-Pakets darf eine Klasse
+mit `@Entity` kennen. Die Entities sind zudem paketprivat — der Compiler
+verbietet den Zugriff ohnehin. Die Regel greift erst, wenn jemand eine Entity
+öffentlich macht, und genau das ist der Moment, in dem sie gebraucht wird.
+
+**Was die Gegenprobe an mir gelehrt hat — fünfter Fall heute.** Die erste
+Sonde hing an einer Hilfsklasse im Persistenz-Paket, nicht an der Entity
+selbst; die Regel blieb zu Recht still, und ich hätte das beinahe als
+Beweis gelesen. Die zweite Sonde machte die Entity öffentlich und gab sie aus
+einer Klasse außerhalb zurück — zwei Verletzungen, mit dem ADR-Text im
+Fehler. Eine Sonde prüft nur das, was sie tatsächlich tut, nicht das, was
+sie prüfen soll.
+
+**Zeitschätzung:** delegiert gut eine Stunde, von Hand geschätzt anderthalb
+Tage — die Übersetzung von Hand kostet Zeilen, die ein Werkzeug spart, und
+bringt, dass eine Spaltenumbenennung hier auffällt und nicht in einem
+Controller.
+
+---
+
 ## Vorlage für weitere Einträge
 
 ```

@@ -42,6 +42,17 @@ class ModulgrenzenTest {
             .because("ADR-001: Die Anwendungsschicht kennt ihre Ports, nicht deren Implementierung.");
 
     @ArchTest
+    static final ArchRule keineEntityVerlaesstDenAdapter = noClasses()
+            .that()
+            .resideOutsideOfPackage("..persistenz..")
+            .should()
+            .dependOnClassesThat()
+            .areAnnotatedWith(jakarta.persistence.Entity.class)
+            .because("ADR-001: JPA-Entities werden nie als API-DTO durchgereicht. "
+                    + "Eine Spaltenumbenennung darf kein API-Bruch sein, und die Entity kennt Spalten, "
+                    + "die niemand nach außen sehen soll.");
+
+    @ArchTest
     static final ArchRule anwendungKenntKeinFramework = noClasses()
             .that()
             .resideInAPackage("..application..")

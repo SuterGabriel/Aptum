@@ -144,6 +144,12 @@ echo "ADR-002 — Mandantentrennung ist geprüft, nicht behauptet"
 pruefe "Migration mit Row Level Security" enthaelt services/scheduling/infrastructure/src/main/resources/db/migration/V1__mandantentrennung.sql "row level security"
 pruefe "Isolationstest existiert" datei services/scheduling/infrastructure/src/test/java/de/aptum/scheduling/infrastructure/mandant/MandantIsolationTest.java
 pruefe "Mandant wird an genau einer Stelle gesetzt" datei services/scheduling/infrastructure/src/main/java/de/aptum/scheduling/infrastructure/mandant/MandantTransactionManager.java
+
+echo
+echo "ADR-001 — Ports innen, Adapter außen"
+pruefe "Repository-Port liegt im Domain-Modul" datei services/scheduling/domain/src/main/java/de/aptum/scheduling/domain/port/VerordnungRepository.java
+pruefe "JPA-Adapter liegt in infrastructure" datei services/scheduling/infrastructure/src/main/java/de/aptum/scheduling/infrastructure/persistenz/VerordnungRepositoryAdapter.java
+pruefe "ArchUnit: keine Entity verlässt den Adapter" enthaelt services/scheduling/infrastructure/src/test/java/de/aptum/scheduling/infrastructure/ModulgrenzenTest.java "keineEntityVerlaesstDenAdapter"
 pruefe "stumme Lücke 1 ist Fixture" datei scripts/fixtures/regel-check/domain/NachbarBorgt.java
 pruefe "stumme Lücke 2 ist Fixture" datei scripts/fixtures/regel-check/domain/KlassenkommentarBorgt.java
 pruefe "Wertabgleich ist Fixture" datei scripts/fixtures/regel-check/domain/FalscherWert.java
