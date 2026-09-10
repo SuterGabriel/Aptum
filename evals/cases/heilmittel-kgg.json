@@ -1,0 +1,17 @@
+{
+  "id": "heilmittel-kgg",
+  "eingabe": "KGG 10x, 2x wöchentlich, WS, 27.02.2026",
+  "erwartet": {
+    "heilmittel": "KG_GERAET",
+    "diagnosegruppe": "WS",
+    "verordnete_einheiten": 10,
+    "frequenz": {
+      "min_pro_woche": 2,
+      "max_pro_woche": 2
+    },
+    "ausstellungsdatum": "2026-02-27",
+    "dringlicher_bedarf": null,
+    "hausbesuch": null
+  },
+  "warum": "KGG ist Gerätetraining, nicht Gruppe. Ein Buchstabe entscheidet über den Raum."
+}

@@ -1,0 +1,17 @@
+{
+  "id": "frequenz-spanne-01",
+  "eingabe": "KG 6x, 1-3x wöchentlich, WS, 27.02.2026",
+  "erwartet": {
+    "heilmittel": "KG_EINZEL",
+    "diagnosegruppe": "WS",
+    "verordnete_einheiten": 6,
+    "frequenz": {
+      "min_pro_woche": 1,
+      "max_pro_woche": 3
+    },
+    "ausstellungsdatum": "2026-02-27",
+    "dringlicher_bedarf": null,
+    "hausbesuch": null
+  },
+  "warum": "Frequenzspanne statt fester Zahl - häufiger Fall, leicht zu verlieren."
+}

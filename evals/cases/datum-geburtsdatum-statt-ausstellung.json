@@ -1,0 +1,17 @@
+{
+  "id": "datum-geburtsdatum-statt-ausstellung",
+  "eingabe": "Patient: Testfall Beta, geb. 02.02.1901. KG 6x, 2x/Woche, WS.",
+  "erwartet": {
+    "heilmittel": "KG_EINZEL",
+    "diagnosegruppe": "WS",
+    "verordnete_einheiten": 6,
+    "frequenz": {
+      "min_pro_woche": 2,
+      "max_pro_woche": 2
+    },
+    "ausstellungsdatum": null,
+    "dringlicher_bedarf": null,
+    "hausbesuch": null
+  },
+  "warum": "Nur ein Geburtsdatum im Text, und das ist pseudonymisiert. Ausstellungsdatum nicht extrahierbar."
+}

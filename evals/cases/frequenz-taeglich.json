@@ -1,0 +1,17 @@
+{
+  "id": "frequenz-taeglich",
+  "eingabe": "KG 10x, täglich, WS, 27.02.2026",
+  "erwartet": {
+    "heilmittel": "KG_EINZEL",
+    "diagnosegruppe": "WS",
+    "verordnete_einheiten": 10,
+    "frequenz": {
+      "min_pro_woche": 5,
+      "max_pro_woche": 7
+    },
+    "ausstellungsdatum": "2026-02-27",
+    "dringlicher_bedarf": null,
+    "hausbesuch": null
+  },
+  "warum": "Täglich ist 5 bis 7 laut Prompt, mit Hinweis. Ungewöhnlich, aber verordnet."
+}

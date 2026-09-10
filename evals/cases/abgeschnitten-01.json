@@ -1,0 +1,17 @@
+{
+  "id": "abgeschnitten-01",
+  "eingabe": "KG 6x, 2x/Woche, W",
+  "erwartet": {
+    "heilmittel": "KG_EINZEL",
+    "diagnosegruppe": null,
+    "verordnete_einheiten": 6,
+    "frequenz": {
+      "min_pro_woche": 2,
+      "max_pro_woche": 2
+    },
+    "ausstellungsdatum": null,
+    "dringlicher_bedarf": null,
+    "hausbesuch": null
+  },
+  "warum": "Am Ende abgeschnitten: Diagnosegruppe und Datum fehlen, nicht erraten."
+}

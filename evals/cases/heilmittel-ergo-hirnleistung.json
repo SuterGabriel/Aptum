@@ -1,0 +1,17 @@
+{
+  "id": "heilmittel-ergo-hirnleistung",
+  "eingabe": "Hirnleistungstraining 10 Einheiten, 2x wöchentlich, PN, 27.02.2026",
+  "erwartet": {
+    "heilmittel": "ERGO_HIRNLEISTUNGSTRAINING",
+    "diagnosegruppe": "PN",
+    "verordnete_einheiten": 10,
+    "frequenz": {
+      "min_pro_woche": 2,
+      "max_pro_woche": 2
+    },
+    "ausstellungsdatum": "2026-02-27",
+    "dringlicher_bedarf": null,
+    "hausbesuch": null
+  },
+  "warum": "Ergo ohne das Wort Ergo davor."
+}

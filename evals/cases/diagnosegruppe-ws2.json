@@ -1,0 +1,17 @@
+{
+  "id": "diagnosegruppe-ws2",
+  "eingabe": "KG 6x, 2x/Woche, WS2, 27.02.2026",
+  "erwartet": {
+    "heilmittel": "KG_EINZEL",
+    "diagnosegruppe": "WS",
+    "verordnete_einheiten": 6,
+    "frequenz": {
+      "min_pro_woche": 2,
+      "max_pro_woche": 2
+    },
+    "ausstellungsdatum": "2026-02-27",
+    "dringlicher_bedarf": null,
+    "hausbesuch": null
+  },
+  "warum": "WS2 ist WS; die Ziffer ist aus älteren Katalogen, keine andere Gruppe."
+}

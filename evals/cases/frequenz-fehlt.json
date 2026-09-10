@@ -1,0 +1,14 @@
+{
+  "id": "frequenz-fehlt",
+  "eingabe": "KG 6x, WS, 27.02.2026",
+  "erwartet": {
+    "heilmittel": "KG_EINZEL",
+    "diagnosegruppe": "WS",
+    "verordnete_einheiten": 6,
+    "frequenz": null,
+    "ausstellungsdatum": "2026-02-27",
+    "dringlicher_bedarf": null,
+    "hausbesuch": null
+  },
+  "warum": "Keine Frequenz. Nicht die übliche 2 annehmen."
+}

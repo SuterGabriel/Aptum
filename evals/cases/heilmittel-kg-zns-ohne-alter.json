@@ -1,0 +1,17 @@
+{
+  "id": "heilmittel-kg-zns-ohne-alter",
+  "eingabe": "KG-ZNS 20x, 2x/Woche, ZN, 27.02.2026",
+  "erwartet": {
+    "heilmittel": null,
+    "diagnosegruppe": "ZN",
+    "verordnete_einheiten": 20,
+    "frequenz": {
+      "min_pro_woche": 2,
+      "max_pro_woche": 2
+    },
+    "ausstellungsdatum": "2026-02-27",
+    "dringlicher_bedarf": null,
+    "hausbesuch": null
+  },
+  "warum": "ZNS ohne Altersangabe: nicht extrahierbar, weil zwei Heilmittel in Frage kommen."
+}

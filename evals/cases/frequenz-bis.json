@@ -1,0 +1,17 @@
+{
+  "id": "frequenz-bis",
+  "eingabe": "KG 6x, bis zu 3x pro Woche, WS, 27.02.2026",
+  "erwartet": {
+    "heilmittel": "KG_EINZEL",
+    "diagnosegruppe": "WS",
+    "verordnete_einheiten": 6,
+    "frequenz": {
+      "min_pro_woche": 1,
+      "max_pro_woche": 3
+    },
+    "ausstellungsdatum": "2026-02-27",
+    "dringlicher_bedarf": null,
+    "hausbesuch": null
+  },
+  "warum": "Nur eine Obergrenze genannt. Untergrenze ist dann 1."
+}

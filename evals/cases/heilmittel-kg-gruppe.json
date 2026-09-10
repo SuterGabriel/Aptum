@@ -1,0 +1,17 @@
+{
+  "id": "heilmittel-kg-gruppe",
+  "eingabe": "Krankengymnastik in der Gruppe, 10 Einheiten, 1x/Woche, WS, 27.02.2026",
+  "erwartet": {
+    "heilmittel": "KG_GRUPPE",
+    "diagnosegruppe": "WS",
+    "verordnete_einheiten": 10,
+    "frequenz": {
+      "min_pro_woche": 1,
+      "max_pro_woche": 1
+    },
+    "ausstellungsdatum": "2026-02-27",
+    "dringlicher_bedarf": null,
+    "hausbesuch": null
+  },
+  "warum": "Gruppe ausgeschrieben."
+}

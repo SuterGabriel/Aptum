@@ -82,7 +82,7 @@ Verlängerung möglich · 80–100 % · AI-native Healthcare SaaS
 | # | Anforderung (wörtlich) | Status | Beleg im Repo |
 |---|---|---|---|
 | C8 | Praxiserfahrung mit KI-Coding-Agenten sowie Aufbau von Agenten, Skills und Workflows | belegt | `.claude/skills/`, `.claude/commands/`, `.claude/agents/`, `.claude/hooks/prosa-nach-schreiben.mjs` als PostToolUse-Hook in `.claude/settings.json`; die Hooks haben im Log dokumentiert mehrfach den Agenten selbst korrigiert |
-| C9 | Erfahrung mit AI-Pipelines, Harnesses und Context Engineering | offen | `docs/AI-PIPELINE.md` |
+| C9 | Erfahrung mit AI-Pipelines, Harnesses und Context Engineering | in Arbeit | Pipeline in `services/ai-assist/src/ai_assist/erfassung.py`; Eval-Suite mit 55 begründeten Fällen in `evals/cases/`, feldweise Messung und Regressionsvergleich in `evals/run.py`, CI-Job `evals`; Beschreibung in `docs/AI-PIPELINE.md` |
 | C10 | Kenntnisse in LLM-Tooling (Azure OpenAI, Anthropic SDK, MCP) | in Arbeit | Provider-Interface mit Anthropic SDK (Tool-Use als Structured Output) und OpenAI-kompatiblem Provider für Azure in `services/ai-assist/src/ai_assist/provider/`; MCP-Server folgt |
 | C11 | Verständnis von Product-Management-Prozessen | belegt | `docs/PRODUKT.md` |
 

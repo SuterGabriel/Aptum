@@ -1,0 +1,14 @@
+{
+  "id": "frequenz-alle-zwei-wochen",
+  "eingabe": "KG 6x, alle 14 Tage, WS, 27.02.2026",
+  "erwartet": {
+    "heilmittel": "KG_EINZEL",
+    "diagnosegruppe": "WS",
+    "verordnete_einheiten": 6,
+    "frequenz": null,
+    "ausstellungsdatum": "2026-02-27",
+    "dringlicher_bedarf": null,
+    "hausbesuch": null
+  },
+  "warum": "Unter einmal pro Woche passt nicht ins Schema (min 1). Nicht extrahierbar, mit Hinweis."
+}

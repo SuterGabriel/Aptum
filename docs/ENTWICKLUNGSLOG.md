@@ -1435,6 +1435,50 @@ Pseudonymisierung wäre „später“.
 
 ---
 
+## 2026-09-11 — Stufe 3, Schritt 2: die Evals
+
+**Was delegiert wurde:** Die Eval-Suite nach dem Skill `llm-evals`: 55 Fälle
+mit `warum`, ein Runner, der feldweise misst und Regressionen einzeln nennt,
+ein Test für den Runner, und der CI-Job, der ohne Schlüssel sichtbar
+überspringt. 20 Python-Tests.
+
+**Die Fälle.** Absichtlich unausgewogen: vier Normalfälle, der Rest
+Grenzfälle — KG ohne Zusatz, KGG gegen KG-Gruppe, MLD ohne Umfang, ZNS
+ohne Altersangabe, WS2, ein ICD-Code statt einer Diagnosegruppe, Menge und
+Frequenz vertauscht, „mindestens 2x“ ohne Obergrenze, alle 14 Tage, der
+31. Februar, ein leeres Ankreuzfeld. Bei vielen davon ist die richtige
+Antwort „nicht extrahierbar“, und genau das ist der Punkt: Ein Modell,
+das bei fehlender Diagnosegruppe WS rät, weil WS die häufigste ist, hat
+eine fachliche Entscheidung getroffen, die ihm nicht zusteht. Das `warum`
+je Fall ist Pflicht; der Runner lehnt einen Fall ohne ab.
+
+**Der Runner ohne Modell getestet.** Der Test baut aus den Erwartungen eine
+Aufzeichnung, lässt die Suite dagegen laufen und prüft, dass ein
+einzelnes falsches Feld genau dieses Feld rot macht — und dass ein Fall,
+der vorher grün war und jetzt rot ist, als Regression gemeldet wird, in
+der Gegenrichtung aber nicht. Trockenlauf gegen die perfekte Aufzeichnung:
+55 von 55 grün. Das beweist nichts über das Modell und alles über den
+Runner.
+
+**Was ehrlich gesagt wird.** Kein Schlüssel, also kein echter Lauf, also
+keine Zahl. Unter `evals/ergebnisse/` liegt nichts. Der CI-Job schreibt in
+diesem Zustand eine Warnung in den Lauf: „Evals übersprungen, kein
+Schlüssel“ — der Skill verbietet stummes Grün, und ein grüner
+Eval-Job, der nie ein Modell gesehen hat, wäre genau das. Sobald der
+Schlüssel als Secret liegt, läuft die Suite bei jeder Änderung an
+Prompt, Schema, Provider oder Fällen, und der erste Lauf wird eingecheckt.
+
+**Was nicht funktionierte.** Der Hook hat die Umschriften in den
+`warum`-Texten gefunden — nicht in den Fall-Dateien, die kein Prosa-Check
+liest, sondern im Generator dafür. Ich hatte sie absichtlich ohne Umlaute
+geschrieben, aus Angst vor der Shell. Falscher Reflex: Skript als Datei,
+Umlaute wie überall.
+
+**Zeitschätzung:** delegiert etwa eine Stunde, davon die Hälfte für die
+Fälle. Von Hand ein Tag — und es wären zwanzig Fälle, alle normal.
+
+---
+
 ## Vorlage für weitere Einträge
 
 ```

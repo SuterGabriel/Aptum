@@ -1,0 +1,17 @@
+{
+  "id": "heilmittel-ergo-psychisch",
+  "eingabe": "Psychisch-funktionelle Behandlung, 20x, 1x/Woche, PN, 27.02.2026",
+  "erwartet": {
+    "heilmittel": "ERGO_PSYCHISCH_FUNKTIONELL",
+    "diagnosegruppe": "PN",
+    "verordnete_einheiten": 20,
+    "frequenz": {
+      "min_pro_woche": 1,
+      "max_pro_woche": 1
+    },
+    "ausstellungsdatum": "2026-02-27",
+    "dringlicher_bedarf": null,
+    "hausbesuch": null
+  },
+  "warum": "Ergo-Code, der leicht mit sensomotorisch verwechselt wird."
+}

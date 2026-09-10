@@ -1,0 +1,14 @@
+{
+  "id": "frequenz-mindestens",
+  "eingabe": "KG 6x, mind. 2x/Woche, WS, 27.02.2026",
+  "erwartet": {
+    "heilmittel": "KG_EINZEL",
+    "diagnosegruppe": "WS",
+    "verordnete_einheiten": 6,
+    "frequenz": null,
+    "ausstellungsdatum": "2026-02-27",
+    "dringlicher_bedarf": null,
+    "hausbesuch": null
+  },
+  "warum": "Nur eine Untergrenze. Obergrenze fehlt: Frequenz nicht extrahierbar, nicht 2-7."
+}

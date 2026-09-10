@@ -1,0 +1,17 @@
+{
+  "id": "dringlich-ausdrücklich",
+  "eingabe": "KG 6x, 2x/Woche, WS, 27.02.2026, dringlicher Behandlungsbedarf",
+  "erwartet": {
+    "heilmittel": "KG_EINZEL",
+    "diagnosegruppe": "WS",
+    "verordnete_einheiten": 6,
+    "frequenz": {
+      "min_pro_woche": 2,
+      "max_pro_woche": 2
+    },
+    "ausstellungsdatum": "2026-02-27",
+    "dringlicher_bedarf": true,
+    "hausbesuch": null
+  },
+  "warum": "Das Kennzeichen verkürzt die Frist auf 14 Tage; es muss erkannt werden."
+}

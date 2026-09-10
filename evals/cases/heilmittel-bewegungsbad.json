@@ -1,0 +1,17 @@
+{
+  "id": "heilmittel-bewegungsbad",
+  "eingabe": "KG im Bewegungsbad, 6x, 1x/Woche, WS, 27.02.2026",
+  "erwartet": {
+    "heilmittel": "KG_BEWEGUNGSBAD",
+    "diagnosegruppe": "WS",
+    "verordnete_einheiten": 6,
+    "frequenz": {
+      "min_pro_woche": 1,
+      "max_pro_woche": 1
+    },
+    "ausstellungsdatum": "2026-02-27",
+    "dringlicher_bedarf": null,
+    "hausbesuch": null
+  },
+  "warum": "Bewegungsbad braucht einen eigenen Raum und Nachruhe; muss als eigenes Heilmittel erkannt werden."
+}

@@ -1,0 +1,14 @@
+{
+  "id": "rauschen-leer",
+  "eingabe": "Bitte Termin vereinbaren, danke.",
+  "erwartet": {
+    "heilmittel": null,
+    "diagnosegruppe": null,
+    "verordnete_einheiten": null,
+    "frequenz": null,
+    "ausstellungsdatum": null,
+    "dringlicher_bedarf": null,
+    "hausbesuch": null
+  },
+  "warum": "Kein Verordnungstext. Alles nicht extrahierbar; kein Feld darf gefüllt sein."
+}

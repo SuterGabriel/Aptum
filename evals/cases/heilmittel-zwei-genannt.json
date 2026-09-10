@@ -1,0 +1,17 @@
+{
+  "id": "heilmittel-zwei-genannt",
+  "eingabe": "KG und MT je 6x, 2x/Woche, WS, 27.02.2026",
+  "erwartet": {
+    "heilmittel": null,
+    "diagnosegruppe": "WS",
+    "verordnete_einheiten": null,
+    "frequenz": {
+      "min_pro_woche": 2,
+      "max_pro_woche": 2
+    },
+    "ausstellungsdatum": "2026-02-27",
+    "dringlicher_bedarf": null,
+    "hausbesuch": null
+  },
+  "warum": "Zwei Heilmittel auf einer Zeile. Das Schema kennt eins; nicht extrahierbar plus Hinweis."
+}

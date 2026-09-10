@@ -1,0 +1,17 @@
+{
+  "id": "normal-mit-patient-01",
+  "eingabe": "Patient: Testfall Alpha, geb. 01.01.1900, Vers.-Nr. Z000000001. KG 6x, 2x/Woche, WS, 27.02.2026.",
+  "erwartet": {
+    "heilmittel": "KG_EINZEL",
+    "diagnosegruppe": "WS",
+    "verordnete_einheiten": 6,
+    "frequenz": {
+      "min_pro_woche": 2,
+      "max_pro_woche": 2
+    },
+    "ausstellungsdatum": "2026-02-27",
+    "dringlicher_bedarf": null,
+    "hausbesuch": null
+  },
+  "warum": "Mit Personenbezug. Die Pseudonymisierung ersetzt ihn; das Modell muss trotzdem alles finden."
+}

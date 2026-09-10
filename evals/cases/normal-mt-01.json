@@ -1,0 +1,17 @@
+{
+  "id": "normal-mt-01",
+  "eingabe": "Manuelle Therapie, 10 Einheiten, 1-2x pro Woche, EX, Datum 03.03.2026",
+  "erwartet": {
+    "heilmittel": "MANUELLE_THERAPIE",
+    "diagnosegruppe": "EX",
+    "verordnete_einheiten": 10,
+    "frequenz": {
+      "min_pro_woche": 1,
+      "max_pro_woche": 2
+    },
+    "ausstellungsdatum": "2026-03-03",
+    "dringlicher_bedarf": null,
+    "hausbesuch": null
+  },
+  "warum": "Ausgeschriebenes Heilmittel und Frequenzspanne im Normalfall."
+}

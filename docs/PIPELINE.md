@@ -89,9 +89,10 @@ Ergebnisses, nicht nur Werkzeug.
 | `backend` | Formatierung (Spotless), Tests aller drei Module, ArchUnit gegen ADR-001, und ein echtes Postgres über Testcontainers für den Isolationstest aus ADR-002 — der einzige Job mit JVM und Docker |
 | `frontend` | Prettier, ESLint mit den Template-Regeln zur Barrierefreiheit, API-Typen gegen `docs/api/openapi.json`, Unit-Tests mit axe-core über jede Seite, Build mit Budget |
 | `ai-assist` | Der Python-Dienst: Ruff (Format und Lint), mypy strict, pytest gegen aufgezeichnete Antworten — ohne Schlüssel, ohne Netz |
+| `evals` | Die Eval-Suite gegen das Modell, feldweise — nur bei Änderung an Prompt, Schema, Provider oder Fällen, oder von Hand; ohne Schlüssel sichtbar übersprungen, nie stumm grün; bricht nur, wenn ein Fall neu scheitert |
 | `e2e` | Backend und Frontend zusammen im echten Chromium: über die API buchen, den Termin im Grid finden, mit der Tastatur hindurchfahren, axe über jede Seite — erst nach `backend` und `frontend` |
 
-Was noch fehlt — Dependency-Scan, die Eval-Suite — steht als
+Was noch fehlt — der Dependency-Scan — steht als
 auskommentiertes Gerüst in der Datei, nicht als leere Jobs: Ein Job, der
 nichts prüft und trotzdem grün meldet, ist schlimmer als kein Job.
 
@@ -182,8 +183,8 @@ davon entfernt:
   aussehen, und das Skript, das die Wahrheit kennt, wird nicht gefragt.
 - **Anführungszeichen.** Das Repo mischt gerade und deutsche. Eine Regel dazu
   ist nicht getroffen, also prüft auch nichts.
-- **Ab Stufe 2, was noch fehlt.** Keine Evals, kein Dependency-Scan. Die
-  Jobs stehen als Gerüst bereit.
+- **Der Dependency-Scan.** Steht als Gerüst bereit. Und die Evals laufen
+  nur, wenn ein Schlüssel hinterlegt ist — der Lauf sagt es, wenn nicht.
 - **Der Rechtsstand der Domäne.** `regeln.md` trägt Recherchedatum und
   Rechtsstände. Fristen ändern sich; nichts warnt, wenn die Recherche alt wird.
 

@@ -1,0 +1,17 @@
+{
+  "id": "heilmittel-kg-zns-erw",
+  "eingabe": "KG-ZNS (Bobath) Erwachsene, 20x, 2-3x/Woche, ZN, 27.02.2026",
+  "erwartet": {
+    "heilmittel": "KG_ZNS_ERWACHSENE",
+    "diagnosegruppe": "ZN",
+    "verordnete_einheiten": 20,
+    "frequenz": {
+      "min_pro_woche": 2,
+      "max_pro_woche": 3
+    },
+    "ausstellungsdatum": "2026-02-27",
+    "dringlicher_bedarf": null,
+    "hausbesuch": null
+  },
+  "warum": "ZNS mit Altersangabe; Bobath ist ein Verfahren, kein eigenes Heilmittel."
+}

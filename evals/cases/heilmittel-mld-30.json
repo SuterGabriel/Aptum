@@ -1,0 +1,17 @@
+{
+  "id": "heilmittel-mld-30",
+  "eingabe": "Manuelle Lymphdrainage 30 Minuten, 10x, 2x/Woche, LY, 27.02.2026",
+  "erwartet": {
+    "heilmittel": "MLD_TEILBEHANDLUNG",
+    "diagnosegruppe": "LY",
+    "verordnete_einheiten": 10,
+    "frequenz": {
+      "min_pro_woche": 2,
+      "max_pro_woche": 2
+    },
+    "ausstellungsdatum": "2026-02-27",
+    "dringlicher_bedarf": null,
+    "hausbesuch": null
+  },
+  "warum": "30 Minuten ist die Teilbehandlung."
+}

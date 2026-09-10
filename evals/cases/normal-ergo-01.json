@@ -1,0 +1,17 @@
+{
+  "id": "normal-ergo-01",
+  "eingabe": "Ergotherapie: motorisch-funktionelle Behandlung, 10x, 2x/Woche, SO, 10.03.2026",
+  "erwartet": {
+    "heilmittel": "ERGO_MOTORISCH_FUNKTIONELL",
+    "diagnosegruppe": "SO",
+    "verordnete_einheiten": 10,
+    "frequenz": {
+      "min_pro_woche": 2,
+      "max_pro_woche": 2
+    },
+    "ausstellungsdatum": "2026-03-10",
+    "dringlicher_bedarf": null,
+    "hausbesuch": null
+  },
+  "warum": "Ergotherapie hat eigene Codes; das Modell darf nicht in KG_ verfallen."
+}

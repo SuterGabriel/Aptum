@@ -1,0 +1,17 @@
+{
+  "id": "menge-frequenz-verwechselbar",
+  "eingabe": "KG 2x, 6x/Woche, WS, 27.02.2026",
+  "erwartet": {
+    "heilmittel": "KG_EINZEL",
+    "diagnosegruppe": "WS",
+    "verordnete_einheiten": 2,
+    "frequenz": {
+      "min_pro_woche": 6,
+      "max_pro_woche": 6
+    },
+    "ausstellungsdatum": "2026-02-27",
+    "dringlicher_bedarf": null,
+    "hausbesuch": null
+  },
+  "warum": "Menge und Frequenz vertauscht geschrieben; die Wochenangabe entscheidet, was Frequenz ist."
+}

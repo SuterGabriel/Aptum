@@ -1,0 +1,17 @@
+{
+  "id": "datum-unmoeglich",
+  "eingabe": "KG 6x, 2x/Woche, WS, 31.02.2026",
+  "erwartet": {
+    "heilmittel": "KG_EINZEL",
+    "diagnosegruppe": "WS",
+    "verordnete_einheiten": 6,
+    "frequenz": {
+      "min_pro_woche": 2,
+      "max_pro_woche": 2
+    },
+    "ausstellungsdatum": null,
+    "dringlicher_bedarf": null,
+    "hausbesuch": null
+  },
+  "warum": "Den 31. Februar gibt es nicht. Nicht extrahierbar, nicht auf den 28. runden."
+}

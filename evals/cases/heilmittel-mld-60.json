@@ -1,0 +1,17 @@
+{
+  "id": "heilmittel-mld-60",
+  "eingabe": "MLD 60 Min., 6x, 3x wöchentlich, LY, 27.02.2026",
+  "erwartet": {
+    "heilmittel": "MLD_GANZBEHANDLUNG",
+    "diagnosegruppe": "LY",
+    "verordnete_einheiten": 6,
+    "frequenz": {
+      "min_pro_woche": 3,
+      "max_pro_woche": 3
+    },
+    "ausstellungsdatum": "2026-02-27",
+    "dringlicher_bedarf": null,
+    "hausbesuch": null
+  },
+  "warum": "60 Minuten ist die Ganzbehandlung."
+}
