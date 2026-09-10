@@ -23,16 +23,19 @@ import java.util.Objects;
  * @param dringlicherBedarf   das ärztliche Kennzeichen, das die Frist verkürzt
  * @param therapieform        Physio- oder Ergotherapie
  * @param verordneteEinheiten die verordneten Behandlungseinheiten
+ * @param frequenz            die verordnete Behandlungshäufigkeit, für die Praxis bindend
  */
 public record Verordnung(
         LocalDate ausstellungsdatum,
         boolean dringlicherBedarf,
         Therapieform therapieform,
-        int verordneteEinheiten) {
+        int verordneteEinheiten,
+        Frequenz frequenz) {
 
     public Verordnung {
         Objects.requireNonNull(ausstellungsdatum, "ausstellungsdatum");
         Objects.requireNonNull(therapieform, "therapieform");
+        Objects.requireNonNull(frequenz, "frequenz");
         if (verordneteEinheiten <= 0) {
             throw new IllegalArgumentException(
                     "Eine Verordnung ohne Behandlungseinheiten gibt es nicht: "

@@ -164,7 +164,10 @@ function codePruefen(pfad, katalog) {
   // Welche Fundstellen nennt diese Datei überhaupt?
   zeilen.forEach((zeile, index) => {
     for (const treffer of zeile.matchAll(/@fundstelle\s+(\S+)/g)) {
-      const id = treffer[1].replace(/[`*.,;]/g, '');
+      // Eine Fundstelle steht oft mitten in Javadoc: `{@code @fundstelle HM-X}`,
+      // in Klammern, am Satzende. Die Auszeichnung drumherum gehört nicht zur
+      // ID — sonst zwingt das Gate dazu, Javadoc schlechter zu schreiben.
+      const id = treffer[1].replace(/^[`*("'[{<]+/, '').replace(/[`*.,;:)\]}>"']+$/, '');
       const eintrag = katalog.get(id);
       if (!eintrag) {
         befund(

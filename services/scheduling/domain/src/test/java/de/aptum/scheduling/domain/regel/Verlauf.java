@@ -2,6 +2,7 @@ package de.aptum.scheduling.domain.regel;
 
 import de.aptum.scheduling.domain.model.Behandlungstermin;
 import de.aptum.scheduling.domain.model.Behandlungsverlauf;
+import de.aptum.scheduling.domain.model.Frequenz;
 import de.aptum.scheduling.domain.model.Therapieform;
 import de.aptum.scheduling.domain.model.Unterbrechungskennzeichen;
 import de.aptum.scheduling.domain.model.Verordnung;
@@ -46,7 +47,14 @@ final class Verlauf {
         return Behandlungsverlauf.aus(termine);
     }
 
+    /** Die Katalogfrequenz der meisten Diagnosegruppen, wenn der Test sie nicht braucht. */
+    static final Frequenz REGELFREQUENZ = Frequenz.spanne(1, 3);
+
     static Verordnung verordnung(Therapieform therapieform, int einheiten) {
-        return new Verordnung(ERSTER_TAG.minusDays(3), false, therapieform, einheiten);
+        return verordnung(therapieform, einheiten, REGELFREQUENZ);
+    }
+
+    static Verordnung verordnung(Therapieform therapieform, int einheiten, Frequenz frequenz) {
+        return new Verordnung(ERSTER_TAG.minusDays(3), false, therapieform, einheiten, frequenz);
     }
 }

@@ -372,6 +372,52 @@ zählt, wenn nur Pausen über 14 Tagen mitzählen.
 
 ---
 
+## 2026-09-10 — Stufe 1, die Regel, die warnt statt zu blockieren
+
+**Was delegiert wurde:** Die Frequenzregel und der Wertetyp dazu. 48 Tests grün,
+davon 10 neu.
+
+**Der eigentliche Ertrag ist nicht die Regel, sondern ihr Ausgang.** Bisher
+kannte das Modell `WARNUNG` nur als Enum-Konstante, die niemand benutzt. Über
+eine Frequenzabweichung entscheidet laut Richtlinie ein Mensch nach Rücksprache
+mit der verordnenden Person. Ein `VERLETZT` wäre hier fachlich falsch — es
+würde eine Buchung verhindern, die nach einem Telefonat völlig zulässig ist.
+Ein eigener Testfall hält fest, dass diese Regel nie mehr als warnt.
+
+**Die Regel ohne eine einzige Zahl.** `HM-FREQ-05` ist ein belegter Nichtfund:
+Eine prozentuale Toleranz gibt es in der Richtlinie nicht. Es gibt also keine
+Karenz, die man implementieren könnte — verbindlich ist allein die Angabe auf
+dem Vordruck, und die kommt aus der Verordnung. Die Klasse hat deshalb keine
+Konstante. Dass ein Nichtfund die Implementierung *vereinfacht*, statt sie offen
+zu lassen, war beim Lesen der Regeltabelle nicht abzusehen.
+
+**Was die Quelle offen lässt.** Was eine „Woche" ist, sagt die Richtlinie nicht.
+Die Regel legt sie als Kalenderwoche von Montag bis Sonntag aus, weil eine
+Praxis ihre Frequenz am Wochenplan abliest. Ein rollendes Sieben-Tage-Fenster
+wäre strenger. Die Auslegung ist im Javadoc benannt und hat einen Testfall, der
+den Sonntag und den Montag danach gegeneinanderstellt.
+
+**Was die Gates gelehrt haben, dritter Fall in Folge.** Der Regel-Check meldete
+vier Befunde in einer korrekten Datei: `{@code @fundstelle HM-FREQ-05}` — die
+schließende Klammer klebte an der ID. Javadoc-Auszeichnung um eine Fundstelle
+ist normal, und ein Gate, das dazu zwingt, Javadoc schlechter zu schreiben, ist
+falsch eingestellt. Der Parser schneidet die Auszeichnung jetzt ab.
+
+Damit sind es drei Gate-Korrekturen, alle durch echten Code ausgelöst, keine
+davon vorher vermutet: Javadoc-Parameter, Testquellen, Javadoc-Auszeichnung. Das
+Muster ist inzwischen deutlich genug, um es festzuhalten — ein Gate wird nicht
+am Reißbrett fertig, sondern an der dritten Datei, die durch es hindurchgeht.
+
+**Was nicht funktionierte.** Der Prosa-Hook schlug zehnmal an, wieder
+ausschließlich in `//`-Kommentaren. In Markdown passiert mir das nicht, in
+Java-Kommentaren regelmäßig. Vermutlich, weil der umgebende Code ASCII ist und
+die Hand mitläuft.
+
+**Zeitschätzung:** delegiert etwa dreißig Minuten, von Hand geschätzt ein halber
+Tag.
+
+---
+
 ## Vorlage für weitere Einträge
 
 ```
