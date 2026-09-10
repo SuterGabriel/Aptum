@@ -1,4 +1,4 @@
-# therapie-scheduling
+# Aptum
 
 Terminplanung und Verordnungsverwaltung für Physio- und Ergotherapiepraxen.
 Portfolio-Projekt. Alles Agent-bezogene liegt versioniert im Repo — es *ist*

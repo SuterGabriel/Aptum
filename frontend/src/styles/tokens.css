@@ -1,0 +1,223 @@
+/*
+ * Gestaltungstoken
+ *
+ * Die einzige Quelle für Farben, Abstände, Schriftgrößen und Muster dieses
+ * Frontends. Grundlage: ADR-006.
+ *
+ * Zwei Dinge sind an dieser Datei ungewöhnlich, beide mit Absicht:
+ *
+ * 1. Die Kontrastanforderungen stehen als @kontrast-Kommentar direkt neben
+ *    den Farben. `scripts/kontrast-check.mjs` liest sie und rechnet nach.
+ *    Wer eine Farbe ändert, sieht die Anforderung in derselben Zeile — und
+ *    die CI wird rot, wenn er sie reißt.
+ *
+ * 2. Muster sind ebenfalls Token. Der Skill a11y-grid verlangt, dass sich
+ *    Zustände nie allein durch Farbe unterscheiden. Eine Schraffur, die
+ *    nicht benannt ist, wird bei der dritten Komponente anders gezeichnet,
+ *    und die Regel zerfällt still.
+ *
+ * Benennung: technische Struktur englisch, Zustände der Domäne deutsch —
+ * `--slot-frei-bg`, nicht `--slot-free-bg`. So wie im Java-Code auch.
+ */
+
+:root {
+
+  /* ---- Grundflächen ------------------------------------------------- */
+
+  --surface-page:    #F6F5F2;
+  --surface-raised:  #FFFFFF;
+  --surface-sunken:  #EBE9E4;
+  --surface-backdrop: #1A1917;   /* nur mit Deckkraft verwendet */
+
+  --border-subtle:   #D9D5CD;    /* rein trennend, trägt keine Information */
+  --border-strong:   #8C867B;    /* Ränder von Bedienelementen */
+
+  /* @kontrast --border-strong auf --surface-raised >= 3 */
+  /* @kontrast --border-strong auf --surface-page >= 3 */
+
+  /* ---- Text ---------------------------------------------------------- */
+
+  --text-primary:    #1A1917;
+  --text-secondary:  #5A554D;
+  --text-muted:      #6E6860;
+
+  /* @kontrast --text-primary auf --surface-page >= 4.5 */
+  /* @kontrast --text-primary auf --surface-raised >= 4.5 */
+  /* @kontrast --text-secondary auf --surface-page >= 4.5 */
+  /* @kontrast --text-secondary auf --surface-raised >= 4.5 */
+  /* @kontrast --text-muted auf --surface-page >= 4.5 */
+  /* @kontrast --text-muted auf --surface-raised >= 4.5 */
+
+  /* ---- Akzent -------------------------------------------------------- */
+  /* Genau eine Akzentfarbe. Farbe ist in dieser Anwendung ein knappes
+     Signalmittel für Regelverstöße und wird nicht für Dekoration ausgegeben. */
+
+  --accent:          #1D5B87;
+  --accent-strong:   #164869;    /* Hover und aktiver Zustand */
+  --accent-text:     #FFFFFF;    /* Text auf gefüllter Akzentfläche */
+
+  /* @kontrast --accent-text auf --accent >= 4.5 */
+  /* @kontrast --accent auf --surface-raised >= 4.5 */
+  /* @kontrast --accent auf --surface-page >= 4.5 */
+
+  /* ---- Fokus --------------------------------------------------------- */
+  /* Zweifarbiger Ring: dunkler Kern plus heller Absatz. Der Absatz ist
+     nötig, weil der dunkle Ring auf der gefüllten Akzentfläche allein
+     keine 3:1 erreicht — auf einer blauen Schaltfläche wäre er unsichtbar. */
+
+  --focus-ring:        #0F3E5C;
+  --focus-ring-offset: #FFFFFF;
+  --focus-ring-breite: 2px;
+  --focus-ring-absatz: 2px;
+
+  /* @kontrast --focus-ring auf --surface-page >= 3 */
+  /* @kontrast --focus-ring auf --surface-raised >= 3 */
+  /* @kontrast --focus-ring-offset auf --accent >= 3 */
+
+  /* ---- Zustände im Kalender-Grid ------------------------------------- */
+  /* Sechs Zustände. Jeder hat Fläche, Rand, Text und ein Muster. Das
+     Muster ist der Teil, der die Unterscheidung in Graustufen trägt. */
+
+  --slot-frei-bg:            #FFFFFF;
+  --slot-frei-border:        #8C867B;
+  --slot-frei-text:          #3A362F;
+  /* @kontrast --slot-frei-text auf --slot-frei-bg >= 4.5 */
+  /* @kontrast --slot-frei-border auf --surface-page >= 3 */
+
+  --slot-belegt-bg:          #E3EBF2;
+  --slot-belegt-border:      #1D5B87;
+  --slot-belegt-text:        #143349;
+  /* @kontrast --slot-belegt-text auf --slot-belegt-bg >= 4.5 */
+  /* @kontrast --slot-belegt-border auf --surface-page >= 3 */
+
+  --slot-ruestzeit-bg:       #EFECE4;
+  --slot-ruestzeit-border:   #8C867B;
+  --slot-ruestzeit-text:     #4A453B;
+  /* @kontrast --slot-ruestzeit-text auf --slot-ruestzeit-bg >= 4.5 */
+
+  --slot-nachruhe-bg:        #F3EDDC;
+  --slot-nachruhe-border:    #9A7B3A;
+  --slot-nachruhe-text:      #4B3D1C;
+  /* @kontrast --slot-nachruhe-text auf --slot-nachruhe-bg >= 4.5 */
+  /* @kontrast --slot-nachruhe-border auf --surface-page >= 3 */
+
+  --slot-abwesenheit-bg:     #E8E6E1;
+  --slot-abwesenheit-border: #6E6860;
+  --slot-abwesenheit-text:   #3D3A34;
+  /* @kontrast --slot-abwesenheit-text auf --slot-abwesenheit-bg >= 4.5 */
+  /* @kontrast --slot-abwesenheit-border auf --surface-page >= 3 */
+
+  --slot-gesperrt-bg:        #F7E7E6;
+  --slot-gesperrt-border:    #97302E;
+  --slot-gesperrt-text:      #6B1F1E;
+  /* @kontrast --slot-gesperrt-text auf --slot-gesperrt-bg >= 4.5 */
+  /* @kontrast --slot-gesperrt-border auf --surface-page >= 3 */
+
+  /* ---- Ergebnis der Regelprüfung ------------------------------------- */
+  /* Drei Ausgänge: erfüllt, Warnung, verletzt. Nie allein durch Farbe
+     unterschieden — im Markup gehört ein Symbol und ein Wort dazu. */
+
+  --regel-erfuellt-bg:     #E8F0E9;
+  --regel-erfuellt-border: #3F6E48;
+  --regel-erfuellt-text:   #24512F;
+  /* @kontrast --regel-erfuellt-text auf --regel-erfuellt-bg >= 4.5 */
+  /* @kontrast --regel-erfuellt-border auf --surface-page >= 3 */
+
+  --regel-warnung-bg:      #FBF0D8;
+  --regel-warnung-border:  #9A7B3A;
+  --regel-warnung-text:    #6B4A05;
+  /* @kontrast --regel-warnung-text auf --regel-warnung-bg >= 4.5 */
+  /* @kontrast --regel-warnung-border auf --surface-page >= 3 */
+
+  --regel-verletzt-bg:     #F9E5E4;
+  --regel-verletzt-border: #97302E;
+  --regel-verletzt-text:   #7A2220;
+  /* @kontrast --regel-verletzt-text auf --regel-verletzt-bg >= 4.5 */
+  /* @kontrast --regel-verletzt-border auf --surface-page >= 3 */
+
+  /* ---- Muster -------------------------------------------------------- */
+  /* Diese tragen die Unterscheidung, wenn die Farbe ausfällt: bei
+     Rot-Grün-Sehschwäche, auf schlechten Bildschirmen, im Ausdruck. */
+
+  --muster-ruestzeit:    repeating-linear-gradient(
+                           45deg, transparent 0 4px, rgba(26, 25, 23, 0.13) 4px 5px);
+  --muster-nachruhe:     radial-gradient(
+                           rgba(75, 61, 28, 0.28) 1px, transparent 1px);
+  --muster-nachruhe-groesse: 6px 6px;
+  --muster-abwesenheit:  repeating-linear-gradient(
+                           135deg, transparent 0 7px, rgba(26, 25, 23, 0.16) 7px 9px);
+  --muster-gesperrt:     repeating-linear-gradient(
+                           45deg, transparent 0 4px, rgba(151, 48, 46, 0.22) 4px 5px),
+                         repeating-linear-gradient(
+                           135deg, transparent 0 4px, rgba(151, 48, 46, 0.22) 4px 5px);
+
+  /* ---- Schrift ------------------------------------------------------- */
+  /* Source Sans 3 für Fließtext, IBM Plex Mono für Uhrzeiten und Mengen.
+     Der Mono-Satz ist keine Stilfrage: In einem Kalender müssen Ziffern
+     untereinander stehen, sonst springt die Spalte bei jedem Wechsel. */
+
+  --schrift-text: 'Source Sans 3', 'Segoe UI', system-ui, sans-serif;
+  --schrift-zahl: 'IBM Plex Mono', ui-monospace, 'Cascadia Mono', monospace;
+
+  --schrift-xs:   11px;   /* Legende, Einheiten */
+  --schrift-s:    12px;   /* Grid-Zellen, Tabellenzellen */
+  --schrift-m:    14px;   /* Fließtext, Bedienelemente */
+  --schrift-l:    16px;   /* Abschnittsüberschrift */
+  --schrift-xl:   20px;   /* Seitenüberschrift */
+
+  --zeilenhoehe-eng:   1.3;
+  --zeilenhoehe-text:  1.55;
+
+  --gewicht-normal:   400;
+  --gewicht-mittel:   500;
+  --gewicht-fett:     600;
+
+  /* ---- Abstände ------------------------------------------------------ */
+
+  --abstand-1:  4px;
+  --abstand-2:  8px;
+  --abstand-3: 12px;
+  --abstand-4: 16px;
+  --abstand-5: 24px;
+  --abstand-6: 32px;
+
+  --radius-klein: 3px;
+  --radius-gross: 5px;
+
+  --rand-duenn: 1px;
+  --rand-dick:  2px;
+
+  /* ---- Maße des Kalender-Grids --------------------------------------- */
+  /* Vorschlag, im Mockup zu prüfen: 15-Minuten-Raster bei 18px Zeilenhöhe
+     ergibt 72px je Stunde. Ein Praxistag von 07:00 bis 19:00 sind damit
+     864px — passt ohne Scrollen auf einen 1080er-Bildschirm, wenn die
+     Kopfzeile schlank bleibt. */
+
+  --grid-raster-minuten: 15;
+  --grid-zeilenhoehe:    18px;
+  --grid-spaltenbreite-min: 132px;
+  --grid-zeitspalte:     56px;
+
+  /* ---- Hitflächen ----------------------------------------------------- */
+  /* 44px für alles, was angetippt wird. Ausnahme sind die Grid-Zellen
+     selbst: Dort ist die Dichte bewusst höher, weil ein Arbeitstag auf
+     eine Bildschirmhöhe passen muss. Der Kompromiss ist benannt, nicht
+     versehentlich. */
+
+  --hitflaeche-min: 44px;
+}
+
+:root {
+  --uebergang-schnell: 120ms;
+  --uebergang-normal:  200ms;
+}
+
+/* Muss nach den Standardwerten stehen: Bei gleicher Spezifität gewinnt die
+   spätere Regel. Andersherum wäre die Abschaltung wirkungslos — und niemand
+   würde es merken, weil die Seite ja aussieht wie vorher. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --uebergang-schnell: 0ms;
+    --uebergang-normal:  0ms;
+  }
+}
