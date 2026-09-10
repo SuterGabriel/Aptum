@@ -166,6 +166,9 @@ pruefe "ADR-003 entscheidet das Grid" datei docs/adr/ADR-003-kalender-grid-selbs
 pruefe "Angular-Gerüst existiert" datei frontend/angular.json
 pruefe "Token liegen im Frontend" datei frontend/src/styles/tokens.css
 pruefe "API-Typen sind aus OpenAPI erzeugt" datei frontend/src/app/api/schema.d.ts
+pruefe "Suchflow ist der aus dem Skill" enthaelt frontend/src/app/suche/termin-suche.service.ts "switchMap"
+pruefe "Suchflow wird einzeln getestet" datei frontend/src/app/suche/termin-suche.service.spec.ts
+pruefe "Terminsuche hat einen axe-Test" enthaelt frontend/src/app/suche/termin-suche.spec.ts "axe.run"
 pruefe "stumme Lücke 1 ist Fixture" datei scripts/fixtures/regel-check/domain/NachbarBorgt.java
 pruefe "stumme Lücke 2 ist Fixture" datei scripts/fixtures/regel-check/domain/KlassenkommentarBorgt.java
 pruefe "Wertabgleich ist Fixture" datei scripts/fixtures/regel-check/domain/FalscherWert.java

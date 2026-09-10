@@ -1,0 +1,4 @@
+{
+  "/termine": { "target": "http://localhost:8080", "secure": false },
+  "/verordnungen": { "target": "http://localhost:8080", "secure": false }
+}

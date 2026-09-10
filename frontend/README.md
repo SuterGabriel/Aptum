@@ -6,12 +6,16 @@ Kontrast geprüft; das Kalender-Grid wird selbst gebaut (ADR-003).
 
 ```bash
 npm install
-npm start              # http://localhost:4200, erwartet das Backend auf :8080
+npm start              # http://localhost:4200, leitet /termine und /verordnungen an :8080 weiter
 npm test               # Unit-Tests, einmalig, headless
 npm run lint
 npm run api:types      # TypeScript-Typen aus ../docs/api/openapi.json erzeugen
 npm run build
 ```
+
+Die erste Seite ist die Terminsuche unter `/suche`. Sie braucht die Kennung einer
+Verordnung — die gibt `POST /verordnungen` zurück, siehe „Starten“ im
+Haupt-README. Der Mandant ist ein Platzhalter (`src/app/api/mandant.ts`).
 
 Die API-Typen unter `src/app/api/schema.d.ts` sind erzeugt, nicht geschrieben.
 Sie werden aus dem OpenAPI-Dokument abgeleitet, das der Backend-Test gegen die

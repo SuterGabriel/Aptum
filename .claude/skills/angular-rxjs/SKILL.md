@@ -8,7 +8,8 @@ description: Hausstil für Angular und RxJS in diesem Projekt - switchMap bei Su
 ## Der kanonische Suchflow
 
 Das zentrale Frontend-Artefakt dieses Projekts. Referenz:
-`referenzen/slot-suche.ts`. Jede neue Suche folgt diesem Muster.
+`frontend/src/app/suche/termin-suche.service.ts` — echter Code, nicht ein
+Beispiel neben dem Code, das veraltet. Jede neue Suche folgt diesem Muster.
 
 ```
 Filterformular als Stream

@@ -87,10 +87,10 @@ Ergebnisses, nicht nur Werkzeug.
 | `regeln` | Der Regelkatalog ist vollständig ausgezeichnet, und kein Domänencode nennt eine Zahl ohne belegte Fundstelle |
 | `kontrast` | Jedes geforderte Farbpaar aus `tokens.css` hält seine WCAG-Schwelle |
 | `backend` | Formatierung (Spotless), Tests aller drei Module, ArchUnit gegen ADR-001, und ein echtes Postgres über Testcontainers für den Isolationstest aus ADR-002 — der einzige Job mit JVM und Docker |
-| `frontend` | Prettier, ESLint mit den Template-Regeln zur Barrierefreiheit, API-Typen gegen `docs/api/openapi.json`, Unit-Tests, Build mit Budget |
+| `frontend` | Prettier, ESLint mit den Template-Regeln zur Barrierefreiheit, API-Typen gegen `docs/api/openapi.json`, Unit-Tests mit axe-core über jede Seite, Build mit Budget |
 
-Was noch fehlt — Lint und Bundle-Budget fürs Frontend, Playwright mit axe-core
-über das Kalender-Grid, Dependency-Scan, die Eval-Suite — steht als
+Was noch fehlt — Playwright mit axe-core über das Kalender-Grid,
+Dependency-Scan, die Eval-Suite — steht als
 auskommentiertes Gerüst in der Datei, nicht als leere Jobs: Ein Job, der
 nichts prüft und trotzdem grün meldet, ist schlimmer als kein Job.
 
@@ -181,8 +181,8 @@ davon entfernt:
   aussehen, und das Skript, das die Wahrheit kennt, wird nicht gefragt.
 - **Anführungszeichen.** Das Repo mischt gerade und deutsche. Eine Regel dazu
   ist nicht getroffen, also prüft auch nichts.
-- **Alles ab Stufe 1.** Kein Java, kein ArchUnit, keine Tests, kein axe-Lauf,
-  keine Evals. Die Jobs stehen als Gerüst bereit.
+- **Ab Stufe 2, was noch fehlt.** Kein Playwright über das Grid, keine
+  Evals, kein Dependency-Scan. Die Jobs stehen als Gerüst bereit.
 - **Der Rechtsstand der Domäne.** `regeln.md` trägt Recherchedatum und
   Rechtsstände. Fristen ändern sich; nichts warnt, wenn die Recherche alt wird.
 

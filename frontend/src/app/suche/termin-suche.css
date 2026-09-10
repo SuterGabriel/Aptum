@@ -1,0 +1,216 @@
+.suche {
+  display: grid;
+  grid-template-columns: minmax(18rem, 24rem) minmax(0, 1fr);
+  gap: var(--abstand-6);
+  align-items: start;
+}
+
+@media (max-width: 56rem) {
+  .suche {
+    grid-template-columns: 1fr;
+  }
+}
+
+h1 {
+  font-size: var(--schrift-xl);
+  margin: 0 0 var(--abstand-2);
+}
+
+h2 {
+  font-size: var(--schrift-l);
+  margin: 0 0 var(--abstand-2);
+}
+
+h3 {
+  font-size: var(--schrift-m);
+  margin: 0 0 var(--abstand-2);
+}
+
+.einleitung,
+.hinweis,
+.abgeleitet,
+.leer {
+  color: var(--text-secondary);
+  font-size: var(--schrift-s);
+  margin: 0 0 var(--abstand-3);
+}
+
+/* ---- Die vier Dimensionen ------------------------------------------- */
+
+fieldset {
+  border: var(--rand-duenn) solid var(--border-subtle);
+  border-radius: var(--radius-gross);
+  background: var(--surface-raised);
+  padding: var(--abstand-3) var(--abstand-4) var(--abstand-4);
+  margin: 0 0 var(--abstand-4);
+}
+
+legend {
+  font-weight: var(--gewicht-mittel);
+  padding: 0 var(--abstand-2);
+  display: flex;
+  align-items: center;
+  gap: var(--abstand-2);
+}
+
+.nummer {
+  display: inline-grid;
+  place-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--accent-text);
+  font-family: var(--schrift-zahl);
+  font-size: var(--schrift-s);
+}
+
+label {
+  display: block;
+  font-size: var(--schrift-s);
+  font-weight: var(--gewicht-mittel);
+  margin: var(--abstand-3) 0 var(--abstand-1);
+}
+
+input[type='text'],
+input[type='date'],
+input[type='time'],
+select {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: var(--hitflaeche-min);
+  padding: var(--abstand-2) var(--abstand-3);
+  border: var(--rand-duenn) solid var(--border-strong);
+  border-radius: var(--radius-klein);
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  font: inherit;
+}
+
+input[type='text'],
+input[type='time'] {
+  font-family: var(--schrift-zahl);
+}
+
+input[aria-invalid='true'] {
+  border-color: var(--regel-verletzt-border);
+  border-width: var(--rand-dick);
+}
+
+.paar {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--abstand-3);
+}
+
+.tage {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--abstand-2);
+  padding: var(--abstand-2) var(--abstand-3);
+  margin: var(--abstand-3) 0 0;
+  border-color: var(--border-subtle);
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--abstand-1);
+  min-height: var(--hitflaeche-min);
+  margin: 0;
+  padding: 0 var(--abstand-2);
+  font-weight: var(--gewicht-normal);
+}
+
+.tag abbr {
+  text-decoration: none;
+}
+
+.fehler {
+  color: var(--regel-verletzt-text);
+  background: var(--regel-verletzt-bg);
+  border-left: var(--rand-dick) solid var(--regel-verletzt-border);
+  padding: var(--abstand-2) var(--abstand-3);
+  border-radius: var(--radius-klein);
+  margin: var(--abstand-3) 0 0;
+}
+
+/* ---- Vorschläge ------------------------------------------------------ */
+
+.status {
+  min-height: 1.5em;
+  margin: 0 0 var(--abstand-2);
+  color: var(--text-muted);
+  font-size: var(--schrift-s);
+}
+
+.zusammenfassung {
+  margin: 0 0 var(--abstand-3);
+}
+
+.vorschlaege {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--abstand-4);
+  display: grid;
+  gap: var(--abstand-2);
+}
+
+.vorschlag {
+  display: grid;
+  gap: var(--abstand-1);
+  padding: var(--abstand-3) var(--abstand-4);
+  background: var(--slot-frei-bg);
+  border: var(--rand-duenn) solid var(--slot-frei-border);
+  border-radius: var(--radius-gross);
+  color: var(--slot-frei-text);
+}
+
+.wann {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--abstand-3);
+  font-weight: var(--gewicht-mittel);
+}
+
+.wer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--abstand-2);
+  color: var(--text-secondary);
+  font-size: var(--schrift-s);
+}
+
+.zahl {
+  font-family: var(--schrift-zahl);
+  font-variant-numeric: tabular-nums;
+}
+
+.warnungen {
+  list-style: none;
+  padding: 0;
+  margin: var(--abstand-2) 0 0;
+  display: grid;
+  gap: var(--abstand-1);
+}
+
+.warnung {
+  font-size: var(--schrift-s);
+  color: var(--regel-warnung-text);
+  background: var(--regel-warnung-bg);
+  border-left: var(--rand-dick) solid var(--regel-warnung-border);
+  padding: var(--abstand-1) var(--abstand-2);
+  border-radius: var(--radius-klein);
+}
+
+.ausgeschlossen {
+  background: var(--surface-sunken);
+  border-radius: var(--radius-gross);
+  padding: var(--abstand-3) var(--abstand-4);
+}
+
+.ausgeschlossen ul {
+  margin: 0 0 var(--abstand-2);
+  padding-left: var(--abstand-4);
+}

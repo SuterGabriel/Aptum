@@ -1125,6 +1125,55 @@ Kendo-Argument und die zwei Ausnahmen. Von Hand ein halber Tag.
 
 ---
 
+## 2026-09-10 — Stufe 1 abgeschlossen: die Terminsuche
+
+**Was delegiert wurde:** Die erste Seite. Formular nach den vier Dimensionen,
+der Suchflow aus dem Skill `angular-rxjs`, Vorschläge mit den ausgeschlossenen
+Slots und ihrem Grund. 11 Frontend-Tests grün, davon einer mit axe-core.
+
+**Der Skill hatte eine Referenz, die es nicht gab.** `referenzen/slot-suche.ts`
+stand seit Stufe 0 im Skill, die Datei nie im Repo. Jetzt zeigt der Skill auf
+den echten Service. Das ist besser als eine Beispieldatei neben dem Code: Die
+würde beim nächsten Umbau veralten, und kein Gate liest Beispiele.
+
+**Was gut lief.** Der Suchflow ist eine Kette von acht Zeilen, und jede Zusage
+hat ihren eigenen Test: drei Eingaben in 300 ms sind eine Anfrage; die zweite
+Anfrage bricht die erste ab (`cancelled` ist wahr); nach einem Fehler
+funktioniert die nächste Suche; eine 503 wird mit Abstand wiederholt, eine
+400 nicht — dieselbe Anfrage noch einmal ändert an einer falschen Kennung
+nichts. Die Komponente hält keinen Zustand und kennt kein `subscribe`. Das
+Formular ist ein Strom, der Service macht daraus Zustände, `toSignal` hält
+den letzten.
+
+Die zweite und dritte Dimension sind auf der Seite bewusst *kein* Filter.
+Wer das Heilmittel abrechnen darf, entscheidet die Regel Qualifikation, den
+Raum die Raumanforderung des Heilmittels. Die Seite sagt das so und zeigt
+rechts, was dadurch weggefallen ist. Das ist der Moment aus dem
+Wireframe-Auftrag, in dem das Produkt seine Fachlogik zeigt.
+
+**Was nicht funktionierte.** Der axe-Test hing fünf Sekunden und starb am
+Timeout: `axe.run` arbeitet mit echten Promises und Timern, `fakeAsync`
+friert genau die ein. Der Test läuft jetzt mit echten Timern und wartet die
+Entprellung real ab. Dann die Gegenprobe, bevor „keine Verstöße" als Beleg
+zählt: ein Eingabefeld ohne Beschriftung in einem Wegwerftest — axe meldet
+`label`. Erst danach ist grün eine Aussage.
+
+Zweitens hat der Produktions-Build etwas gefunden, das der Testlauf
+durchließ: `track v.beginn + v.therapeut` mit zwei optionalen Feldern aus dem
+OpenAPI-Dokument. Die erzeugten Typen sagen ehrlich, dass springdoc nichts
+als Pflichtfeld kennzeichnet — und der Build nimmt sie beim Wort.
+
+**Was die Testsuite abgefangen hat.** Nichts Fachliches; das liegt im
+Backend. Was der Suchflow abfängt, ist Zeit: Race Conditions und tote
+Streams sind Fehler, die im Browser nie reproduzierbar auftreten und im
+Test mit `tick(300)` jedes Mal.
+
+**Zeitschätzung:** delegiert etwa eineinhalb Stunden. Von Hand ein Tag,
+wovon der halbe für die Tests des Suchflows draufginge — die man dann
+weglässt.
+
+---
+
 ## Vorlage für weitere Einträge
 
 ```

@@ -1,0 +1,161 @@
+<div class="suche">
+  <form [formGroup]="form" class="kriterien" aria-labelledby="titel">
+    <h1 id="titel">Terminsuche</h1>
+    <p class="einleitung">
+      Ein freier Termin ist die Schnittmenge aus vier Dimensionen. Zwei davon gibt die Verordnung
+      vor, zwei wählt die Praxis.
+    </p>
+
+    <fieldset>
+      <legend><span class="nummer" aria-hidden="true">1</span> Verordnung</legend>
+      <label for="verordnung">Kennung der Verordnung</label>
+      <input
+        id="verordnung"
+        type="text"
+        formControlName="verordnung"
+        autocomplete="off"
+        spellcheck="false"
+        placeholder="00000000-0000-0000-0000-000000000000"
+        aria-describedby="verordnung-hinweis"
+        [attr.aria-invalid]="form.controls.verordnung.touched && form.controls.verordnung.invalid"
+      />
+      <p id="verordnung-hinweis" class="hinweis">
+        Die Kennung, die das Anlegen der Verordnung zurückgibt. Das Backend liest daraus
+        Restkontingent, Frequenz und Frist - hier wird nichts davon eingegeben.
+      </p>
+
+      <label for="heilmittel">Heilmittel</label>
+      <select id="heilmittel" formControlName="heilmittel">
+        @for (h of heilmittel; track h.code) {
+          <option [value]="h.code">{{ h.bezeichnung }}</option>
+        }
+      </select>
+    </fieldset>
+
+    <fieldset>
+      <legend><span class="nummer" aria-hidden="true">2</span> Therapeut</legend>
+      <p class="abgeleitet">
+        Kein Filter. Wer das Heilmittel abrechnen darf und wann Dienst hat, entscheiden die Regeln
+        <em>Qualifikation</em> und <em>Dienstplan</em>. Was dadurch wegfällt, steht rechts mit
+        Begründung.
+      </p>
+    </fieldset>
+
+    <fieldset>
+      <legend><span class="nummer" aria-hidden="true">3</span> Raum</legend>
+      <p class="abgeleitet">
+        Kein Filter. Die Raumanforderung folgt aus dem Heilmittel - Gerätebereich oder Liege, mit
+        Nachruhe, wo sie vorgeschrieben ist.
+      </p>
+    </fieldset>
+
+    <fieldset formGroupName="fenster">
+      <legend><span class="nummer" aria-hidden="true">4</span> Wunschfenster</legend>
+      <div class="paar">
+        <div>
+          <label for="von">Von</label>
+          <input id="von" type="date" formControlName="von" />
+        </div>
+        <div>
+          <label for="bis">Bis</label>
+          <input id="bis" type="date" formControlName="bis" />
+        </div>
+      </div>
+      <div class="paar">
+        <div>
+          <label for="fruehestens">Frühestens</label>
+          <input id="fruehestens" type="time" step="900" formControlName="fruehestens" />
+        </div>
+        <div>
+          <label for="spaetestens">Spätestens</label>
+          <input id="spaetestens" type="time" step="900" formControlName="spaetestens" />
+        </div>
+      </div>
+      @if (fensterFehler(); as fehler) {
+        <p class="fehler" role="alert">
+          @if (!fehler.tage) {
+            Das Fenster endet vor seinem Beginn.
+          } @else {
+            Die Tageszeit endet vor ihrem Beginn.
+          }
+        </p>
+      }
+      <fieldset class="tage" formGroupName="tage">
+        <legend>Wochentage</legend>
+        @for (t of wochentage; track t.code) {
+          <label class="tag">
+            <input type="checkbox" [formControlName]="t.code" />
+            <abbr [title]="t.lang">{{ t.kurz }}</abbr>
+          </label>
+        }
+      </fieldset>
+    </fieldset>
+  </form>
+
+  <section class="ergebnis" aria-labelledby="ergebnis-titel">
+    <h2 id="ergebnis-titel">Vorschläge</h2>
+    <p class="status" aria-live="polite">{{ statusText() }}</p>
+
+    @switch (zustand().status) {
+      @case ('leer') {
+        <p class="leer">Sobald eine gültige Kennung eingetragen ist, wird gesucht.</p>
+      }
+      @case ('fehler') {
+        @if (zustand(); as z) {
+          @if (z.status === 'fehler') {
+            <p class="fehler" role="alert">{{ z.meldung }}</p>
+          }
+        }
+      }
+      @case ('fertig') {
+        @if (zustand(); as z) {
+          @if (z.status === 'fertig') {
+            <p class="zusammenfassung">{{ z.antwort.zusammenfassung }}</p>
+            <ol class="vorschlaege">
+              @for (v of z.antwort.vorschlaege; track (v.beginn ?? '') + (v.therapeut ?? '')) {
+                <li class="vorschlag">
+                  <span class="wann">
+                    <span class="datum">{{ v.beginn | date: 'EEEE, d. MMMM' }}</span>
+                    <span class="zeit zahl">
+                      {{ v.beginn | date: 'HH:mm' }} bis {{ v.ende | date: 'HH:mm' }}
+                    </span>
+                  </span>
+                  <span class="wer">
+                    <span>{{ v.therapeut }}</span>
+                    <span class="trenner" aria-hidden="true">·</span>
+                    <span>{{ v.raum }}</span>
+                    <span class="trenner" aria-hidden="true">·</span>
+                    <span class="zahl">{{ dauerMinuten(v) }} min</span>
+                  </span>
+                  @if (v.warnungen?.length) {
+                    <ul class="warnungen">
+                      @for (w of v.warnungen; track w.regel) {
+                        <li class="warnung">{{ w.regel }}: {{ w.begruendung }}</li>
+                      }
+                    </ul>
+                  }
+                </li>
+              }
+            </ol>
+            @if (ausgeschlossen().length) {
+              <aside class="ausgeschlossen" aria-labelledby="ausgeschlossen-titel">
+                <h3 id="ausgeschlossen-titel">Nicht gezeigt</h3>
+                <ul>
+                  @for (a of ausgeschlossen(); track a.regel) {
+                    <li>
+                      <span class="zahl">{{ a.anzahl }}</span> wegen {{ a.regel }}
+                    </li>
+                  }
+                </ul>
+                <p class="hinweis">
+                  Von {{ z.antwort.geprueft }} geprüften Slots. Die Regeln entscheiden, nicht die
+                  Suche.
+                </p>
+              </aside>
+            }
+          }
+        }
+      }
+    }
+  </section>
+</div>
