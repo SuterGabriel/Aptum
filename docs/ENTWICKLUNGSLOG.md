@@ -976,6 +976,47 @@ Controller.
 
 ---
 
+## 2026-09-10 — Stufe 1, die Schnittstelle
+
+**Was delegiert wurde:** Schritt D — drei Anwendungsfälle ohne Framework,
+ein Filter für den Mandanten, zwei Controller mit eigenen DTOs, und ein Test,
+der die ganze Strecke über HTTP fährt: anlegen, suchen, buchen, noch einmal
+buchen. 169 Tests grün, davon 7 neu. Zum ersten Mal lässt sich das Projekt
+starten und mit `curl` befragen.
+
+**Der Satz aus CLAUDE.md, an der Stelle, an der er zählt.** Regel 3 — *der
+AI-Layer schlägt vor, die Domäne entscheidet* — hat jetzt ihren Ort:
+`TerminBuchen`. Ein Vorschlag aus der Suche, eine Buchung von Hand und später
+ein Vorschlag eines Sprachmodells landen alle dort, und dort fragt niemand,
+woher der Termin kommt. In der Gegenprobe das Regelwerk übersprungen: Die
+Doppelbuchung wurde zu 201, die Übersteuerung zu einem stillen FREI. Zwei
+Tests rot, genau die beiden.
+
+**Was bewusst ein Platzhalter ist, und so heißt.** Der Mandant kommt aus der
+Kopfzeile `X-Mandant`, die jeder setzen kann. Das ist kein
+Sicherheitsmechanismus, sondern der Stub, der die Kette Anfrage → Kontext →
+Transaktion → Policy einmal vollständig laufen lässt. Er steht als Punkt 8 in
+den offenen Punkten, und der Filter sagt es in seinem Kopfkommentar selbst.
+Ohne Kopfzeile gibt es 400 — keinen Standardmandanten.
+
+**Was am Zuschnitt auffiel.** Die Höchstmenge greift beim Erfassen, nicht
+beim Buchen; `VerordnungAnlegen` ist deshalb der erste Anwendungsfall, der
+nur eine Regel kennt. Und die Buchung schreibt zweimal: den Termin in den
+Kalender und die Behandlung auf die Verordnung. Ohne das zweite wüsste die
+nächste Suche nichts vom Restkontingent — der Fehler wäre erst beim sechsten
+Termin aufgefallen, als gebuchte siebte Einheit.
+
+**Was nicht funktionierte.** Nichts am Code — der Build war auf Anhieb grün,
+was nach den vier Fehlern in Schritt B fast verdächtig war. Zwei Kleinigkeiten
+daneben: Ein neuer Abschnitt in den offenen Punkten stand vor dem vorherigen,
+und die Skript-Gates liefen einmal im falschen Verzeichnis, weil ein
+paralleler Maven-Aufruf es gewechselt hatte. Beides beim Hinsehen gefunden,
+beides ohne Folgen.
+
+**Zeitschätzung:** delegiert etwa eine Stunde, von Hand geschätzt zwei Tage.
+
+---
+
 ## Vorlage für weitere Einträge
 
 ```

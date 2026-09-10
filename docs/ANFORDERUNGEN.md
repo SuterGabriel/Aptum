@@ -26,7 +26,7 @@ Projekt-ID 3038770 · Projekt-Nr. a1WSZ0000088BoH2AU · Start 09.09.2026 ·
 |---|---|---|---|
 | S1 | Sehr gute Kenntnisse in dem Frontend-Framework Angular | offen | `frontend/` |
 | S2 | Sehr gutes Verständnis von rxjs-Bibliothek | offen | `frontend/` — kanonischer Suchflow, kommentiert |
-| S3 | Erfahrung mit Spring Boot, REST-APIs sowie Microservices-Architekturen | in Arbeit | Spring Boot 3.5, JPA-Adapter hinter Ports der Domäne in `services/scheduling/infrastructure/src/main/java/de/aptum/scheduling/infrastructure/persistenz/`, Flyway, Testcontainers; REST-Endpunkte folgen |
+| S3 | Erfahrung mit Spring Boot, REST-APIs sowie Microservices-Architekturen | in Arbeit | Spring Boot 3.5, JPA-Adapter hinter Ports, REST in `services/scheduling/infrastructure/src/main/java/de/aptum/scheduling/infrastructure/rest/`, Ende-zu-Ende-Test über HTTP gegen Postgres; von drei geplanten Services existiert einer |
 | S4 | Erfahrung in Java (Java 11 oder höher) | in Arbeit | Java 21, Maven nach ADR-008, erste Regelklasse mit 12 Tests: `services/scheduling/domain/` |
 | S5 | Erfahrung in der Weiterentwicklung von komplexen Anwendungen mit sehr viel Business-Logik | teilweise belegbar | `services/scheduling/domain/` — benannte Regel mit Fundstelle und parametrisierten Grenzfalltests. Siehe Hinweis unten. |
 
@@ -52,7 +52,7 @@ Projekt-ID 3038770 · Projekt-Nr. a1WSZ0000088BoH2AU · Start 09.09.2026 ·
 | SA3 | Ausbau der Multi-Mandanten-Architektur | belegt | `docs/adr/ADR-002-multi-tenancy.md`; Row Level Security in `services/scheduling/infrastructure/src/main/resources/db/migration/V1__mandantentrennung.sql`; Isolationstest `services/scheduling/infrastructure/src/test/java/de/aptum/scheduling/infrastructure/mandant/MandantIsolationTest.java` gegen echtes Postgres |
 | SA4 | Weiterentwicklung von Kalender- und Verfügbarkeitsfunktionen | in Arbeit | Slot-Suche über vier Dimensionen in `services/scheduling/domain/src/main/java/de/aptum/scheduling/domain/suche/`; Kalender-Grid folgt in Stufe 2 |
 | SA5 | Berücksichtigung fachlicher und regulatorischer Anforderungen der Branche | belegt | `.claude/skills/heilmittel-domain/regeln.md` — jede Regel mit Wert, Fundstelle und Beleg-Status |
-| SA6 | Entwicklung von Java-Backends und REST-APIs | offen | `services/`, OpenAPI |
+| SA6 | Entwicklung von Java-Backends und REST-APIs | in Arbeit | `services/scheduling/infrastructure/src/main/java/de/aptum/scheduling/infrastructure/rest/`; OpenAPI folgt |
 | SA7 | Umsetzung und Optimierung von Microservices | offen | drei Services, bewusst wenige |
 | SA8 | Analyse und Umsetzung fachlicher Anforderungen aus dem Praxisumfeld | belegt | `docs/PRODUKT.md` |
 | SA9 | Erstellung technischer Konzepte und Architekturentscheidungen | belegt | `docs/adr/`, `DECISIONS.md` |

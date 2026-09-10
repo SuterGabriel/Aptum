@@ -13,8 +13,9 @@ zählt, was sie aus welchem Grund weggelassen hat. Dasselbe Regelwerk, das die
 Suche befragt, prüft später jede Buchung von Hand und jeden Vorschlag eines
 Sprachmodells — es gibt keinen zweiten Weg. Das Spring-Boot-Gerüst steht in
 drei Modulen, die Persistenz trennt Mandanten per Row Level Security und
-beweist das gegen ein echtes Postgres (ADR-002). REST und das Angular-Frontend
-sind offen.
+beweist das gegen ein echtes Postgres (ADR-002). Zwei REST-Endpunkte suchen und buchen
+durch dasselbe Regelwerk — nachspielbar mit `curl`. Das Angular-Frontend ist
+offen.
 
 Vorgezogen aus Stufe 2 sind die Gestaltungstoken und die Kontrastprüfung
 (ADR-006), weil der Auftrag an die Gestaltung eine Grundlage brauchte. Was

@@ -150,6 +150,10 @@ echo "ADR-001 — Ports innen, Adapter außen"
 pruefe "Repository-Port liegt im Domain-Modul" datei services/scheduling/domain/src/main/java/de/aptum/scheduling/domain/port/VerordnungRepository.java
 pruefe "JPA-Adapter liegt in infrastructure" datei services/scheduling/infrastructure/src/main/java/de/aptum/scheduling/infrastructure/persistenz/VerordnungRepositoryAdapter.java
 pruefe "ArchUnit: keine Entity verlässt den Adapter" enthaelt services/scheduling/infrastructure/src/test/java/de/aptum/scheduling/infrastructure/ModulgrenzenTest.java "keineEntityVerlaesstDenAdapter"
+pruefe "Anwendungsfälle ohne Framework" datei services/scheduling/application/src/main/java/de/aptum/scheduling/application/anwendungsfall/TerminBuchen.java
+pruefe "REST über dasselbe Regelwerk" datei services/scheduling/infrastructure/src/main/java/de/aptum/scheduling/infrastructure/rest/TerminController.java
+pruefe "Ende-zu-Ende-Test über HTTP" datei services/scheduling/infrastructure/src/test/java/de/aptum/scheduling/infrastructure/rest/RestApiTest.java
+pruefe "Header-Stub ist als offen geführt" enthaelt docs/OFFENE-PUNKTE.md "X-Mandant"
 pruefe "stumme Lücke 1 ist Fixture" datei scripts/fixtures/regel-check/domain/NachbarBorgt.java
 pruefe "stumme Lücke 2 ist Fixture" datei scripts/fixtures/regel-check/domain/KlassenkommentarBorgt.java
 pruefe "Wertabgleich ist Fixture" datei scripts/fixtures/regel-check/domain/FalscherWert.java

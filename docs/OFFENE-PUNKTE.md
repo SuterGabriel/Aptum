@@ -83,3 +83,14 @@ belegt nichts.
 **Nachgeholt am 2026-09-10:** Die Begründung steht als
 [ADR-008](adr/ADR-008-maven-statt-gradle.md), mit Vermerk, dass sie einen Tag zu
 spät kommt. Die Verspätung selbst bleibt dort stehen, statt geglättet zu werden.
+
+## 8. Authentifizierung ist ein Platzhalter
+
+Der Mandant kommt aus der Kopfzeile `X-Mandant`, die jeder setzen kann. Das
+ist kein Sicherheitsmechanismus, sondern ein Stub, damit die Kette Anfrage →
+Kontext → Transaktion → Policy einmal vollständig läuft und testbar ist. In
+einer echten Anwendung käme der Mandant aus einem signierten Token, etwa per
+OIDC. Der Filter ist so benannt, und der Stub wird durch nichts verschleiert.
+
+**Formulierung nach außen:** Die Mandantentrennung ist in der Datenbank
+gebaut und getestet; wer der Mandant ist, entscheidet heute ein Header.
