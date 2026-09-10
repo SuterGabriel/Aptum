@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: aptum-scheduling
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      # Nur "UP" oder "DOWN" nach außen. Details nennen Komponenten und
+      # Verbindungen, und das gehört nicht in eine unauthentifizierte Antwort.
+      show-details: never

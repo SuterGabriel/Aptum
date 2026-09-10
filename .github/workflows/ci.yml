@@ -85,12 +85,12 @@ jobs:
       - name: Kontraste nachrechnen
         run: node scripts/kontrast-check.mjs
 
-  domain:
-    name: Domain kompilieren und testen
+  backend:
+    name: Backend bauen und testen
     runs-on: ubuntu-latest
-    # Der erste Job, der nicht in Sekunden fertig ist. Java 21 und Maven nach
-    # ADR-008; das Domain-Modul hat laut ADR-001 keine Framework-Abhängigkeit,
-    # deshalb braucht dieser Job weder Datenbank noch Container.
+    # Alle drei Module: domain, application, infrastructure. Java 21 und Maven
+    # nach ADR-008. Der Spring-Kontext startet im Test, aber ohne Datenbank -
+    # die kommt mit dem Job backend-it und Testcontainers.
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
@@ -98,10 +98,10 @@ jobs:
           distribution: temurin
           java-version: '21'
           cache: maven
-      # Formatierung, Domain-Tests und ArchUnit in einem Lauf. ArchUnit ist
-      # ein gewöhnlicher Test im Domain-Modul; ADR-001 wird damit bei jedem
-      # Lauf geprüft, nicht nur behauptet.
-      - name: Format, Domain-Tests, ArchUnit
+      # Formatierung, Tests und ArchUnit in einem Lauf. ArchUnit prüft im
+      # Domain-Modul, was die Domäne nicht kennt, und in infrastructure, wer
+      # wen kennen darf - ADR-001 bei jedem Lauf, nicht nur behauptet.
+      - name: Format, Tests, ArchUnit
         run: mvn -B --file services/scheduling/pom.xml spotless:check test
       # Wenn ein Test rot ist, gehört der Bericht dazu - nicht nur das Log.
       - name: Testberichte sichern

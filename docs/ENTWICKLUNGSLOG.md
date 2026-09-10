@@ -824,6 +824,56 @@ dem Formatieren rot ist.
 
 ---
 
+## 2026-09-10 — Stufe 1, das erste, was man starten kann
+
+**Was delegiert wurde:** ADR-002 zur Mandantentrennung und Schritt A der
+Anwendungsschicht: drei Module nach ADR-008, Spring Boot in `infrastructure`,
+`MandantId` und `MandantKontext` in `application`, ein Health-Endpunkt und
+ArchUnit über die Modulgrenzen. 152 Tests grün, davon 4 neu.
+
+**ADR-002 im Moment der Entscheidung.** Zum ersten Mal ohne
+Verspätungsvermerk. Die Frage war seit Stufe 0 reserviert und wurde fällig,
+weil die erste Tabelle ihren Schnitt braucht. Entschieden: eine Spalte je
+Tabelle, Row Level Security in Postgres als zweite Verteidigungslinie, der
+Mandant im Sicherheitskontext statt im Domänenobjekt. Der Isolationstest ist
+das Gate, und die ADR sagt selbst, was ohne ihn gälte — dann wäre Schema je
+Mandant vorzuziehen, weil Struktur Disziplin schlägt, wenn niemand die
+Disziplin prüft.
+
+**Was gut lief.** Spring Boot als BOM statt als Parent-Pom. Der eigene Parent
+bleibt, und `domain` wie `application` erben nichts von Spring — die Module
+ohne Framework bleiben es auch im Build, nicht nur im Quelltext. ArchUnit
+prüft die Modulgrenzen jetzt dort, wo alle drei auf dem Klassenpfad liegen,
+als zweiter Riegel neben den Maven-Abhängigkeiten.
+
+**Was die Gegenprobe abgefangen hat — zweimal an mir, wieder.** Die Sonde für
+die Modulgrenzen kompilierte nicht, weil `application` kein Spring auf dem
+Klassenpfad hat; ein Compile-Fehler ist keine Architekturverletzung. Also die
+Sonde ins Infrastruktur-Modul, unter das `application`-Paket — ArchUnit prüft
+Pakete, nicht Module, und das ist an dieser Stelle die richtige Sonde.
+
+Der zweite Fehler war stiller: `mvn -pl infrastructure` fand
+`scheduling-application` nicht, weil es nur im Reactor existiert und nicht im
+lokalen Repository. Die Ausgabe zeigte einen Auflösungsfehler, mein Filter
+zeigte nichts. Erst der Rücklauf ohne Sonde machte den Fehler sichtbar, weil
+er *auch* rot war. Mit `-am` baut Maven die Abhängigkeiten mit, und dann
+schlug die Regel an.
+
+Das ist heute das dritte Mal, dass eine Gegenprobe aus dem falschen Grund
+rot oder aus dem falschen Grund stumm war. Die Lehre steht inzwischen fest:
+Ein Filter über eine Build-Ausgabe muss die Zeile enthalten, die den Erfolg
+beweist — nicht nur die, die den Fehler zeigen würde.
+
+**Was bleibt.** Der `MandantKontext` hat noch keine Implementierung; sie
+kommt mit dem Header-Platzhalter in Schritt D. Und das Gate der ADR — der
+Isolationstest — kommt mit der ersten Tabelle in Schritt B. Bis dahin ist
+ADR-002 eine Entscheidung mit angekündigtem Beweis.
+
+**Zeitschätzung:** delegiert etwa eine Stunde, von Hand geschätzt ein Tag —
+davon die Hälfte für die Frage, warum `-pl` ohne `-am` nicht auflöst.
+
+---
+
 ## Vorlage für weitere Einträge
 
 ```

@@ -75,7 +75,7 @@ Ergebnisses, nicht nur Werkzeug.
 | `dokumente` | Ausgeschriebene Umlaute in Prosa · tote Verweise zwischen Markdown-Dateien |
 | `regeln` | Der Regelkatalog ist vollständig ausgezeichnet, und kein Domänencode nennt eine Zahl ohne belegte Fundstelle |
 | `kontrast` | Jedes geforderte Farbpaar aus `tokens.css` hält seine WCAG-Schwelle |
-| `domain` | Formatierung (Spotless), Domain-Tests, ArchUnit gegen ADR-001 — der einzige Job mit JVM |
+| `backend` | Formatierung (Spotless), Tests aller drei Module, ArchUnit gegen ADR-001 in domain und infrastructure — der einzige Job mit JVM, noch ohne Datenbank |
 
 Ab Stufe 1 kommen Kompilieren, Domain-Tests und ArchUnit dazu, später
 Testcontainers, Playwright mit axe-core und die Eval-Suite. Sie stehen als

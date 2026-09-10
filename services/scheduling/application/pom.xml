@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Die Anwendungsschicht: Anwendungsfaelle und die Ports, die sie nach aussen
+  brauchen. Orchestriert, entscheidet nicht - die Entscheidung liegt im
+  Regelwerk des Domaenenkerns.
+
+  Auch dieses Modul kennt kein Framework. Spring existiert erst in
+  infrastructure. Ein Anwendungsfall ist damit ohne Kontext testbar, und die
+  Mandanten-ID kommt als Wert herein, nicht als Annotation.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>de.aptum</groupId>
+    <artifactId>scheduling</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>scheduling-application</artifactId>
+  <name>Aptum Scheduling Application</name>
+
+  <dependencies>
+    <dependency>
+      <groupId>de.aptum</groupId>
+      <artifactId>scheduling-domain</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+</project>

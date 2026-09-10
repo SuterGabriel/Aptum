@@ -134,6 +134,10 @@ echo "Was CLAUDE.md verlangt, gibt es auch"
 pruefe "ArchUnit prüft ADR-001" datei services/scheduling/domain/src/test/java/de/aptum/scheduling/domain/ArchitekturTest.java
 pruefe "Formatter ist im Build" enthaelt services/scheduling/pom.xml "spotless"
 pruefe "ADR-009 entscheidet Blockieren gegen Warnen" datei docs/adr/ADR-009-blockieren-mit-uebersteuerung.md
+# ADR-008 verspricht drei Module je Service, ADR-001 die Richtung dazwischen.
+pruefe "Modul application existiert" datei services/scheduling/application/pom.xml
+pruefe "Modul infrastructure existiert" datei services/scheduling/infrastructure/pom.xml
+pruefe "ArchUnit prüft die Modulgrenzen" datei services/scheduling/infrastructure/src/test/java/de/aptum/scheduling/infrastructure/ModulgrenzenTest.java
 pruefe "stumme Lücke 1 ist Fixture" datei scripts/fixtures/regel-check/domain/NachbarBorgt.java
 pruefe "stumme Lücke 2 ist Fixture" datei scripts/fixtures/regel-check/domain/KlassenkommentarBorgt.java
 pruefe "Wertabgleich ist Fixture" datei scripts/fixtures/regel-check/domain/FalscherWert.java

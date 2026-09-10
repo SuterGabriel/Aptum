@@ -11,8 +11,9 @@ als benannte Regeln mit parametrisierten Grenzfalltests modelliert, und die
 Slot-Suche schneidet sie: Sie liefert Vorschläge mit ihrem Prüfbericht und
 zählt, was sie aus welchem Grund weggelassen hat. Dasselbe Regelwerk, das die
 Suche befragt, prüft später jede Buchung von Hand und jeden Vorschlag eines
-Sprachmodells — es gibt keinen zweiten Weg. Spring, Multi-Tenancy und das
-Angular-Frontend sind offen.
+Sprachmodells — es gibt keinen zweiten Weg. Das Spring-Boot-Gerüst steht in
+drei Modulen und startet; Persistenz mit Mandantentrennung (ADR-002), REST und
+das Angular-Frontend sind offen.
 
 Vorgezogen aus Stufe 2 sind die Gestaltungstoken und die Kontrastprüfung
 (ADR-006), weil der Auftrag an die Gestaltung eine Grundlage brauchte. Was
@@ -102,7 +103,7 @@ der eigenen Maschine. Wie sie zugeschnitten sind und was sie *nicht* abfangen, s
 | Stufe | Inhalt | Stand |
 |---|---|---|
 | 0 | Setup, Regeln, Skills, CI-Grundgerüst, ADR-001 | **erledigt** |
-| 1 | Domänenkern in reinem Java, dann Spring, Multi-Tenancy, Angular-Suchflow | **in Arbeit** — Domänenkern mit Slot-Suche steht, Spring und Frontend offen |
+| 1 | Domänenkern in reinem Java, dann Spring, Multi-Tenancy, Angular-Suchflow | **in Arbeit** — Domänenkern mit Slot-Suche steht, Spring-Boot-Gerüst startet, Persistenz und Frontend offen |
 | 2 | Kalender-Grid, Tabelle, WCAG, End-to-End-Tests | offen |
 | 3 | AI-Layer, MCP-Server, Evals, Provider-Vergleich | offen |
 | 4 | Terraform, Helm, ArgoCD, Observability | offen |

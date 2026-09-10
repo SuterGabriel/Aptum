@@ -26,7 +26,7 @@ Projekt-ID 3038770 · Projekt-Nr. a1WSZ0000088BoH2AU · Start 09.09.2026 ·
 |---|---|---|---|
 | S1 | Sehr gute Kenntnisse in dem Frontend-Framework Angular | offen | `frontend/` |
 | S2 | Sehr gutes Verständnis von rxjs-Bibliothek | offen | `frontend/` — kanonischer Suchflow, kommentiert |
-| S3 | Erfahrung mit Spring Boot, REST-APIs sowie Microservices-Architekturen | offen | `services/` |
+| S3 | Erfahrung mit Spring Boot, REST-APIs sowie Microservices-Architekturen | in Arbeit | Spring Boot 3.5 in `services/scheduling/infrastructure/`, drei Module nach ADR-001; REST-Endpunkte folgen |
 | S4 | Erfahrung in Java (Java 11 oder höher) | in Arbeit | Java 21, Maven nach ADR-008, erste Regelklasse mit 12 Tests: `services/scheduling/domain/` |
 | S5 | Erfahrung in der Weiterentwicklung von komplexen Anwendungen mit sehr viel Business-Logik | teilweise belegbar | `services/scheduling/domain/` — benannte Regel mit Fundstelle und parametrisierten Grenzfalltests. Siehe Hinweis unten. |
 
@@ -49,7 +49,7 @@ Projekt-ID 3038770 · Projekt-Nr. a1WSZ0000088BoH2AU · Start 09.09.2026 ·
 |---|---|---|---|
 | SA1 | Weiterentwicklung der Praxissoftware für Physio- und Ergotherapien | in Arbeit | Domäne des gesamten Projekts, `docs/PRODUKT.md` |
 | SA2 | Harmonisierung mehrerer Systeminstanzen | nicht belegbar | Bestandsaufgabe, setzt gewachsene Systeminstanzen voraus — siehe Abschnitt D |
-| SA3 | Ausbau der Multi-Mandanten-Architektur | offen | ADR-002 (noch nicht geschrieben), Isolationstest im CI-Job `backend-it` |
+| SA3 | Ausbau der Multi-Mandanten-Architektur | in Arbeit | `docs/adr/ADR-002-multi-tenancy.md` entschieden, `MandantId` und `MandantKontext` in `services/scheduling/application/`; Isolationstest folgt mit der ersten Tabelle |
 | SA4 | Weiterentwicklung von Kalender- und Verfügbarkeitsfunktionen | in Arbeit | Slot-Suche über vier Dimensionen in `services/scheduling/domain/src/main/java/de/aptum/scheduling/domain/suche/`; Kalender-Grid folgt in Stufe 2 |
 | SA5 | Berücksichtigung fachlicher und regulatorischer Anforderungen der Branche | belegt | `.claude/skills/heilmittel-domain/regeln.md` — jede Regel mit Wert, Fundstelle und Beleg-Status |
 | SA6 | Entwicklung von Java-Backends und REST-APIs | offen | `services/`, OpenAPI |
@@ -71,7 +71,7 @@ Verlängerung möglich · 80–100 % · AI-native Healthcare SaaS
 |---|---|---|---|
 | C1 | Mehrjährige Senior-Erfahrung als Full-Stack Engineer mit modernen Webanwendungen | teilweise belegbar | Portfolio + dieses Projekt |
 | C2 | Tiefe in mindestens einem Frontend-Stack (React oder Angular) | offen | `frontend/` (Angular) |
-| C3 | Tiefe in einem Backend-Stack (Java/Spring Boot oder Python) | in Arbeit | Java 21 in `services/scheduling/domain/`; Spring Boot folgt mit der Anwendungsschicht |
+| C3 | Tiefe in einem Backend-Stack (Java/Spring Boot oder Python) | in Arbeit | Java 21 in `services/scheduling/domain/`, Spring Boot 3.5 in `services/scheduling/infrastructure/` |
 | C4 | Solide Kenntnisse der relevanten Cloud- und DevOps-Praktiken (u. a. Kubernetes, Helm, ArgoCD, Terraform) | offen | `infra/` |
 | C5 | Nachweisbarer, effektiver Einsatz von KI in der Softwareentwicklung | in Arbeit | `.claude/` im Repo, `docs/ENTWICKLUNGSLOG.md`, CI-Guardrails |
 | C6 | Abgeschlossenes Studium der Informatik, Software Engineering oder vergleichbarer technischer Fachrichtung | zu klären | nicht durch das Repo belegbar — siehe `docs/OFFENE-PUNKTE.md` |
