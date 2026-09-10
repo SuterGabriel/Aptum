@@ -533,6 +533,46 @@ Tage — die Heilmittel-Tabelle allein wäre ein halber gewesen.
 
 ---
 
+## 2026-09-10 — Stufe 1, die Dimension Raum
+
+**Was delegiert wurde:** Etappe B der Slot-Berechnung — Raum, Raumanforderung
+und die Ausstattungsregel. 111 Tests grün, davon 27 neu.
+
+**Die Anforderung ist zweiteilig, und der zweite Teil rutscht leicht durch.**
+Krankengymnastik am Gerät verlangt einen Bereich von mindestens 30 m² *und*
+vier Pflichtgeräte — dazu vier Quadratmeter mehr je weiterem Gerät. Ein Raum
+mit 30 m² und zehn Geräten erfüllt die Anforderung also nicht, obwohl er die
+Grundfläche hat. Wer nur die Grundfläche prüft, lässt ihn durch.
+
+Das war der Fall für die Gegenprobe: Zuschlagsformel entfernt, zwei Tests rot —
+„ein Gerät mehr, aber die Fläche fehlt" und „genug Fläche für den Grundfall, zu
+viele Geräte darin". Beide hätten ohne den Zuschlag stillschweigend gepasst.
+
+**Was bewusst nicht geprüft wird.** Drei Dinge, alle benannt statt vergessen:
+
+- Die Grundausstattung der Praxis — Mindestfläche, zwei höhenverstellbare
+  Liegen, Notrufanlage (`HM-RAUM-01`) — ist eine Zulassungsvoraussetzung und
+  keine Eigenschaft der einzelnen Buchung. Sie gehört nicht in die Slot-Suche.
+- Wassertiefe und Temperatur des Bewegungsbads (`HM-RAUM-03`) sind
+  Eigenschaften der Anlage. Ob ein Raum ein zugelassenes Bewegungsbad ist, wird
+  als Tatsache geführt und nicht vor jedem Termin nachgerechnet.
+- Die Ergotherapie kennt keine leistungsbezogenen Sonderbereiche
+  (`HM-RAUM-07`), also greift die Regel dort nie.
+
+**Was die Gegenprobe an mir selbst gelehrt hat.** Der erste Durchgang meldete
+scheinbar nichts, weil die Ausgabe durch ein `head -3` abgeschnitten war — die
+fehlgeschlagene Testklasse steht alphabetisch weiter hinten. Für zwei Minuten
+sah es aus wie ein zweites stummes Gate.
+
+Das ist die Lehre aus dem Eintrag darüber in kleiner Münze: Eine Gegenprobe, die
+nichts meldet, ist erst dann ein Befund, wenn man sicher ist, dass man auch
+hingesehen hat. Ein abgeschnittener Filter sieht genauso aus wie ein blindes
+Gate.
+
+**Zeitschätzung:** delegiert etwa dreißig Minuten, von Hand geschätzt ein Tag.
+
+---
+
 ## Vorlage für weitere Einträge
 
 ```

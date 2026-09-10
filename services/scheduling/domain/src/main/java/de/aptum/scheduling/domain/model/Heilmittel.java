@@ -27,40 +27,40 @@ public enum Heilmittel {
     // --- Physiotherapie ---------------------------------------------------
 
     /** @fundstelle HM-ZEIT-01 */
-    KG_EINZEL("Krankengymnastik", Therapieform.PHYSIOTHERAPIE, 15, 25, Zertifikatsleistung.KEINE),
+    KG_EINZEL("Krankengymnastik", Therapieform.PHYSIOTHERAPIE, 15, 25, Zertifikatsleistung.KEINE, Raumanforderung.GRUNDAUSSTATTUNG),
 
     /** @fundstelle HM-ZEIT-02 */
-    KG_GRUPPE("Krankengymnastik in der Gruppe", Therapieform.PHYSIOTHERAPIE, 20, 30, Zertifikatsleistung.KEINE),
+    KG_GRUPPE("Krankengymnastik in der Gruppe", Therapieform.PHYSIOTHERAPIE, 20, 30, Zertifikatsleistung.KEINE, Raumanforderung.GRUNDAUSSTATTUNG),
 
     /** @fundstelle HM-ZEIT-03 */
-    MANUELLE_THERAPIE("Manuelle Therapie", Therapieform.PHYSIOTHERAPIE, 15, 25, Zertifikatsleistung.MANUELLE_THERAPIE),
+    MANUELLE_THERAPIE("Manuelle Therapie", Therapieform.PHYSIOTHERAPIE, 15, 25, Zertifikatsleistung.MANUELLE_THERAPIE, Raumanforderung.GRUNDAUSSTATTUNG),
 
     /** @fundstelle HM-ZEIT-04 */
-    KLASSISCHE_MASSAGE("Klassische Massagetherapie", Therapieform.PHYSIOTHERAPIE, 15, 20, Zertifikatsleistung.KEINE),
+    KLASSISCHE_MASSAGE("Klassische Massagetherapie", Therapieform.PHYSIOTHERAPIE, 15, 20, Zertifikatsleistung.KEINE, Raumanforderung.GRUNDAUSSTATTUNG),
 
     /** @fundstelle HM-ZEIT-05 */
-    MLD_TEILBEHANDLUNG("Manuelle Lymphdrainage, Teilbehandlung", Therapieform.PHYSIOTHERAPIE, 30, 30, Zertifikatsleistung.LYMPHDRAINAGE),
+    MLD_TEILBEHANDLUNG("Manuelle Lymphdrainage, Teilbehandlung", Therapieform.PHYSIOTHERAPIE, 30, 30, Zertifikatsleistung.LYMPHDRAINAGE, Raumanforderung.GRUNDAUSSTATTUNG),
 
     /** @fundstelle HM-ZEIT-05 */
-    MLD_GROSSBEHANDLUNG("Manuelle Lymphdrainage, Grossbehandlung", Therapieform.PHYSIOTHERAPIE, 45, 45, Zertifikatsleistung.LYMPHDRAINAGE),
+    MLD_GROSSBEHANDLUNG("Manuelle Lymphdrainage, Grossbehandlung", Therapieform.PHYSIOTHERAPIE, 45, 45, Zertifikatsleistung.LYMPHDRAINAGE, Raumanforderung.GRUNDAUSSTATTUNG),
 
     /** @fundstelle HM-ZEIT-05 */
-    MLD_GANZBEHANDLUNG("Manuelle Lymphdrainage, Ganzbehandlung", Therapieform.PHYSIOTHERAPIE, 60, 60, Zertifikatsleistung.LYMPHDRAINAGE),
+    MLD_GANZBEHANDLUNG("Manuelle Lymphdrainage, Ganzbehandlung", Therapieform.PHYSIOTHERAPIE, 60, 60, Zertifikatsleistung.LYMPHDRAINAGE, Raumanforderung.GRUNDAUSSTATTUNG),
 
     /** @fundstelle HM-ZEIT-06 */
-    KG_ZNS_ERWACHSENE("KG-ZNS, Erwachsene", Therapieform.PHYSIOTHERAPIE, 25, 35, Zertifikatsleistung.KG_ZNS_ERWACHSENE),
+    KG_ZNS_ERWACHSENE("KG-ZNS, Erwachsene", Therapieform.PHYSIOTHERAPIE, 25, 35, Zertifikatsleistung.KG_ZNS_ERWACHSENE, Raumanforderung.GRUNDAUSSTATTUNG),
 
     /** @fundstelle HM-ZEIT-07 */
-    KG_ZNS_KINDER("KG-ZNS, Kinder", Therapieform.PHYSIOTHERAPIE, 30, 45, Zertifikatsleistung.KG_ZNS_KINDER),
+    KG_ZNS_KINDER("KG-ZNS, Kinder", Therapieform.PHYSIOTHERAPIE, 30, 45, Zertifikatsleistung.KG_ZNS_KINDER, Raumanforderung.GRUNDAUSSTATTUNG),
 
     /** @fundstelle HM-ZEIT-08 */
-    KG_GERAET("Krankengymnastik am Gerät", Therapieform.PHYSIOTHERAPIE, 60, 60, Zertifikatsleistung.GERAET),
+    KG_GERAET("Krankengymnastik am Gerät", Therapieform.PHYSIOTHERAPIE, 60, 60, Zertifikatsleistung.GERAET, Raumanforderung.GERAETEBEREICH),
 
     /** @fundstelle HM-ZEIT-09 */
-    KG_BEWEGUNGSBAD("Krankengymnastik im Bewegungsbad", Therapieform.PHYSIOTHERAPIE, 20, 30, Zertifikatsleistung.KEINE),
+    KG_BEWEGUNGSBAD("Krankengymnastik im Bewegungsbad", Therapieform.PHYSIOTHERAPIE, 20, 30, Zertifikatsleistung.KEINE, Raumanforderung.BEWEGUNGSBAD),
 
     /** @fundstelle HM-ZEIT-10 */
-    WARMPACKUNG("Warmpackung", Therapieform.PHYSIOTHERAPIE, 20, 30, Zertifikatsleistung.KEINE),
+    WARMPACKUNG("Warmpackung", Therapieform.PHYSIOTHERAPIE, 20, 30, Zertifikatsleistung.KEINE, Raumanforderung.GRUNDAUSSTATTUNG),
 
     // --- Ergotherapie -----------------------------------------------------
     // Die Zeiten sind Regelleistungszeiten und enthalten 15 Minuten Vor- und
@@ -68,34 +68,37 @@ public enum Heilmittel {
     // Teil der Angabe.
 
     /** @fundstelle HM-ZEIT-11 */
-    ERGO_MOTORISCH_FUNKTIONELL("Motorisch-funktionelle Behandlung", Therapieform.ERGOTHERAPIE, 45, 45, Zertifikatsleistung.KEINE),
+    ERGO_MOTORISCH_FUNKTIONELL("Motorisch-funktionelle Behandlung", Therapieform.ERGOTHERAPIE, 45, 45, Zertifikatsleistung.KEINE, Raumanforderung.GRUNDAUSSTATTUNG),
 
     /** @fundstelle HM-ZEIT-12 */
-    ERGO_SENSOMOTORISCH("Sensomotorisch-perzeptive Behandlung", Therapieform.ERGOTHERAPIE, 60, 60, Zertifikatsleistung.KEINE),
+    ERGO_SENSOMOTORISCH("Sensomotorisch-perzeptive Behandlung", Therapieform.ERGOTHERAPIE, 60, 60, Zertifikatsleistung.KEINE, Raumanforderung.GRUNDAUSSTATTUNG),
 
     /** @fundstelle HM-ZEIT-13 */
-    ERGO_HIRNLEISTUNGSTRAINING("Hirnleistungstraining", Therapieform.ERGOTHERAPIE, 45, 45, Zertifikatsleistung.KEINE),
+    ERGO_HIRNLEISTUNGSTRAINING("Hirnleistungstraining", Therapieform.ERGOTHERAPIE, 45, 45, Zertifikatsleistung.KEINE, Raumanforderung.GRUNDAUSSTATTUNG),
 
     /** @fundstelle HM-ZEIT-14 */
-    ERGO_PSYCHISCH_FUNKTIONELL("Psychisch-funktionelle Behandlung", Therapieform.ERGOTHERAPIE, 75, 75, Zertifikatsleistung.KEINE),
+    ERGO_PSYCHISCH_FUNKTIONELL("Psychisch-funktionelle Behandlung", Therapieform.ERGOTHERAPIE, 75, 75, Zertifikatsleistung.KEINE, Raumanforderung.GRUNDAUSSTATTUNG),
 
     /** @fundstelle HM-ZEIT-15 */
-    ERGO_BERATUNG_UMFELD("Beratung des Umfelds", Therapieform.ERGOTHERAPIE, 120, 120, Zertifikatsleistung.KEINE);
+    ERGO_BERATUNG_UMFELD("Beratung des Umfelds", Therapieform.ERGOTHERAPIE, 120, 120, Zertifikatsleistung.KEINE, Raumanforderung.GRUNDAUSSTATTUNG);
 
     private final String bezeichnung;
     private final Therapieform therapieform;
     private final Duration mindestdauer;
     private final Duration regeldauer;
     private final Zertifikatsleistung zertifikatsleistung;
+    private final Raumanforderung raumanforderung;
 
     Heilmittel(String bezeichnung, Therapieform therapieform,
                int mindestminuten, int regelminuten,
-               Zertifikatsleistung zertifikatsleistung) {
+               Zertifikatsleistung zertifikatsleistung,
+               Raumanforderung raumanforderung) {
         this.bezeichnung = bezeichnung;
         this.therapieform = therapieform;
         this.mindestdauer = Duration.ofMinutes(mindestminuten);
         this.regeldauer = Duration.ofMinutes(regelminuten);
         this.zertifikatsleistung = zertifikatsleistung;
+        this.raumanforderung = raumanforderung;
     }
 
     public String bezeichnung() {
@@ -118,6 +121,11 @@ public enum Heilmittel {
 
     public Zertifikatsleistung zertifikatsleistung() {
         return zertifikatsleistung;
+    }
+
+    /** Was dieses Heilmittel vom Raum verlangt. */
+    public Raumanforderung raumanforderung() {
+        return raumanforderung;
     }
 
     public boolean brauchtAbrechnungserlaubnis() {
