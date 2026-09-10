@@ -117,11 +117,18 @@ Geprüft von `scripts/regel-check.mjs` im Hook vor dem Commit und in der CI.
 **Negativ**
 
 - **Die Zahl steht weiterhin zweimal da**, in der Tabelle und im Code, und der
-  Check vergleicht sie nicht. Er prüft, dass die ID existiert und belegt ist —
-  nicht, dass 28 im Code zu den 28 in der Zeile passt. Ein automatischer
-  Abgleich scheitert daran, dass viele Zeilen mehrere Zahlen tragen
-  (`SB1, SB2, EN1, EN2, PS4: 10 · PS2, PS3: 20`). Das ist die größte Lücke
-  dieser Entscheidung und sie bleibt offen.
+  Check vergleicht sie nur grob. Er prüft, dass die ID existiert und belegt
+  ist und dass die Zahl in der Zeile vorkommt — nicht, *welche* der Zahlen
+  einer Zeile gemeint ist. Bei `SB1, SB2, EN1, EN2, PS4: 10 · PS2, PS3: 20`
+  deckt die Zeile eine 10 und eine 20 gleichermaßen. Der Zahlendreher und der
+  Verweis auf die falsche Zeile fallen auf, die Verwechslung innerhalb einer
+  Zeile nicht. Näher kommt man nicht heran, solange die Werte nur in Prosa
+  stehen.
+
+  *Nachtrag vom 2026-09-10:* Die Fassung bei Annahme kannte den Wertabgleich
+  noch nicht; er kam, nachdem eine Sonde gezeigt hatte, dass eine 82 mit der
+  Fundstelle „28 Kalendertage" durchging. Die Formulierung oben ist die
+  aktuelle.
 - **Die ID ist eine zweite Sprache neben dem Paragraphen.** Wer `§ 15` sucht,
   findet `HM-FRIST-01` nicht. Gegenmittel ist allein, dass die Fundstelle in
   derselben Tabellenzeile steht.

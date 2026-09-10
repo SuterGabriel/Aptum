@@ -110,13 +110,20 @@ Bezeichner und Absicht, kein Fehler.
 braucht. Der wichtigste Befund aus Stufe 0 lautet: Falscher Code fällt im Test
 auf, falsche Fachlogik nicht — ein Test über eine erfundene Frist ist grün.
 Deshalb trägt jede der 65 Regeln in `regeln.md` eine ID, und jede fachliche
-Konstante im Domänenmodell nennt sie. Geprüft wird beides: der Katalog
-(eindeutige IDs, gültiger Status) und der Code (keine nackte Zahl in einer
-Regelklasse, jede Fundstelle existiert und trägt `BELEGT`, nicht `UNSICHER`).
-Grundlage ist [ADR-007](adr/ADR-007-fundstellen-id-im-domaenenmodell.md).
+Konstante im Domänenkern nennt sie. Geprüft wird beides: der Katalog
+(eindeutige IDs, gültiger Status) und der Code (keine nackte Zahl, jede
+Fundstelle existiert, trägt `BELEGT` statt `UNSICHER` — und die Zahl kommt in
+der genannten Zeile auch vor). Grundlage ist
+[ADR-007](adr/ADR-007-fundstellen-id-im-domaenenmodell.md).
 
-Solange `services/` leer ist, prüft nur der Katalogteil — und das Skript sagt
-das ausdrücklich, statt still grün zu melden.
+**Dieses Gate hat eine eigene Testsuite**, `scripts/regel-check.test.mjs`, mit
+einem Fixture je Fall unter `scripts/fixtures/regel-check/`. Der Grund steht
+im [Entwicklungslog](ENTWICKLUNGSLOG.md): Zwei Lücken in diesem Skript haben
+nichts gemeldet — eine Konstante borgte sich die Fundstelle ihres Nachbarn,
+eine andere die aus dem Klassenkommentar — und beide fielen nur durch
+Gegenproben von Hand auf. Ein Gate, das nichts meldet, sieht aus wie ein
+Gate, das zufrieden ist. Die beiden Lücken sind jetzt Fixtures, die bei jedem
+Lauf mitprüfen, dass sie geschlossen bleiben.
 
 **`scripts/link-check.mjs`** prüft Markdown-Verweise der Form `[Text](Ziel)`.
 Pfade in Backticks prüft er bewusst nicht: Die Skills und Commands nennen dort
@@ -139,11 +146,13 @@ bash  scripts/beleg-check.sh
 Der ehrliche Teil. Jeder Punkt ist entweder schon passiert oder eine Änderung
 davon entfernt:
 
-- **Ob die Zahl im Code zur Zahl in der Tabelle passt.** Der Regel-Check prüft,
-  dass die genannte Fundstelle existiert und Status `BELEGT` trägt — nicht,
-  dass die 28 im Code die 28 aus der Zeile ist. Ein automatischer Abgleich
-  scheitert daran, dass viele Zeilen mehrere Zahlen tragen. Das ist die größte
-  bekannte Lücke, benannt in [ADR-007](adr/ADR-007-fundstellen-id-im-domaenenmodell.md).
+- **Ob die Zahl im Code die *richtige* Zahl aus der Tabelle ist.** Der
+  Wertabgleich ist grob: Die Zahl muss in der genannten Zeile vorkommen. Eine
+  Zeile mit mehreren Zahlen — `10 · 20` — deckt beide, auch wenn nur eine
+  gemeint war. Der Zahlendreher und der Verweis auf die falsche Zeile fallen
+  auf; die Verwechslung innerhalb einer Zeile nicht. Näher kommt man ohne
+  maschinenlesbare Werte nicht heran, siehe
+  [ADR-007](adr/ADR-007-fundstellen-id-im-domaenenmodell.md).
 - **Fachliche Nullen, Einsen und Zweien.** Der Regel-Check lässt sie durch,
   weil sie in jedem Code vorkommen. Eine fachliche Zwei — „2× wöchentlich" —
   rutscht dadurch hindurch.

@@ -122,6 +122,12 @@ echo "Fachregeln — keine Zahl ohne Fundstelle"
 pruefe "Regelkatalog existiert" datei .claude/skills/heilmittel-domain/regeln.md
 pruefe "Regelzeilen tragen IDs" enthaelt .claude/skills/heilmittel-domain/regeln.md "HM-FRIST-01"
 pruefe "ADR-007 begründet die Fundstellen-ID" datei docs/adr/ADR-007-fundstellen-id-im-domaenenmodell.md
+# Ein Gate, das nichts meldet, sieht aus wie ein Gate, das zufrieden ist.
+# Deshalb hat der Regel-Check Tests, und die beiden stummen Lücken sind Fixtures.
+pruefe "Regel-Check hat eine Testsuite" datei scripts/regel-check.test.mjs
+pruefe "stumme Lücke 1 ist Fixture" datei scripts/fixtures/regel-check/domain/NachbarBorgt.java
+pruefe "stumme Lücke 2 ist Fixture" datei scripts/fixtures/regel-check/domain/KlassenkommentarBorgt.java
+pruefe "Wertabgleich ist Fixture" datei scripts/fixtures/regel-check/domain/FalscherWert.java
 
 echo
 echo "Schritt 6 — der KI-Einsatz wird protokolliert"

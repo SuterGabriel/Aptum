@@ -15,26 +15,34 @@
 //   Teil A, der Katalog. Trägt jede Zeile in regeln.md eine eindeutige ID im
 //   richtigen Format, und ist ihr Status einer der drei erlaubten?
 //
-//   Teil B, der Code. In einer Regelklasse steht keine nackte Zahl. Jede
-//   fachliche Zahl ist eine benannte Konstante mit `@fundstelle HM-...`, die
-//   genannte Zeile existiert, und ihr Status ist BELEGT — nicht UNSICHER.
+//   Teil B, der Code. Im Domänenkern steht keine nackte Zahl. Jede fachliche
+//   Zahl ist eine benannte Konstante mit `@fundstelle HM-...`; die genannte
+//   Zeile existiert, ihr Status ist BELEGT, und die Zahl kommt in der Zeile
+//   auch vor.
 //
-// Teil B findet noch keinen Code, weil das Domänenmodell nicht existiert. Das
-// Skript sagt das ausdrücklich, statt still grün zu melden: Ein Gate, das
-// nichts prüft und trotzdem grün meldet, ist schlimmer als kein Gate.
+// Dieses Gate hat eine eigene Testsuite: `node --test scripts/regel-check.test.mjs`.
+// Sie existiert, weil zwei Lücken in diesem Skript nichts gemeldet haben und
+// nur durch Gegenproben von Hand aufgefallen sind. Ein Gate braucht keine
+// Tests, weil es Fehler findet, sondern weil es sie übersehen kann, ohne dass
+// jemand es merkt.
 //
 // Grundlage: `docs/adr/ADR-007-fundstellen-id-im-domaenenmodell.md`
 //
 // Aufruf:
 //   node scripts/regel-check.mjs                 Katalog und der ganze Baum
 //   node scripts/regel-check.mjs datei.java ...  Katalog und diese Dateien
+//   node scripts/regel-check.mjs --nur-katalog   nur Teil A
+//   REGEL_KATALOG=pfad/zu/katalog.md ...         anderer Katalog (für Tests)
 
 import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { dirname, join, relative, resolve, extname } from 'node:path';
+import { dirname, join, relative, resolve, extname, basename } from 'node:path';
 
 const wurzel = join(dirname(fileURLToPath(import.meta.url)), '..');
-const katalogDatei = join(wurzel, '.claude', 'skills', 'heilmittel-domain', 'regeln.md');
+const katalogDatei = process.env.REGEL_KATALOG
+  ? resolve(process.env.REGEL_KATALOG)
+  : join(wurzel, '.claude', 'skills', 'heilmittel-domain', 'regeln.md');
+const katalogName = basename(katalogDatei);
 
 const ID_FORM = /^HM-[A-Z]+-\d{2}$/;
 const ERLAUBTE_STATUS = ['BELEGT', 'UNSICHER', 'OFFEN'];
@@ -86,7 +94,7 @@ function katalogLesen() {
       // sind Regeln.
       if (/^\d+\./.test(abschnitt)) {
         befund(
-          `regeln.md:${index + 1}`,
+          `${katalogName}:${index + 1}`,
           'Regelzeile ohne ID',
           `Abschnitt "${abschnitt}" — jede Regelzeile braucht eine ID HM-<BEREICH>-<NN>`,
         );
@@ -95,12 +103,12 @@ function katalogLesen() {
     }
 
     if (!ID_FORM.test(erste)) {
-      befund(`regeln.md:${index + 1}`, `ID "${erste}" hat nicht die Form HM-<BEREICH>-<NN>`, '');
+      befund(`${katalogName}:${index + 1}`, `ID "${erste}" hat nicht die Form HM-<BEREICH>-<NN>`, '');
       return;
     }
     if (katalog.has(erste)) {
       befund(
-        `regeln.md:${index + 1}`,
+        `${katalogName}:${index + 1}`,
         `ID ${erste} ist doppelt vergeben`,
         `zuerst in Zeile ${katalog.get(erste).zeile}. IDs werden nie neu vergeben.`,
       );
@@ -115,14 +123,21 @@ function katalogLesen() {
 
     if (!ERLAUBTE_STATUS.includes(status)) {
       befund(
-        `regeln.md:${index + 1}`,
+        `${katalogName}:${index + 1}`,
         `${erste} hat den Status "${roh}"`,
         `erlaubt sind ${ERLAUBTE_STATUS.join(', ')}`,
       );
       return;
     }
 
-    katalog.set(erste, { zeile: index + 1, status, roh, abschnitt, regel: spalten[1] });
+    // Die Zahlen der Zeile, für den Wertabgleich in Teil B. Nur aus den
+    // Spalten Regel und Wert — die Fundstelle trägt Paragraphennummern, die
+    // keine Werte sind: "§ 15 Abs. 1" darf eine 15 im Code nicht decken.
+    const zahlen = new Set(
+      [...`${spalten[1]} ${spalten[2]}`.matchAll(/(?<!\d)(\d+)(?!\d)/g)].map((t) => t[1]),
+    );
+
+    katalog.set(erste, { zeile: index + 1, status, roh, abschnitt, regel: spalten[1], zahlen });
   });
 
   return katalog;
@@ -162,16 +177,17 @@ function istRegelklasse(pfad) {
   return p.includes('/domain/') && !p.includes('/src/test/');
 }
 
+// Eine Fundstelle steht oft mitten in Javadoc: `{@code @fundstelle HM-X}`,
+// in Klammern, am Satzende. Die Auszeichnung drumherum gehört nicht zur ID —
+// sonst zwingt das Gate dazu, Javadoc schlechter zu schreiben.
+function idAusZeile(roh) {
+  return roh.replace(/^[`*("'[{<]+/, '').replace(/[`*.,;:)\]}>"']+$/, '');
+}
+
 function codePruefen(pfad, katalog) {
   const inhalt = readFileSync(pfad, 'utf8');
   const zeilen = inhalt.split(/\r?\n/);
   const ort = relative(wurzel, pfad).replace(/\\/g, '/');
-
-  // Eine Fundstelle steht oft mitten in Javadoc: `{@code @fundstelle HM-X}`,
-  // in Klammern, am Satzende. Die Auszeichnung drumherum gehört nicht zur ID —
-  // sonst zwingt das Gate dazu, Javadoc schlechter zu schreiben.
-  const idAusZeile = (roh) =>
-    roh.replace(/^[`*("'[{<]+/, '').replace(/[`*.,;:)\]}>"']+$/, '');
 
   // Jede genannte ID muss es geben. Der Status wird hier absichtlich nicht
   // geprüft: ADR-007 verbietet, eine unsichere Quelle als *Konstante* in den
@@ -184,15 +200,15 @@ function codePruefen(pfad, katalog) {
       if (!katalog.has(id)) {
         befund(
           `${ort}:${index + 1}`,
-          `@fundstelle ${id} steht nicht in regeln.md`,
+          `@fundstelle ${id} steht nicht in ${katalogName}`,
           'Entweder die ID ist falsch geschrieben, oder die Regel ist nicht recherchiert.',
         );
       }
     }
   });
 
-  // Nackte Zahlen. Eine Konstantendeklaration ist erlaubt, wenn in den drei
-  // Zeilen davor eine Fundstelle steht — und diese Fundstelle muss BELEGT sein.
+  // Nackte Zahlen. Eine Deklaration ist erlaubt, wenn über ihr eine Fundstelle
+  // steht — und die muss BELEGT sein und die Zahl auch tragen.
   let imBlockkommentar = false;
   zeilen.forEach((zeile, index) => {
     const nurCode = zeile.replace(/"[^"]*"/g, '""');
@@ -215,7 +231,7 @@ function codePruefen(pfad, katalog) {
     // zweite borgt sich die erste Konstante einer Klasse eine Fundstelle aus
     // dem Klassenkommentar, wo sie oft nur zitiert wird. Beide Lücken waren da,
     // beide haben nichts gemeldet, und beide sind nur durch eine Gegenprobe
-    // aufgefallen.
+    // aufgefallen. Die Testsuite hält sie fest.
     const umgebung = [];
     for (let zurueck = index - 1; zurueck >= 0 && index - zurueck <= 10; zurueck--) {
       const vorher = zeilen[zurueck].replace(/"[^"]*"/g, '""').trim();
@@ -230,20 +246,43 @@ function codePruefen(pfad, katalog) {
       befund(
         `${ort}:${index + 1}`,
         `Zahl ohne Fundstelle: ${zahlen.join(', ')}`,
-        'In einer Regelklasse steht keine nackte Zahl. Benannte Konstante mit '
+        'Im Domänenkern steht keine nackte Zahl. Benannte Konstante mit '
         + '/** @fundstelle HM-... */ darüber — oder die Zahl gehört nicht hierher.',
       );
       return;
     }
 
-    for (const id of genannt) {
+    const bekannt = genannt.filter((id) => katalog.has(id));
+    if (bekannt.length === 0) return; // die unbekannte ID ist oben schon gemeldet
+
+    for (const id of bekannt) {
       const eintrag = katalog.get(id);
-      if (eintrag && eintrag.status !== 'BELEGT') {
+      if (eintrag.status !== 'BELEGT') {
         befund(
           `${ort}:${index + 1}`,
           `Zahl ${zahlen.join(', ')} stützt sich auf ${id} mit Status ${eintrag.roh}`,
           'Nur BELEGT darf als Konstante in den Code. Bei UNSICHER wird die Regel '
           + 'ein Parameter je Praxis — siehe die Ausfallregel als Vorbild.',
+        );
+        return;
+      }
+    }
+
+    // Der Wertabgleich. Er ist bewusst grob: Die Zahl muss als ganzes Wort in
+    // der Regel- oder Wertspalte der genannten Zeile vorkommen. Das fängt den
+    // Zahlendreher, den Verweis auf die falsche Zeile und die Drift nach einem
+    // neuen Rechtsstand — nicht aber eine Zeile, die zufällig dieselbe Zahl in
+    // anderem Zusammenhang trägt. Grob ist besser als gar nicht: Vor diesem
+    // Abgleich ging eine 82 mit der Fundstelle "28 Kalendertage" durch.
+    for (const zahl of zahlen) {
+      const gedeckt = bekannt.some((id) => katalog.get(id).zahlen.has(zahl));
+      if (!gedeckt) {
+        const zeilenText = bekannt.map((id) => `${id} („${katalog.get(id).regel}")`).join(', ');
+        befund(
+          `${ort}:${index + 1}`,
+          `Zahl ${zahl} kommt in ${zeilenText} nicht vor`,
+          'Entweder ist der Wert falsch, oder die Fundstelle zeigt auf die falsche Zeile, '
+          + 'oder der Wert ist umgerechnet — dann gehört die Umrechnung in den Katalog.',
         );
       }
     }
@@ -267,19 +306,22 @@ console.log(
 );
 
 const argumente = process.argv.slice(2);
-const alleJava = argumente.length > 0
-  ? argumente.map((p) => resolve(p)).filter((p) => extname(p) === '.java')
-  : javaSammeln(join(wurzel, 'services'));
+const nurKatalog = argumente.includes('--nur-katalog');
+const dateiArgumente = argumente.filter((a) => !a.startsWith('--'));
+const alleJava = nurKatalog
+  ? []
+  : dateiArgumente.length > 0
+    ? dateiArgumente.map((p) => resolve(p)).filter((p) => extname(p) === '.java')
+    : javaSammeln(join(wurzel, 'services'));
 const regelklassen = alleJava.filter(istRegelklasse);
 
 for (const pfad of regelklassen) codePruefen(pfad, katalog);
 
 if (regelklassen.length === 0) {
-  console.log('Code:    keine Regelklassen unter services/**/domain/regel/ — Teil B hat');
-  console.log('         nichts zu prüfen. Das ist kein grünes Ergebnis, sondern der');
-  console.log('         Stand: Das Domänenmodell beginnt mit Stufe 1.');
+  console.log('Code:    keine Klassen unter services/**/domain/ — Teil B hat nichts zu');
+  console.log('         prüfen. Das ist kein grünes Ergebnis, sondern ein leerer Baum.');
 } else {
-  console.log(`Code:    ${regelklassen.length} Regelklassen geprüft.`);
+  console.log(`Code:    ${regelklassen.length} Klassen im Domänenkern geprüft.`);
 }
 console.log('');
 

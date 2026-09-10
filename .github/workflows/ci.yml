@@ -55,6 +55,10 @@ jobs:
           node-version: '22'
       - name: Fundstellen prüfen
         run: node scripts/regel-check.mjs
+      # Das Gate wird selbst getestet: 21 Fälle, darunter zwei Lücken, die
+      # nichts gemeldet haben und nur durch Gegenproben von Hand auffielen.
+      - name: Regel-Check testen
+        run: node --test scripts/regel-check.test.mjs
 
   kontrast:
     name: Kontrast der Farbtoken

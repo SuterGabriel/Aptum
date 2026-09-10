@@ -610,6 +610,51 @@ nicht erwartet hat.
 
 ---
 
+## 2026-09-10 — Nachtrag: das Gate bekommt Tests
+
+**Was delegiert wurde:** Die Aufforderung, alle Fälle des stummen Gates
+durchzugehen und zu beheben — nicht nur den, der gerade aufgefallen war.
+
+**Was sich dabei geändert hat.** Nicht das Skript zuerst, sondern die Frage.
+Bisher hieß sie: *Meldet das Gate diesen Fall?* Jetzt heißt sie: *Woher weiß
+ich morgen noch, dass es ihn meldet?* Die Gegenprobe von Hand hatte zwei
+Lücken gefunden und einmal fast eine dritte übersehen, weil ein `head -3` die
+Ausgabe abgeschnitten hatte. Eine Gewohnheit ist kein Gate.
+
+Deshalb hat `regel-check.mjs` jetzt eine Testsuite: 21 Fälle, jeder als
+Fixture unter `scripts/fixtures/regel-check/`. Die beiden stummen Lücken sind
+darunter — `NachbarBorgt.java` und `KlassenkommentarBorgt.java` — und sie
+bleiben dort, damit niemand sie versehentlich wieder aufreißt. Beide Lücken
+absichtlich wieder geöffnet: die Suite wird rot. Der Wertabgleich entfernt:
+zwei Tests rot. Ein Test, den niemand hat fehlschlagen sehen, prüft nichts.
+
+**Der Wertabgleich ist gebaut.** Die Zahl muss als ganzes Wort in der Regel-
+oder Wertspalte der genannten Katalogzeile vorkommen. Die 82 mit der
+Fundstelle „28 Kalendertage" wird gemeldet. Alle 23 Klassen des echten
+Domänenkerns bestehen ihn — jede Konstante stimmt mit ihrer Zeile überein,
+was vorher nur eine Annahme war.
+
+Was der Abgleich nicht kann, steht in PIPELINE.md: Eine Zeile mit `10 · 20`
+deckt beide Zahlen. Der Zahlendreher fällt auf, die Verwechslung innerhalb
+einer Zeile nicht. Und die Paragraphennummern in der Fundstellenspalte
+zählen bewusst nicht mit — sonst deckte `§ 15 Abs. 1` eine 15 im Code.
+
+**Was auffiel.** Ein Designfehler im ersten Wurf der Suite: Katalog-Tests ohne
+Dateiangabe scannten den echten Code gegen den Fixture-Katalog und meldeten 60
+Befunde. Das Skript hat dafür jetzt `--nur-katalog`. Kein Gate-Fehler, aber
+derselbe Mechanismus in klein — ein Test, der aus dem falschen Grund rot ist,
+ist so wenig wert wie einer, der aus dem falschen Grund grün ist.
+
+**Was bleibt.** Die Ausnahme für 0, 1 und 2 steht unverändert, benannt in
+ADR-007. Und der Regel-Check kennt nur `.java` unter `services/**/domain/` —
+sobald es eine Anwendungsschicht oder ein Frontend gibt, ist eine Fachzahl dort
+ungeprüft. Das ist keine Lücke von heute, aber eine, die bei der ersten
+Controller-Klasse zur Sprache kommen muss.
+
+**Zeitschätzung:** delegiert etwa eine Stunde, von Hand geschätzt einen Tag.
+
+---
+
 ## Vorlage für weitere Einträge
 
 ```

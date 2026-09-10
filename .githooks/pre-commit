@@ -58,6 +58,12 @@ lauf "Verweise" node scripts/link-check.mjs
 lauf "Belege" bash scripts/beleg-check.sh
 lauf "Regeln" node scripts/regel-check.mjs
 
+# Das Gate selbst hat Tests, seit zwei seiner Lücken stumm geblieben sind.
+# Sie laufen nur, wenn das Skript oder seine Fixtures vorgemerkt sind.
+if printf '%s\n' "$vorgemerkt" | grep -qE 'scripts/regel-check|scripts/fixtures/regel-check'; then
+  lauf "Regel-Check-Tests" node --test scripts/regel-check.test.mjs
+fi
+
 if printf '%s\n' "$vorgemerkt" | grep -q 'frontend/src/styles/tokens.css'; then
   lauf "Kontrast" node scripts/kontrast-check.mjs
 fi
