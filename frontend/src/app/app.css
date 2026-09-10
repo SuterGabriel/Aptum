@@ -1,0 +1,35 @@
+.kopf {
+  display: flex;
+  align-items: center;
+  gap: var(--abstand-5);
+  padding: var(--abstand-2) var(--abstand-4);
+  background: var(--surface-sunken);
+  border-bottom: var(--rand-duenn) solid var(--border-subtle);
+  min-height: var(--hitflaeche-min);
+}
+
+.wortmarke {
+  font-weight: var(--gewicht-fett);
+  font-size: var(--schrift-l);
+  letter-spacing: 0.02em;
+}
+
+nav a {
+  color: var(--accent);
+  text-decoration: none;
+  padding: var(--abstand-2) var(--abstand-3);
+  border-radius: var(--radius-klein);
+  display: inline-block;
+  min-height: var(--hitflaeche-min);
+  line-height: calc(var(--hitflaeche-min) - 2 * var(--abstand-2));
+}
+
+nav a.aktiv {
+  color: var(--text-primary);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+main {
+  padding: var(--abstand-4);
+}

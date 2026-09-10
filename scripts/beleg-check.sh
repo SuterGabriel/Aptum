@@ -159,6 +159,13 @@ pruefe "Header-Stub ist als offen geführt" enthaelt docs/OFFENE-PUNKTE.md "X-Ma
 # still veraltet.
 pruefe "OpenAPI-Dokument liegt im Repo" datei docs/api/openapi.json
 pruefe "OpenAPI wird gegen die Anwendung geprüft" datei services/scheduling/infrastructure/src/test/java/de/aptum/scheduling/infrastructure/rest/OpenApiTest.java
+
+echo
+echo "Stufe 2 — das Frontend"
+pruefe "ADR-003 entscheidet das Grid" datei docs/adr/ADR-003-kalender-grid-selbst-gebaut.md
+pruefe "Angular-Gerüst existiert" datei frontend/angular.json
+pruefe "Token liegen im Frontend" datei frontend/src/styles/tokens.css
+pruefe "API-Typen sind aus OpenAPI erzeugt" datei frontend/src/app/api/schema.d.ts
 pruefe "stumme Lücke 1 ist Fixture" datei scripts/fixtures/regel-check/domain/NachbarBorgt.java
 pruefe "stumme Lücke 2 ist Fixture" datei scripts/fixtures/regel-check/domain/KlassenkommentarBorgt.java
 pruefe "Wertabgleich ist Fixture" datei scripts/fixtures/regel-check/domain/FalscherWert.java

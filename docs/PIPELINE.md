@@ -12,9 +12,9 @@ kommt mit Stufe 4 des Stufenplans.
 | `.github/workflows/ci.yml` | Push auf `main`, Pull Request | der ganze Baum | nein |
 
 Die Skript-Gates sind abhängigkeitsfreie Skripte in `bash` oder Node; die
-Java-Gates laufen über Maven. Es gibt keinen Paketmanager an der Wurzel
-dieses Repos, solange `frontend/` leer ist, und deshalb kein `npm run`. Der
-Aufruf ist überall der direkte.
+Java-Gates laufen über Maven, die Frontend-Gates über `npm run` in
+`frontend/`. An der Wurzel gibt es keinen Paketmanager; der Aufruf der
+Skripte ist der direkte.
 
 ## Einrichten
 
@@ -78,7 +78,7 @@ Ergebnisses, nicht nur Werkzeug.
 
 ## Stufe 3: GitHub Actions
 
-`.github/workflows/ci.yml`, fünf Jobs, jeder ein Gate:
+`.github/workflows/ci.yml`, sechs Jobs, jeder ein Gate:
 
 | Job | Prüft |
 |---|---|
@@ -87,6 +87,7 @@ Ergebnisses, nicht nur Werkzeug.
 | `regeln` | Der Regelkatalog ist vollständig ausgezeichnet, und kein Domänencode nennt eine Zahl ohne belegte Fundstelle |
 | `kontrast` | Jedes geforderte Farbpaar aus `tokens.css` hält seine WCAG-Schwelle |
 | `backend` | Formatierung (Spotless), Tests aller drei Module, ArchUnit gegen ADR-001, und ein echtes Postgres über Testcontainers für den Isolationstest aus ADR-002 — der einzige Job mit JVM und Docker |
+| `frontend` | Prettier, ESLint mit den Template-Regeln zur Barrierefreiheit, API-Typen gegen `docs/api/openapi.json`, Unit-Tests, Build mit Budget |
 
 Was noch fehlt — Lint und Bundle-Budget fürs Frontend, Playwright mit axe-core
 über das Kalender-Grid, Dependency-Scan, die Eval-Suite — steht als

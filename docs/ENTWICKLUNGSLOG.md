@@ -1082,6 +1082,49 @@ Nachmittag — wie angekündigt.
 
 ---
 
+## 2026-09-10 — Stufe 2, das Gerüst
+
+**Was delegiert wurde:** ADR-003 und das Angular-Gerüst gegen
+`docs/api/openapi.json`. Dazu die Frage, ob das Kalender-Grid mit Kendo
+gebaut werden kann.
+
+**Die Kendo-Frage.** Die ehrliche Antwort ist: für die Terminsuche und die
+Abrechnungstabelle ja, für das Grid nein. Der Kendo Scheduler ist gut, aber
+er bringt sein eigenes DOM mit, und die Zusagen aus dem Skill `a11y-grid` —
+Roving Tabindex, eine Live-Region pro Bewegung, sechs Slot-Zustände aus den
+Token — lassen sich in fremdem DOM weder prüfen noch belegen. Ein Grid, das
+„barrierefrei laut Hersteller" ist, wäre im Anforderungs-Mapping eine
+Behauptung. Selbst gebaut auf dem CDK ist es ein Beleg. Die Lizenzfrage kam
+erst als drittes Argument. Steht so in ADR-003, inklusive der Alternativen,
+die es verloren haben.
+
+**Was gut lief.** Der Weg vom OpenAPI-Dokument zu TypeScript-Typen ist ein
+Befehl, `openapi-typescript`, und die Typen sind eingecheckt. Die CI erzeugt
+sie neu und vergleicht per `git diff` — dasselbe Drift-Gate wie im Backend,
+eine Ebene weiter. Ändert jemand einen Controller, wird der Backend-Test rot;
+aktualisiert er das Dokument, ohne die Typen zu erzeugen, wird das Frontend
+rot. Kein Schritt dazwischen, an dem etwas still veraltet.
+
+**Was nicht funktionierte.** Zwei Werkzeuge haben Dateien angefasst, die sie
+nichts angehen. Prettier hat `tokens.css` umformatiert: die Spalten waren von
+Hand ausgerichtet, damit man Farbwerte nebeneinander lesen kann, und die
+`@kontrast`-Zeilen sind Prosa für ein Gate. ESLint wollte die erzeugte
+`schema.d.ts` nach Stilregeln umschreiben. Beides ist derselbe Fehler:
+Werkzeuge, die auf alles losgehen, was sie finden. Beide Dateien sind jetzt
+ausgenommen, mit dem Grund als Kommentar — die erzeugte Datei wird geprüft,
+nicht gelintet. Und `ng add angular-eslint` ohne Versionsangabe holte eine
+Fassung, die nicht zu Angular 20 passte; erst mit `@20` lief es.
+
+**Was die Testsuite abgefangen hat.** Nichts Fachliches — das Gerüst hat
+einen Test, der prüft, dass die Wortmarke da ist und die Navigation einen
+Namen hat. Das ist bewusst dünn. Die Terminsuche ist die erste Seite, die
+etwas tut, und dort beginnen die Tests, die etwas abfangen können.
+
+**Zeitschätzung:** delegiert etwa eine Stunde, davon die Hälfte für das
+Kendo-Argument und die zwei Ausnahmen. Von Hand ein halber Tag.
+
+---
+
 ## Vorlage für weitere Einträge
 
 ```

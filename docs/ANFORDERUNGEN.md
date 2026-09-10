@@ -24,7 +24,7 @@ Projekt-ID 3038770 · Projekt-Nr. a1WSZ0000088BoH2AU · Start 09.09.2026 ·
 
 | # | Anforderung (wörtlich) | Status | Beleg im Repo |
 |---|---|---|---|
-| S1 | Sehr gute Kenntnisse in dem Frontend-Framework Angular | offen | `frontend/` |
+| S1 | Sehr gute Kenntnisse in dem Frontend-Framework Angular | in Arbeit | Angular 20 in `frontend/`, Standalone, OnPush, CDK ohne Komponenten-Set (ADR-006); Terminsuche und Grid folgen |
 | S2 | Sehr gutes Verständnis von rxjs-Bibliothek | offen | `frontend/` — kanonischer Suchflow, kommentiert |
 | S3 | Erfahrung mit Spring Boot, REST-APIs sowie Microservices-Architekturen | in Arbeit | Spring Boot 3.5, JPA-Adapter hinter Ports, REST in `services/scheduling/infrastructure/src/main/java/de/aptum/scheduling/infrastructure/rest/`, Ende-zu-Ende-Test über HTTP gegen Postgres; von drei geplanten Services existiert einer |
 | S4 | Erfahrung in Java (Java 11 oder höher) | belegt | Java 21 in drei Modulen: Domänenkern mit elf Regelklassen und Slot-Suche in `services/scheduling/domain/`, Anwendungsfälle in `services/scheduling/application/`, Spring Boot in `services/scheduling/infrastructure/` |
@@ -70,7 +70,7 @@ Verlängerung möglich · 80–100 % · AI-native Healthcare SaaS
 | # | Anforderung (wörtlich) | Status | Beleg im Repo |
 |---|---|---|---|
 | C1 | Mehrjährige Senior-Erfahrung als Full-Stack Engineer mit modernen Webanwendungen | teilweise belegbar | Portfolio + dieses Projekt |
-| C2 | Tiefe in mindestens einem Frontend-Stack (React oder Angular) | offen | `frontend/` (Angular) |
+| C2 | Tiefe in mindestens einem Frontend-Stack (React oder Angular) | in Arbeit | Angular 20 in `frontend/`; Terminsuche und Grid folgen |
 | C3 | Tiefe in einem Backend-Stack (Java/Spring Boot oder Python) | in Arbeit | Java 21 in `services/scheduling/domain/`, Spring Boot 3.5 in `services/scheduling/infrastructure/` |
 | C4 | Solide Kenntnisse der relevanten Cloud- und DevOps-Praktiken (u. a. Kubernetes, Helm, ArgoCD, Terraform) | offen | `infra/` |
 | C5 | Nachweisbarer, effektiver Einsatz von KI in der Softwareentwicklung | belegt | `docs/ENTWICKLUNGSLOG.md` — je Schritt, was delegiert wurde, was die Gates abgefangen haben und was nicht funktionierte; `.claude/` versioniert; `docs/PIPELINE.md` |

@@ -14,8 +14,8 @@ Suche befragt, prüft später jede Buchung von Hand und jeden Vorschlag eines
 Sprachmodells — es gibt keinen zweiten Weg. Das Spring-Boot-Gerüst steht in
 drei Modulen, die Persistenz trennt Mandanten per Row Level Security und
 beweist das gegen ein echtes Postgres (ADR-002). Zwei REST-Endpunkte suchen und buchen
-durch dasselbe Regelwerk — nachspielbar mit `curl`. Das Angular-Frontend ist
-offen.
+durch dasselbe Regelwerk — nachspielbar mit `curl`. Das Angular-Frontend hat
+sein Gerüst; Terminsuche und Kalender-Grid folgen (ADR-003).
 
 Vorgezogen aus Stufe 2 sind die Gestaltungstoken und die Kontrastprüfung
 (ADR-006), weil der Auftrag an die Gestaltung eine Grundlage brauchte. Was
@@ -142,7 +142,7 @@ verletzten Regeln; dieselbe Anfrage mit `X-Mandant: praxis-b` antwortet mit
 |---|---|---|
 | 0 | Setup, Regeln, Skills, CI-Grundgerüst, ADR-001 | **erledigt** |
 | 1 | Domänenkern in reinem Java, dann Spring, Multi-Tenancy, Angular-Suchflow | **in Arbeit** — Domänenkern mit Slot-Suche steht, Spring-Boot-Gerüst startet, Persistenz und Frontend offen |
-| 2 | Kalender-Grid, Tabelle, WCAG, End-to-End-Tests | offen |
+| 2 | Kalender-Grid, Tabelle, WCAG, End-to-End-Tests | **in Arbeit** — Angular-Gerüst mit Token, Lint und API-Typen; Grid offen |
 | 3 | AI-Layer, MCP-Server, Evals, Provider-Vergleich | offen |
 | 4 | Terraform, Helm, ArgoCD, Observability | offen |
 | 5 | Demo, ADRs vervollständigen, Mapping | offen |

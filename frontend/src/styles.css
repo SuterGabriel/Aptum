@@ -1,0 +1,41 @@
+/*
+ * Globale Stile. Die Werte kommen ausschließlich aus tokens.css — hier wird
+ * nichts erfunden, nur angewendet. Wer eine Farbe braucht, die es dort nicht
+ * gibt, ergänzt sie dort samt @kontrast-Zeile, sonst prüft die CI sie nicht.
+ */
+@import './styles/tokens.css';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: light;
+}
+
+body {
+  margin: 0;
+  background: var(--surface-page);
+  color: var(--text-primary);
+  font-family: var(--schrift-text);
+  font-size: var(--schrift-m);
+  line-height: var(--zeilenhoehe-text);
+}
+
+/* Der zweifarbige Fokusring aus ADR-006, für jedes Bedienelement gleich. */
+:focus-visible {
+  outline: var(--focus-ring-breite) solid var(--focus-ring);
+  outline-offset: var(--focus-ring-absatz);
+  box-shadow: 0 0 0 var(--focus-ring-absatz) var(--focus-ring-offset);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0ms !important;
+    animation-duration: 0ms !important;
+  }
+}

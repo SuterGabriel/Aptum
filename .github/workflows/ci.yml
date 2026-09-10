@@ -113,13 +113,39 @@ jobs:
           path: services/scheduling/**/target/surefire-reports/
           retention-days: 7
 
-  # --- Ab Stufe 1 ---------------------------------------------------------
+  frontend:
+    name: Frontend prüfen und bauen
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    # Die Schritte sind getrennt, damit im roten Lauf ohne Logsuche sichtbar
+    # ist, welcher hing. Die billigen zuerst. Die API-Typen werden aus dem
+    # OpenAPI-Dokument neu erzeugt und mit der eingecheckten Fassung
+    # verglichen - dieselbe Drift-Prüfung wie im Backend, eine Ebene weiter.
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci --no-audit --no-fund
+      - name: Format
+        run: npm run format:check
+      - name: Lint (inklusive Template-Regeln zur Barrierefreiheit)
+        run: npm run lint
+      - name: API-Typen aktuell
+        run: npm run api:types && git diff --exit-code -- src/app/api/
+      - name: Unit-Tests
+        run: npm test
+      - name: Build mit Budget
+        run: npm run build
+
+  # --- Ab Stufe 2 ---------------------------------------------------------
   # Bewusst als auskommentiertes Gerüst, nicht als leerer Job, der immer
   # grün ist. Ein Job, der nichts prüft und trotzdem grün meldet, ist
   # schlimmer als kein Job.
-  #
-  # frontend:
-  #   Lint, Unit-Tests, Bundle-Größen-Budget.
   #
   # e2e:
   #   Playwright inklusive axe-core über das Kalender-Grid, Report als Artefakt.
