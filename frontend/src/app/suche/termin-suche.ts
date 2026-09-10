@@ -113,6 +113,15 @@ export class TerminSuche {
     return this.form.controls.fenster.errors?.['fenster'];
   }
 
+  /**
+   * Die Zone, in der ein Zeitstempel geliefert wurde - die der Praxis. Das
+   * Backend schreibt sie in jeden Wert; die Anzeige soll sie zeigen und nicht
+   * die des Browsers. Sonst steht in einer CI unter UTC 08:00 statt 09:00.
+   */
+  zone(iso: string | undefined): string {
+    return iso?.match(/([+-]\d{2}:\d{2}|Z)$/)?.[1] ?? '+01:00';
+  }
+
   dauerMinuten(v: Terminvorschlag): number {
     if (!v.beginn || !v.ende) return 0;
     return Math.round((Date.parse(v.ende) - Date.parse(v.beginn)) / 60_000);

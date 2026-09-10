@@ -115,9 +115,12 @@
               @for (v of z.antwort.vorschlaege; track (v.beginn ?? '') + (v.therapeut ?? '')) {
                 <li class="vorschlag">
                   <span class="wann">
-                    <span class="datum">{{ v.beginn | date: 'EEEE, d. MMMM' }}</span>
+                    <span class="datum">{{
+                      v.beginn | date: 'EEEE, d. MMMM' : zone(v.beginn)
+                    }}</span>
                     <span class="zeit zahl">
-                      {{ v.beginn | date: 'HH:mm' }} bis {{ v.ende | date: 'HH:mm' }}
+                      {{ v.beginn | date: 'HH:mm' : zone(v.beginn) }} bis
+                      {{ v.ende | date: 'HH:mm' : zone(v.ende) }}
                     </span>
                   </span>
                   <span class="wer">

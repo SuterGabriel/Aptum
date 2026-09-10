@@ -1173,6 +1173,17 @@ ohne Whitespace und mit vereinheitlichten Anführungszeichen haben dieselbe
 Prüfsumme. Erzeugte Dateien werden eingecheckt, wie sie erzeugt werden —
 das Gate fragt nicht, ob eine Änderung nur hübsch ist.
 
+**Und ein zweites Mal rot, diesmal die Zeitzone.** Lokal 09:00, in der CI
+08:00: `DatePipe` formatiert in der Zone des Browsers, und der Runner steht
+auf UTC. Der Fehler wäre auch bei einer Praxis aufgefallen, deren Rechner
+falsch eingestellt ist — die Uhrzeit eines Termins ist die der Praxis, nicht
+die des Geräts. Das Backend schreibt den Offset ohnehin in jeden Wert; die
+Anzeige nimmt ihn jetzt von dort. Der Test liefert bewusst `+05:00` und
+erwartet 09:00 — so besteht er nur, wenn die Zone aus dem Wert kommt, egal
+wo er läuft. Gegenprobe ohne den Fix: 05:00, rot. Ein `TZ=UTC` vor dem
+Testbefehl hätte unter Windows nichts bewiesen; Chrome liest die Zone vom
+System, nicht aus der Umgebung.
+
 **Was die Testsuite abgefangen hat.** Nichts Fachliches; das liegt im
 Backend. Was der Suchflow abfängt, ist Zeit: Race Conditions und tote
 Streams sind Fehler, die im Browser nie reproduzierbar auftreten und im

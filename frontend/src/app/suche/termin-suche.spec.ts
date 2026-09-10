@@ -12,8 +12,10 @@ const EIN_VORSCHLAG = {
   geprueft: 12,
   vorschlaege: [
     {
-      beginn: '2026-03-02T09:00:00+01:00',
-      ende: '2026-03-02T09:30:00+01:00',
+      // Bewusst nicht die Zone des Rechners: Die Anzeige muss die Zone des
+      // Wertes nehmen, sonst zeigt die CI unter UTC eine andere Uhrzeit.
+      beginn: '2026-03-02T09:00:00+05:00',
+      ende: '2026-03-02T09:30:00+05:00',
       therapeut: 'T. Alpha',
       raum: 'Raum 1',
       warnungen: [{ regel: 'Frequenz', begruendung: 'knapp' }],
@@ -56,6 +58,7 @@ describe('TerminSuche', () => {
     fixture.componentInstance.form.controls.verordnung.setValue('keine-uuid');
     tick(300);
     http.expectNone('/termine/suche');
+    expect().nothing();
   }));
 
   it('zeigt Vorschläge und die ausgeschlossenen mit Begründung', fakeAsync(() => {
