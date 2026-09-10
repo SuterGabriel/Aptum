@@ -1017,6 +1017,34 @@ beides ohne Folgen.
 
 ---
 
+## 2026-09-10 — Nachtrag: der erste echte Lauf
+
+**Was delegiert wurde:** Die Behauptung „nachspielbar mit `curl`" aus dem
+README einlösen — Postgres im Docker, das Jar, die Anwendung außerhalb jeder
+Testumgebung, die Strecke von Hand.
+
+**Was beim ersten Versuch still scheiterte.** Alles: kein Health, kein
+Ergebnis, `000` auf jeder Anfrage. Mein Skript hatte die Fehler unterdrückt.
+Die Ursache lag ganz vorn: Der Volume-Mount für das Rollen-Skript nimmt unter
+Git Bash einen umgeschriebenen Pfad und schweigt dazu. Ohne Rolle scheiterte
+Flyway V1 beim `GRANT`, und die Anwendung kam nie hoch. Die Kette war
+vollständig lesbar — im Anwendungslog, das ich beim ersten Mal nicht gelesen
+hatte.
+
+Zweiter Versuch mit sichtbaren Fehlern und der Rolle per `docker exec`:
+Health in zwei Sekunden, 56 Vorschläge, 28 ausgeschlossen mit Grund, Buchung
+201, Doppelbuchung 409 mit beiden verletzten Regeln, fremder Mandant 404, ohne
+Kopfzeile 400. Der Ablauf steht jetzt im README unter „Starten", mit dem
+Hinweis auf den Mount.
+
+**Die Lehre, zum wiederholten Mal in anderer Form.** Ein Skript, das
+`>/dev/null` an jeden Schritt hängt und am Ende nur Ergebnisse druckt,
+verwandelt einen Fehler in der ersten Zeile in eine Reihe leerer Ausgaben.
+Der Unterschied zwischen „läuft nicht" und „läuft, aber falsch" ist beim
+Lesen des ersten Fehlers zu sehen, nicht beim Lesen des letzten.
+
+---
+
 ## Vorlage für weitere Einträge
 
 ```

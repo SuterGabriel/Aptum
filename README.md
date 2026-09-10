@@ -86,6 +86,42 @@ Fundstelle in den Domänencode lässt. Alle fünf laufen auch vor dem Commit auf
 der eigenen Maschine. Wie sie zugeschnitten sind und was sie *nicht* abfangen, steht in
 [docs/PIPELINE.md](docs/PIPELINE.md).
 
+## Starten
+
+Das Backend läuft gegen ein Postgres. Der kürzeste Weg ist ein Container:
+
+```bash
+docker run -d --name aptum-db -p 55432:5432   -e POSTGRES_USER=aptum -e POSTGRES_PASSWORD=aptum -e POSTGRES_DB=aptum postgres:16-alpine
+docker exec aptum-db psql -U aptum -d aptum -c "create role aptum_app login password 'aptum';"
+
+cd services/scheduling && mvn -q package -DskipTests
+APTUM_DB_URL=jdbc:postgresql://localhost:55432/aptum APTUM_DB_ADMIN_USER=aptum APTUM_DB_ADMIN_PASSWORD=aptum   java -jar infrastructure/target/scheduling-infrastructure-*.jar
+```
+
+Die Anwendung verbindet sich als `aptum_app` — eine Rolle ohne Rechte an den
+Tabellen, sonst griffe Row Level Security nicht (ADR-002). Flyway migriert als
+`aptum`. Wer die Rolle über einen Volume-Mount anlegen will: Unter Git Bash auf
+Windows wird der Pfad umgeschrieben und der Mount schweigt; `docker exec` ist
+der verlässliche Weg.
+
+Dann, mit dem Mandanten in der Kopfzeile — ein Platzhalter, siehe
+[OFFENE-PUNKTE.md](docs/OFFENE-PUNKTE.md), Punkt 8:
+
+```bash
+H='-H Content-Type:application/json -H X-Mandant:praxis-a'
+curl $H -d '{"ausstellungsdatum":"2026-02-27","dringlicherBedarf":false,"diagnosegruppe":"WS",
+             "verordneteEinheiten":6,"frequenzMin":1,"frequenzMax":3}' localhost:8080/verordnungen
+curl $H -d '{"verordnung":"<id>","heilmittel":"KG_EINZEL","von":"2026-03-02","bis":"2026-03-04",
+             "fruehestens":"09:00","spaetestens":"11:00","wochentage":["MONDAY","TUESDAY"]}' localhost:8080/termine/suche
+curl $H -d '{"verordnung":"<id>","heilmittel":"KG_EINZEL","therapeut":"T. Alpha","raum":"Raum 1",
+             "beginn":"2026-03-02T09:00:00+01:00"}' localhost:8080/termine
+```
+
+Die Suche antwortet mit Vorschlägen und der Zählung der Ausschlüsse je Regel.
+Die zweite Buchung desselben Termins antwortet mit `409` und nennt die
+verletzten Regeln; dieselbe Anfrage mit `X-Mandant: praxis-b` antwortet mit
+`404`, weil die Verordnung für diesen Mandanten nicht existiert.
+
 ## Wegweiser
 
 | Datei | Inhalt |
