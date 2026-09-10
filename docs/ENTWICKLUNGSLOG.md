@@ -325,6 +325,53 @@ der größere Teil davon Maven, nicht die Fachlogik.
 
 ---
 
+## 2026-09-10 — Stufe 1, die Physio-Ergo-Asymmetrie
+
+**Was delegiert wurde:** Die drei Unterbrechungsregeln, das Vokabular dazu und
+die Tests. 38 Tests grün, davon 26 neu.
+
+**Was der Schnitt gekostet hat.** Was sich als *eine* Regel anhört, sind in der
+Quelle drei: die 14-Tage-Grenze für die einzelne Pause (beide Formen), die
+70-Tage-Summe (nur Ergo) und die Laufzeit von drei oder sechs Monaten (nur
+Physio). Alle drei in eine Klasse zu falten wäre genau das `if` mitten im
+Service, das Regel 1 verbietet.
+
+Dazwischen entstand `Behandlungsverlauf` als eigener Typ. Der Grund war
+schlicht: Alle drei Regeln brauchen dieselbe Vorarbeit — sortieren, Lücken
+bilden. Dreimal dieselbe Schleife wäre beim vierten Mal leicht anders gezählt
+worden.
+
+**Was die Testsuite abgefangen hat.** In der Gegenprobe die Behauptung
+umgedreht, die Physiotherapie verfalle bei langen Pausen ebenso: rot, mit der
+Meldung im Klartext. Der Asymmetrie-Test tut also, was er soll — er würde eine
+gemeinsame Regel für beide Formen sofort auffliegen lassen.
+
+**Der Fall, der die Trennung trägt.** Zwei identische Terminreihen, nur die
+Therapieform unterscheidet sich, und das Ergebnis kippt in beide Richtungen:
+
+- Drei begründete Pausen von je 25 Tagen: Ergo verfällt (75 über 70), Physio
+  nicht — dort gibt es diese Summe nicht, und 75 Tage sind keine drei Monate.
+- Vier Pausen von 14 Tagen plus eine von 50: Ergo hält (nur die 50 zählt
+  mit), Physio verfällt (106 Tage sind mehr als drei Monate).
+
+**Was das Gate erzwungen hat.** Zur absoluten Gültigkeitsdauer in der
+Ergotherapie wurde keine Regel gefunden; `HM-UNTBR-06` steht auf UNSICHER. Nach
+ADR-007 darf daraus keine Konstante werden. Die Regel prüft für Ergo deshalb
+nichts — und sagt das im Ergebnis, statt still durchzuwinken. Dasselbe beim
+Nichtfund zur Physio-Summengrenze. Ein Nichtfund, der wie eine vergessene
+Prüfung aussieht, ist wertlos.
+
+**Was nicht funktionierte.** Der Prosa-Hook schlug dreimal an, jedes Mal in
+Javadoc oder Kommentaren, in denen ich in die ASCII-Umschrift gerutscht bin.
+Kein Fehler des Gates. Auffällig ist eher, dass es bei deutschem Fließtext in
+Java-Kommentaren offenbar leicht passiert — häufiger als in Markdown.
+
+**Zeitschätzung:** delegiert etwa eine Stunde, von Hand geschätzt zwei bis drei
+Tage. Der Großteil davon wäre in die Frage gegangen, wie man die 70-Tage-Summe
+zählt, wenn nur Pausen über 14 Tagen mitzählen.
+
+---
+
 ## Vorlage für weitere Einträge
 
 ```

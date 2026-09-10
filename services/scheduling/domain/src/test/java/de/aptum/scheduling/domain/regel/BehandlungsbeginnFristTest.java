@@ -1,6 +1,7 @@
 package de.aptum.scheduling.domain.regel;
 
 import de.aptum.scheduling.domain.model.Pruefergebnis;
+import de.aptum.scheduling.domain.model.Therapieform;
 import de.aptum.scheduling.domain.model.Verordnung;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,12 +23,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class BehandlungsbeginnFristTest {
 
     private static final LocalDate AUSSTELLUNG = LocalDate.of(2026, 3, 2);
+    private static final int EINHEITEN = 6;
 
     private final BehandlungsbeginnFrist regel = new BehandlungsbeginnFrist();
 
     private Pruefergebnis pruefeNach(long tage, boolean dringlich) {
         return regel.pruefe(
-                new Verordnung(AUSSTELLUNG, dringlich),
+                new Verordnung(AUSSTELLUNG, dringlich, Therapieform.PHYSIOTHERAPIE, EINHEITEN),
                 AUSSTELLUNG.plusDays(tage));
     }
 
