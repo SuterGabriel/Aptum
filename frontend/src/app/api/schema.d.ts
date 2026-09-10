@@ -52,6 +52,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/termine/pruefung": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["pruefen"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/kalender/woche": {
         parameters: {
             query?: never;
@@ -301,6 +317,54 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["Suchantwort"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Fehler"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Fehler"];
+                };
+            };
+        };
+    };
+    pruefen: {
+        parameters: {
+            query?: never;
+            header: {
+                /**
+                 * @description Die Praxis, für die die Anfrage gilt. Platzhalter für Authentifizierung: In einer echten Anwendung käme der Mandant aus einem signierten Token.
+                 * @example praxis-a
+                 */
+                "X-Mandant": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["Buchung"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Buchungsantwort"];
                 };
             };
             /** @description Bad Request */

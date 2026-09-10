@@ -63,7 +63,25 @@ public final class TerminBuchen {
         return buche(anfrage, uebersteuerung);
     }
 
-    private Ergebnis buche(Anfrage anfrage, Uebersteuerung uebersteuerung) {
+    /**
+     * Dieselbe Prüfung, ohne zu buchen. Für den Dialog, der die Regeln zeigt,
+     * bevor jemand entscheidet — und für jeden Vorschlag eines Sprachmodells,
+     * bevor er überhaupt angezeigt wird.
+     */
+    public Buchungsentscheidung pruefen(Anfrage anfrage) {
+        return Buchungsentscheidung.aus(pruefe(anfrage).bericht());
+    }
+
+    /** Alles, was die Regeln brauchen, an einer Stelle geladen. */
+    private record Geprueft(
+            Pruefbericht bericht,
+            VerordnungAkte akte,
+            Therapeut therapeut,
+            Raum raum,
+            Zeitraum behandlung,
+            LocalDate tag) {}
+
+    private Geprueft pruefe(Anfrage anfrage) {
         VerordnungAkte akte = verordnungen
                 .lade(anfrage.verordnung())
                 .orElseThrow(() -> new UnbekannteVerordnung(anfrage.verordnung()));
@@ -87,18 +105,21 @@ public final class TerminBuchen {
                 termine.imZeitraum(tagesfenster),
                 stammdaten.einstellung());
         Regelwerk.Kandidat kandidat = new Regelwerk.Kandidat(behandlung, therapeut, dienstplan, raum);
-        Pruefbericht bericht = regelwerk.pruefe(kontext, kandidat);
+        return new Geprueft(regelwerk.pruefe(kontext, kandidat), akte, therapeut, raum, behandlung, tag);
+    }
 
+    private Ergebnis buche(Anfrage anfrage, Uebersteuerung uebersteuerung) {
+        Geprueft g = pruefe(anfrage);
         Buchungsentscheidung entscheidung = uebersteuerung == null
-                ? Buchungsentscheidung.aus(bericht)
-                : Buchungsentscheidung.mitUebersteuerung(bericht, uebersteuerung);
+                ? Buchungsentscheidung.aus(g.bericht())
+                : Buchungsentscheidung.mitUebersteuerung(g.bericht(), uebersteuerung);
         if (!entscheidung.darfGebuchtWerden()) {
             return new Ergebnis(entscheidung, Optional.empty());
         }
 
         TerminId id = TerminId.neu();
-        termine.speichere(id, new Termin(therapeut, raum, anfrage.heilmittel(), behandlung));
-        verordnungen.speichere(akte.mitBehandlung(Behandlungstermin.an(tag)));
+        termine.speichere(id, new Termin(g.therapeut(), g.raum(), anfrage.heilmittel(), g.behandlung()));
+        verordnungen.speichere(g.akte().mitBehandlung(Behandlungstermin.an(g.tag())));
         return new Ergebnis(entscheidung, Optional.of(id));
     }
 }

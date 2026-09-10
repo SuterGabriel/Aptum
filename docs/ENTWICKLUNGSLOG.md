@@ -1331,6 +1331,53 @@ Start des Backends im CI-Job das ist, was man drei Mal falsch macht.
 
 ---
 
+## 2026-09-10 — Stufe 2, Schritt 4: der Buchungsdialog
+
+**Was delegiert wurde:** Der wichtigste Screen laut Wireframe — die
+Regelprüfung als benannte Liste, bevor jemand entscheidet. 35 Frontend-Tests,
+davon sechs für den Dialog; 179 im Backend.
+
+**Der Schnitt im Backend zuerst.** Der Wireframe zeigt die Regeln, bevor
+jemand auf „Buchen" drückt; das Backend lieferte sie erst mit der Buchung.
+`TerminBuchen` prüfte und buchte in einer Methode. Die Prüfung ist jetzt
+herausgezogen, `pruefen` liefert dieselbe Entscheidung ohne zu speichern,
+`POST /termine/pruefung` gibt denselben Körper wie die Buchung — kein neues
+Schema, kein zweiter Weg. Der REST-Test prüft zweimal denselben Slot und
+erwartet zweimal „frei": Geprüft ist nicht gebucht. Nebenbei ist das genau
+der Aufruf, den der KI-Layer in Stufe 3 braucht: jeden Vorschlag eines
+Sprachmodells prüfen, bevor er überhaupt angezeigt wird.
+
+**Was gut lief.** Der CDK-Dialog bringt mit, was der Skill verlangt und was
+fast immer vergessen wird: Focus Trap, Escape, Fokus zurück auf den Auslöser.
+Der e2e-Test drückt Escape und prüft, dass der Fokus wieder auf „Buchen"
+liegt. `aria-modal` steht ausdrücklich in der Konfiguration, nachdem der
+erste Unit-Test es als `false` fand — im CDK ist es nicht der Standard.
+Die drei Ausgänge tragen je Farbe und Wort, aus den Regel-Token. Blockiert
+sperrt den Knopf, bis eine Begründung von zehn Zeichen steht; dann heißt
+er „Trotzdem buchen" und die Übersteuerung geht mit — ADR-009 als
+Bedienelement. Eine 409 beim Buchen ist im Dialog kein Fehler, sondern die
+Liste mit der verletzten Regel und dem Begründungsfeld.
+
+Nach der Buchung sucht die Seite neu, damit der verbrauchte Vorschlag
+verschwindet — ohne die Entprellung zu umgehen: Der Service nimmt einen
+zweiten Strom `erneut` und wiederholt damit die letzte Suche.
+
+**Was nicht funktionierte.** Der erste Entwurf schloss den Dialog aus einem
+`computed` heraus — eine Nebenwirkung in einer Berechnung. Ist jetzt ein
+`effect`. Der Build meldete das Budget für Komponenten-CSS (4 kB) als
+überschritten: drei Komponenten trugen dieselben Blöcke für `.zahl`,
+`.still` und `.fehler`. Einmal global, und alle drei sind kleiner. Und der
+e2e-Test behauptete zuletzt, nach der Buchung sei „der erste Vorschlag ein
+anderer" — verglich aber nur Datum und Uhrzeit. Nach der Buchung bei
+T. Alpha um 08:15 war der erste Vorschlag T. Beta um 08:15. Der Code war
+richtig, die Behauptung zu grob; sie vergleicht jetzt den ganzen Vorschlag
+und wartet auf die neue Suche.
+
+**Zeitschätzung:** delegiert etwa anderthalb Stunden. Von Hand ein Tag,
+und der Fokus käme nicht zurück auf den Auslöser.
+
+---
+
 ## Vorlage für weitere Einträge
 
 ```

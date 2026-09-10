@@ -95,6 +95,7 @@
   <section class="ergebnis" aria-labelledby="ergebnis-titel">
     <h2 id="ergebnis-titel">Vorschläge</h2>
     <p class="status" aria-live="polite">{{ statusText() }}</p>
+    <p class="meldung" role="status">{{ meldung() }}</p>
 
     @switch (zustand().status) {
       @case ('leer') {
@@ -130,6 +131,12 @@
                     <span class="trenner" aria-hidden="true">·</span>
                     <span class="zahl">{{ dauerMinuten(v) }} min</span>
                   </span>
+                  <button type="button" class="buchen" (click)="buchen(v)">
+                    Buchen<span class="still"
+                      >: {{ v.beginn | date: 'EEEE HH:mm' : zone(v.beginn) }},
+                      {{ v.therapeut }}</span
+                    >
+                  </button>
                   @if (v.warnungen?.length) {
                     <ul class="warnungen">
                       @for (w of v.warnungen; track w.regel) {

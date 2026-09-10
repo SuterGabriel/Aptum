@@ -1,0 +1,161 @@
+.dialog {
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  border-radius: var(--radius-gross);
+  padding: var(--abstand-5);
+  width: min(36rem, calc(100vw - 2 * var(--abstand-4)));
+  max-height: calc(100vh - 2 * var(--abstand-4));
+  overflow: auto;
+  display: grid;
+  gap: var(--abstand-4);
+}
+
+h2 {
+  font-size: var(--schrift-xl);
+  margin: 0;
+}
+
+h3 {
+  font-size: var(--schrift-m);
+  margin: 0 0 var(--abstand-2);
+}
+
+.vorhaben {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: var(--abstand-3);
+  margin: 0;
+  padding: var(--abstand-3) var(--abstand-4);
+  background: var(--surface-sunken);
+  border-radius: var(--radius-klein);
+}
+
+dt {
+  font-size: var(--schrift-xs);
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+dd {
+  margin: 0;
+  font-weight: var(--gewicht-mittel);
+}
+
+.status {
+  margin: 0 0 var(--abstand-2);
+  color: var(--text-secondary);
+  font-size: var(--schrift-s);
+  min-height: 1.5em;
+}
+
+/* ---- Die Regeln: drei Ausgänge, je Farbe plus Wort ------------------- */
+
+.regeln {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: var(--abstand-2);
+}
+
+.regel {
+  display: grid;
+  grid-template-columns: 5.5rem 1fr;
+  gap: var(--abstand-1) var(--abstand-3);
+  padding: var(--abstand-2) var(--abstand-3);
+  border-radius: var(--radius-klein);
+  border-left: var(--rand-dick) solid;
+  font-size: var(--schrift-s);
+}
+
+.regel .ausgang {
+  font-weight: var(--gewicht-fett);
+  text-transform: uppercase;
+  font-size: var(--schrift-xs);
+  letter-spacing: 0.04em;
+}
+
+.regel .name {
+  font-weight: var(--gewicht-mittel);
+}
+
+.regel .begruendung {
+  grid-column: 2;
+  color: inherit;
+  opacity: 0.9;
+}
+
+.regel.erfuellt {
+  background: var(--regel-erfuellt-bg);
+  border-color: var(--regel-erfuellt-border);
+  color: var(--regel-erfuellt-text);
+}
+
+.regel.warnung {
+  background: var(--regel-warnung-bg);
+  border-color: var(--regel-warnung-border);
+  color: var(--regel-warnung-text);
+}
+
+.regel.verletzt {
+  background: var(--regel-verletzt-bg);
+  border-color: var(--regel-verletzt-border);
+  color: var(--regel-verletzt-text);
+}
+
+.hinweis {
+  color: var(--text-secondary);
+  font-size: var(--schrift-s);
+  margin: 0 0 var(--abstand-2);
+}
+
+label {
+  display: block;
+  font-size: var(--schrift-s);
+  font-weight: var(--gewicht-mittel);
+  margin-bottom: var(--abstand-1);
+}
+
+textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: var(--abstand-2) var(--abstand-3);
+  border: var(--rand-duenn) solid var(--border-strong);
+  border-radius: var(--radius-klein);
+  font: inherit;
+  background: var(--surface-raised);
+  color: var(--text-primary);
+}
+
+.aktionen {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--abstand-2);
+}
+
+button {
+  min-height: var(--hitflaeche-min);
+  padding: var(--abstand-2) var(--abstand-4);
+  border-radius: var(--radius-klein);
+  font: inherit;
+  font-weight: var(--gewicht-mittel);
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.primaer {
+  background: var(--accent);
+  color: var(--accent-text);
+  border: var(--rand-duenn) solid var(--accent-strong);
+}
+
+.sekundaer {
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  border: var(--rand-duenn) solid var(--border-strong);
+}

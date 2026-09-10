@@ -28,8 +28,8 @@
           "required" : true
         },
         "responses" : {
-          "404" : {
-            "description" : "Not Found",
+          "400" : {
+            "description" : "Bad Request",
             "content" : {
               "*/*" : {
                 "schema" : {
@@ -38,8 +38,8 @@
               }
             }
           },
-          "400" : {
-            "description" : "Bad Request",
+          "404" : {
+            "description" : "Not Found",
             "content" : {
               "*/*" : {
                 "schema" : {
@@ -83,8 +83,8 @@
           "required" : true
         },
         "responses" : {
-          "404" : {
-            "description" : "Not Found",
+          "400" : {
+            "description" : "Bad Request",
             "content" : {
               "*/*" : {
                 "schema" : {
@@ -93,8 +93,8 @@
               }
             }
           },
-          "400" : {
-            "description" : "Bad Request",
+          "404" : {
+            "description" : "Not Found",
             "content" : {
               "*/*" : {
                 "schema" : {
@@ -138,8 +138,8 @@
           "required" : true
         },
         "responses" : {
-          "404" : {
-            "description" : "Not Found",
+          "400" : {
+            "description" : "Bad Request",
             "content" : {
               "*/*" : {
                 "schema" : {
@@ -148,8 +148,8 @@
               }
             }
           },
-          "400" : {
-            "description" : "Bad Request",
+          "404" : {
+            "description" : "Not Found",
             "content" : {
               "*/*" : {
                 "schema" : {
@@ -164,6 +164,61 @@
               "*/*" : {
                 "schema" : {
                   "$ref" : "#/components/schemas/Suchantwort"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/termine/pruefung" : {
+      "post" : {
+        "tags" : [ "termin-controller" ],
+        "operationId" : "pruefen",
+        "parameters" : [ {
+          "name" : "X-Mandant",
+          "in" : "header",
+          "description" : "Die Praxis, für die die Anfrage gilt. Platzhalter für Authentifizierung: In einer echten Anwendung käme der Mandant aus einem signierten Token.",
+          "required" : true,
+          "example" : "praxis-a"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Buchung"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "400" : {
+            "description" : "Bad Request",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Fehler"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Fehler"
+                }
+              }
+            }
+          },
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Buchungsantwort"
                 }
               }
             }
@@ -191,8 +246,8 @@
           "example" : "praxis-a"
         } ],
         "responses" : {
-          "404" : {
-            "description" : "Not Found",
+          "400" : {
+            "description" : "Bad Request",
             "content" : {
               "*/*" : {
                 "schema" : {
@@ -201,8 +256,8 @@
               }
             }
           },
-          "400" : {
-            "description" : "Bad Request",
+          "404" : {
+            "description" : "Not Found",
             "content" : {
               "*/*" : {
                 "schema" : {

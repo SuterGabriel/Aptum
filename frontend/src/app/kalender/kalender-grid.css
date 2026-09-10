@@ -44,21 +44,6 @@
   border-right: var(--rand-duenn) solid var(--border-subtle);
 }
 
-.zahl {
-  font-family: var(--schrift-zahl);
-  font-variant-numeric: tabular-nums;
-}
-
-/* Die Zwischenzeiten stehen für Screenreader im Rowheader, sichtbar nur die vollen Stunden. */
-.still {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  white-space: nowrap;
-}
-
 .zelle {
   flex: 1 1 0;
   min-width: var(--grid-spaltenbreite-min);

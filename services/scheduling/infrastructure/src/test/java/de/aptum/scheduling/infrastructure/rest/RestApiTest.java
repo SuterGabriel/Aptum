@@ -51,6 +51,31 @@ class RestApiTest extends MitDatenbank {
     }
 
     @Test
+    @DisplayName("Die Prüfung nennt die Regeln, bucht aber nichts - zweimal geprüft bleibt frei")
+    void pruefungBuchtNicht() {
+        UUID verordnung = verordnungAnlegen("praxis-a");
+        Dto.Terminvorschlag slot = als("praxis-a", "/termine/suche", dieseWoche(verordnung), Dto.Suchantwort.class)
+                .getBody()
+                .vorschlaege()
+                .get(0);
+        Dto.Buchung buchung =
+                new Dto.Buchung(verordnung, "KG_EINZEL", slot.therapeut(), slot.raum(), slot.beginn(), null);
+
+        ResponseEntity<Dto.Buchungsantwort> erste =
+                als("praxis-a", "/termine/pruefung", buchung, Dto.Buchungsantwort.class);
+        assertEquals(HttpStatus.OK, erste.getStatusCode());
+        assertEquals("FREI", erste.getBody().ausgang());
+        assertNull(erste.getBody().termin(), "geprüft ist nicht gebucht");
+        assertFalse(erste.getBody().regeln().isEmpty(), "alle Regeln stehen in der Antwort");
+        assertTrue(erste.getBody().regeln().stream()
+                .allMatch(r -> r.begruendung() != null && !r.begruendung().isBlank()));
+
+        ResponseEntity<Dto.Buchungsantwort> zweite =
+                als("praxis-a", "/termine/pruefung", buchung, Dto.Buchungsantwort.class);
+        assertEquals("FREI", zweite.getBody().ausgang(), "die erste Prüfung hat nichts belegt");
+    }
+
+    @Test
     @DisplayName("Die Woche zeigt den gebuchten Termin mit Rüstzeit - und dem anderen Mandanten nichts")
     void dieWocheNachDerBuchung() {
         UUID verordnung = verordnungAnlegen("praxis-a");

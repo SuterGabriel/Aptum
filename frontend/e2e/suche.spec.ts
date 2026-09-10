@@ -17,6 +17,34 @@ test.describe('Terminsuche', () => {
 
     const ergebnis = await new AxeBuilder({ page }).analyze();
     expect(ergebnis.violations).toEqual([]);
+
+    // Buchen: Der Dialog prüft die Regeln, bucht, schließt; die Seite meldet
+    // und sucht neu, der Vorschlag ist weg. Fokus zurück auf dem Auslöser.
+    const erster = page.locator('.vorschlag').first();
+    // Person eingeschlossen: Nach der Buchung bei einer Person kann dieselbe
+    // Uhrzeit bei der anderen der neue erste Vorschlag sein.
+    const vorher = (await erster.textContent())?.replace(/\s+/g, ' ').trim() ?? '';
+    await erster.getByRole('button', { name: /^Buchen/ }).click();
+
+    const dialog = page.getByRole('dialog');
+    await expect(dialog).toBeVisible();
+    await expect(dialog.locator('.regel').first()).toBeVisible();
+    await expect(dialog.locator('.regel.erfuellt').first()).toBeVisible();
+    await expect(dialog.locator('.regel.verletzt')).toHaveCount(0);
+    const imDialog = await new AxeBuilder({ page }).include('[role="dialog"]').analyze();
+    expect(imDialog.violations).toEqual([]);
+
+    await page.keyboard.press('Escape');
+    await expect(dialog).toBeHidden();
+    await expect(page.locator(':focus')).toHaveText(/Buchen/);
+
+    await erster.getByRole('button', { name: /^Buchen/ }).click();
+    await page.getByRole('dialog').getByRole('button', { name: 'Buchen' }).click();
+    await expect(page.getByRole('dialog')).toBeHidden();
+    await expect(page.getByRole('status')).toContainText('Gebucht:');
+    // Die Seite sucht neu; der verbrauchte Vorschlag ist weg. Wartend, weil die
+    // Suche nach der Meldung noch unterwegs sein kann.
+    await expect(page.locator('.vorschlag').first()).not.toHaveText(vorher);
   });
 
   test('meldet eine unbekannte Verordnung als Alert', async ({ page }) => {

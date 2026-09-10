@@ -24,7 +24,7 @@ Projekt-ID 3038770 · Projekt-Nr. a1WSZ0000088BoH2AU · Start 09.09.2026 ·
 
 | # | Anforderung (wörtlich) | Status | Beleg im Repo |
 |---|---|---|---|
-| S1 | Sehr gute Kenntnisse in dem Frontend-Framework Angular | in Arbeit | Angular 20 in `frontend/`, Standalone, OnPush, Signals, CDK ohne Komponenten-Set (ADR-006); Terminsuche in `frontend/src/app/suche/`, Kalender-Grid in `frontend/src/app/kalender/` |
+| S1 | Sehr gute Kenntnisse in dem Frontend-Framework Angular | belegt | Angular 20 in `frontend/`, Standalone, OnPush, Signals, CDK ohne Komponenten-Set (ADR-006); Terminsuche in `frontend/src/app/suche/`, Kalender-Grid in `frontend/src/app/kalender/`, Buchungsdialog auf dem CDK-Dialog in `frontend/src/app/buchung/` |
 | S2 | Sehr gutes Verständnis von rxjs-Bibliothek | belegt | Kanonischer Suchflow in `frontend/src/app/suche/termin-suche.service.ts` (debounce, switchMap, inneres catchError, retry nur bei 5xx); jede Zusage einzeln getestet in `termin-suche.service.spec.ts` |
 | S3 | Erfahrung mit Spring Boot, REST-APIs sowie Microservices-Architekturen | in Arbeit | Spring Boot 3.5, JPA-Adapter hinter Ports, REST in `services/scheduling/infrastructure/src/main/java/de/aptum/scheduling/infrastructure/rest/`, Ende-zu-Ende-Test über HTTP gegen Postgres; von drei geplanten Services existiert einer |
 | S4 | Erfahrung in Java (Java 11 oder höher) | belegt | Java 21 in drei Modulen: Domänenkern mit elf Regelklassen und Slot-Suche in `services/scheduling/domain/`, Anwendungsfälle in `services/scheduling/application/`, Spring Boot in `services/scheduling/infrastructure/` |

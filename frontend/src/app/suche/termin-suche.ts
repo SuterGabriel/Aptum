@@ -1,5 +1,6 @@
 import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Dialog } from '@angular/cdk/dialog';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import {
   AbstractControl,
@@ -7,7 +8,9 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { Subject } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
+import { BuchungsDialog, BuchungsErgebnis, BuchungsVorhaben } from '../buchung/buchungs-dialog';
 import { Suche, Terminvorschlag, Wochentag } from '../api/aptum-api';
 import { WOCHENTAGE } from '../zeit';
 import { HEILMITTEL } from './heilmittel';
@@ -40,6 +43,13 @@ function fensterGueltig(gruppe: AbstractControl) {
 export class TerminSuche {
   private readonly fb = inject(NonNullableFormBuilder);
   private readonly suche = inject(TerminSucheService);
+  private readonly dialog = inject(Dialog);
+
+  /** Ein Tick je Buchung: Der verbrauchte Vorschlag soll aus der Liste verschwinden. */
+  private readonly erneut = new Subject<void>();
+
+  /** Die letzte Buchung, für die Live-Region. */
+  readonly meldung = signal('');
 
   readonly heilmittel = HEILMITTEL;
   readonly wochentage = WOCHENTAGE;
@@ -73,9 +83,46 @@ export class TerminSuche {
         filter(() => this.form.valid),
         map(() => this.alsSuche()),
       ),
+      this.erneut,
     ),
     { initialValue: LEER },
   );
+
+  /** Öffnet den Dialog mit der Regelprüfung; gebucht wird dort, gemeldet hier. */
+  buchen(v: Terminvorschlag): void {
+    const w = this.form.getRawValue();
+    const vorhaben: BuchungsVorhaben = {
+      verordnung: w.verordnung,
+      heilmittel: w.heilmittel,
+      heilmittelBezeichnung:
+        HEILMITTEL.find((h) => h.code === w.heilmittel)?.bezeichnung ?? w.heilmittel,
+      therapeut: v.therapeut ?? '',
+      raum: v.raum ?? '',
+      beginn: v.beginn ?? '',
+      ende: v.ende ?? '',
+    };
+    this.dialog
+      .open<BuchungsErgebnis, BuchungsVorhaben>(BuchungsDialog, {
+        data: vorhaben,
+        ariaLabelledBy: 'buchung-titel',
+        ariaModal: true,
+        // Escape und Klick daneben schließen - das CDK setzt Fokus zurück auf den Auslöser.
+      })
+      .closed.subscribe((ergebnis) => {
+        if (!ergebnis?.termin) return;
+        const wann = new Date(vorhaben.beginn).toLocaleString('de-DE', {
+          weekday: 'long',
+          hour: '2-digit',
+          minute: '2-digit',
+          timeZone: 'Europe/Berlin',
+        });
+        this.meldung.set(
+          `Gebucht: ${wann}, ${vorhaben.therapeut}, ${vorhaben.raum}` +
+            (ergebnis.ausgang === 'UEBERSTEUERT' ? ' - übersteuert mit Begründung.' : '.'),
+        );
+        this.erneut.next();
+      });
+  }
 
   /** Eine Zeile für die Live-Region: Wer nicht sieht, hört so, was passiert ist. */
   readonly statusText = computed(() => {

@@ -16,6 +16,8 @@ export type Terminvorschlag = components['schemas']['Terminvorschlag'];
 export type Regel = components['schemas']['Regel'];
 export type Wochentag = NonNullable<Suche['wochentage']>[number];
 export type Woche = components['schemas']['Woche'];
+export type Buchung = components['schemas']['Buchung'];
+export type Buchungsantwort = components['schemas']['Buchungsantwort'];
 export type Spalte = components['schemas']['Spalte'];
 export type Belegung = components['schemas']['Belegung'];
 
@@ -26,6 +28,16 @@ export class AptumApi {
 
   suchen(suche: Suche): Observable<Suchantwort> {
     return this.http.post<Suchantwort>('/termine/suche', suche);
+  }
+
+  /** Dieselbe Prüfung wie beim Buchen, ohne zu buchen. */
+  pruefen(buchung: Buchung): Observable<Buchungsantwort> {
+    return this.http.post<Buchungsantwort>('/termine/pruefung', buchung);
+  }
+
+  /** 201 mit Kennung, oder 409 mit denselben Regeln - der Aufrufer fängt die 409. */
+  buchen(buchung: Buchung): Observable<Buchungsantwort> {
+    return this.http.post<Buchungsantwort>('/termine', buchung);
   }
 
   /** Die Woche, in der der Tag liegt. */

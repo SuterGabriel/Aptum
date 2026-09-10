@@ -1,0 +1,86 @@
+<div class="dialog">
+  <h2 id="buchung-titel">Termin buchen</h2>
+
+  <dl class="vorhaben">
+    <div>
+      <dt>Heilmittel</dt>
+      <dd>{{ vorhaben.heilmittelBezeichnung }}</dd>
+    </div>
+    <div>
+      <dt>Wann</dt>
+      <dd class="zahl">
+        {{ vorhaben.beginn | date: 'EEEE, d. MMMM' : zone() }},
+        {{ vorhaben.beginn | date: 'HH:mm' : zone() }} bis
+        {{ vorhaben.ende | date: 'HH:mm' : zone() }}
+      </dd>
+    </div>
+    <div>
+      <dt>Wer und wo</dt>
+      <dd>{{ vorhaben.therapeut }}, {{ vorhaben.raum }}</dd>
+    </div>
+  </dl>
+
+  <section aria-labelledby="regeln-titel">
+    <h3 id="regeln-titel">Regelprüfung</h3>
+    <p class="status" aria-live="polite">
+      @switch (zustand().status) {
+        @case ('laedt') {
+          Regeln werden geprüft.
+        }
+        @case ('fertig') {
+          {{ zusammenfassung()['ERFUELLT'] }} erfüllt, {{ zusammenfassung()['WARNUNG'] }} Warnungen,
+          {{ zusammenfassung()['VERLETZT'] }} verletzt.
+        }
+      }
+    </p>
+    @if (zustand(); as z) {
+      @if (z.status === 'fehler') {
+        <p class="fehler" role="alert">{{ z.meldung }}</p>
+      }
+    }
+    <ul class="regeln">
+      @for (r of regeln(); track r.regel) {
+        <li class="regel" [class]="'regel ' + (r.ausgang ?? '').toLowerCase()">
+          <span class="ausgang">{{ ausgangText(r) }}</span>
+          <span class="name">{{ r.regel }}</span>
+          <span class="begruendung">{{ r.begruendung }}</span>
+        </li>
+      }
+    </ul>
+  </section>
+
+  @if (blockiert()) {
+    <section class="uebersteuerung" aria-labelledby="uebersteuerung-titel">
+      <h3 id="uebersteuerung-titel">Trotzdem buchen?</h3>
+      <p class="hinweis">
+        Eine verletzte Regel blockiert die Buchung. Übersteuern geht nur mit Begründung; sie wird
+        mit dem Termin gespeichert und ist nachvollziehbar.
+      </p>
+      <label for="begruendung">Begründung (mindestens zehn Zeichen)</label>
+      <textarea
+        id="begruendung"
+        rows="3"
+        [ngModel]="begruendung()"
+        (ngModelChange)="begruendung.set($event)"
+      ></textarea>
+    </section>
+  }
+
+  <div class="aktionen">
+    <button type="button" class="sekundaer" (click)="abbrechen()">Abbrechen</button>
+    @if (blockiert()) {
+      <button
+        type="button"
+        class="primaer"
+        [disabled]="!darfUebersteuern()"
+        (click)="trotzdemBuchen()"
+      >
+        Trotzdem buchen
+      </button>
+    } @else {
+      <button type="button" class="primaer" [disabled]="!buchbar()" (click)="buchen()">
+        Buchen
+      </button>
+    }
+  </div>
+</div>

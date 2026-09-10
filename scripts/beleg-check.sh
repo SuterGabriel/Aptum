@@ -173,6 +173,8 @@ pruefe "Grid ist ein Grid-Widget" enthaelt frontend/src/app/kalender/kalender-gr
 pruefe "Grid hat Roving Tabindex und einen axe-Test" enthaelt frontend/src/app/kalender/kalender-grid.spec.ts "axe.run"
 pruefe "Ende-zu-Ende fährt per Tastatur durch das Grid" enthaelt frontend/e2e/kalender.spec.ts "ArrowDown"
 pruefe "CI hat den Job e2e" enthaelt .github/workflows/ci.yml "  e2e:"
+pruefe "Dialog prüft, bevor er bucht" enthaelt frontend/src/app/buchung/buchungs-dialog.ts "pruefen"
+pruefe "Prüfung ohne Buchung im Backend" enthaelt services/scheduling/infrastructure/src/main/java/de/aptum/scheduling/infrastructure/rest/TerminController.java "/pruefung"
 pruefe "Wochenansicht nimmt die Grenzen aus Termin" enthaelt services/scheduling/domain/src/main/java/de/aptum/scheduling/domain/kalender/Wochenansicht.java "belegtRaum"
 pruefe "stumme Lücke 1 ist Fixture" datei scripts/fixtures/regel-check/domain/NachbarBorgt.java
 pruefe "stumme Lücke 2 ist Fixture" datei scripts/fixtures/regel-check/domain/KlassenkommentarBorgt.java

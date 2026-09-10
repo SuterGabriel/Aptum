@@ -9,7 +9,11 @@ import { defineConfig, devices } from '@playwright/test';
  */
 export default defineConfig({
   testDir: 'e2e',
+  // Ein Backend, eine Datenbank, eine Testwoche: Zwei Worker buchen sich
+  // gegenseitig die Slots weg, und ein Test sieht eine 409, die keiner
+  // geschrieben hat. Deshalb ein Worker - auch in der CI.
   fullyParallel: false,
+  workers: 1,
   forbidOnly: !!process.env['CI'],
   retries: 0,
   reporter: process.env['CI'] ? [['list'], ['html', { open: 'never' }]] : 'list',

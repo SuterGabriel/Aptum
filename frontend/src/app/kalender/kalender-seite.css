@@ -59,21 +59,8 @@ h1 {
   border-color: var(--accent-strong);
 }
 
-.zahl {
-  font-family: var(--schrift-zahl);
-  font-variant-numeric: tabular-nums;
-}
-
 .hinweis {
   color: var(--text-secondary);
-}
-
-.fehler {
-  color: var(--regel-verletzt-text);
-  background: var(--regel-verletzt-bg);
-  border-left: var(--rand-dick) solid var(--regel-verletzt-border);
-  padding: var(--abstand-2) var(--abstand-3);
-  border-radius: var(--radius-klein);
 }
 
 /* ---- Legende und Statuszeile ---------------------------------------- */

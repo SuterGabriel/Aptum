@@ -1,14 +1,16 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable, of, throwError, timer } from 'rxjs';
+import { EMPTY, Observable, merge, of, throwError, timer } from 'rxjs';
 import {
   catchError,
   debounceTime,
   distinctUntilChanged,
   map,
   retry,
+  share,
   startWith,
   switchMap,
+  withLatestFrom,
 } from 'rxjs/operators';
 import { AptumApi, Suchantwort, Suche } from '../api/aptum-api';
 
@@ -33,11 +35,23 @@ export const LEER: Suchzustand = { status: 'leer' };
 export class TerminSucheService {
   private readonly api = inject(AptumApi);
 
-  zustand(anfragen: Observable<Suche>): Observable<Suchzustand> {
-    return anfragen.pipe(
+  /**
+   * @param anfragen was das Formular liefert
+   * @param erneut   ein Tick, wenn dieselbe Suche noch einmal laufen soll -
+   *                 etwa nach einer Buchung, die einen Vorschlag verbraucht hat
+   */
+  zustand(anfragen: Observable<Suche>, erneut: Observable<void> = EMPTY): Observable<Suchzustand> {
+    const entprellt = anfragen.pipe(
       // Wer tippt, löst keine Anfrage je Taste aus.
       debounceTime(300),
       distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b)),
+      share(),
+    );
+    const wiederholt = erneut.pipe(
+      withLatestFrom(entprellt),
+      map(([, suche]) => suche),
+    );
+    return merge(entprellt, wiederholt).pipe(
       // switchMap, nicht mergeMap: Die neue Anfrage bricht die alte ab. Sonst
       // gewinnt die langsamste Antwort und überschreibt das richtige Ergebnis.
       switchMap((suche) =>

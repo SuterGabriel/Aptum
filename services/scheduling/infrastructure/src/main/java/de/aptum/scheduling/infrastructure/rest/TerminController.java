@@ -19,10 +19,13 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * Suchen und buchen.
  *
- * <p>Beides ist ein {@code POST}: Die Suche trägt einen Körper und ist keine
+ * <p>Alles ist ein {@code POST}: Die Suche trägt einen Körper und ist keine
  * Ressource, die Buchung legt eine an. Die Antwort auf eine blockierte
  * Buchung ist {@code 409} mit demselben Körper wie bei Erfolg — die Regeln
  * stehen drin, damit der Dialog sie anzeigen kann, nur die Kennung fehlt.
+ *
+ * <p>Die Prüfung unter {@code /termine/pruefung} liefert denselben Körper,
+ * bucht aber nichts: Der Dialog zeigt die Regeln, bevor jemand entscheidet.
  */
 @RestController
 @RequestMapping("/termine")
@@ -45,14 +48,23 @@ class TerminController {
         return Dto.Suchantwort.von(ergebnis);
     }
 
-    @PostMapping
-    ResponseEntity<Dto.Buchungsantwort> buchen(@RequestBody Dto.Buchung buchung) {
-        TerminBuchen.Anfrage anfrage = new TerminBuchen.Anfrage(
+    @PostMapping("/pruefung")
+    Dto.Buchungsantwort pruefen(@RequestBody Dto.Buchung buchung) {
+        return Dto.Buchungsantwort.von(null, buchen.pruefen(anfrage(buchung)));
+    }
+
+    private static TerminBuchen.Anfrage anfrage(Dto.Buchung buchung) {
+        return new TerminBuchen.Anfrage(
                 new VerordnungId(buchung.verordnung()),
                 Heilmittel.valueOf(buchung.heilmittel()),
                 buchung.therapeut(),
                 buchung.raum(),
                 buchung.beginn());
+    }
+
+    @PostMapping
+    ResponseEntity<Dto.Buchungsantwort> buchen(@RequestBody Dto.Buchung buchung) {
+        TerminBuchen.Anfrage anfrage = anfrage(buchung);
         TerminBuchen.Ergebnis ergebnis = buchung.uebersteuerung() == null
                 ? buchen.ausfuehren(anfrage)
                 : buchen.ausfuehren(

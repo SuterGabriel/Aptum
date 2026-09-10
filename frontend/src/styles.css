@@ -4,6 +4,8 @@
  * gibt, ergänzt sie dort samt @kontrast-Zeile, sonst prüft die CI sie nicht.
  */
 @import './styles/tokens.css';
+/* Positionierung und Backdrop für den CDK-Dialog - nur Layout, keine Gestaltung. */
+@import '@angular/cdk/overlay-prebuilt.css';
 
 *,
 *::before,
@@ -38,4 +40,37 @@ body {
     transition-duration: 0ms !important;
     animation-duration: 0ms !important;
   }
+}
+
+/* Der abgedunkelte Hintergrund des Dialogs, aus dem Token mit Deckkraft. */
+.cdk-overlay-dark-backdrop {
+  background: color-mix(in srgb, var(--surface-backdrop) 55%, transparent);
+}
+
+/* ---- Zwei Hilfsklassen, die jede Seite braucht ---------------------- */
+
+/* Zahlen und Uhrzeiten in der Monospace-Schrift, mit gleich breiten Ziffern. */
+.zahl {
+  font-family: var(--schrift-zahl);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Für Screenreader vorhanden, unsichtbar für alle anderen. */
+.still {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* Eine Fehlermeldung sieht überall gleich aus: Farbe aus den Regel-Token, dazu ein Rand. */
+.fehler {
+  color: var(--regel-verletzt-text);
+  background: var(--regel-verletzt-bg);
+  border-left: var(--rand-dick) solid var(--regel-verletzt-border);
+  padding: var(--abstand-2) var(--abstand-3);
+  border-radius: var(--radius-klein);
+  margin: var(--abstand-3) 0 0;
 }

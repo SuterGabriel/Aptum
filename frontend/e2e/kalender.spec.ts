@@ -51,10 +51,19 @@ test.describe('Kalender-Grid', () => {
     // Eine gesperrte Zelle ist nicht wählbar; eine freie landet in der Statuszeile.
     await page.keyboard.press('Enter');
     await expect(page.locator('.status')).toHaveText('');
+
+    // Die erste freie Zelle der Spalte suchen statt sie zu kennen: Nach vielen
+    // Läufen gegen dieselbe Datenbank ist 08:00 nicht mehr frei.
     await page.keyboard.press('Control+Home');
-    for (let i = 0; i < 4; i++) await page.keyboard.press('ArrowDown'); // 08:00, Dienstbeginn
+    let name = '';
+    for (let i = 0; i < 48; i++) {
+      name = (await page.locator(':focus').getAttribute('aria-label')) ?? '';
+      if (name.endsWith(', frei')) break;
+      await page.keyboard.press('ArrowDown');
+    }
+    expect(name).toMatch(/, T\. Alpha, frei$/);
     await page.keyboard.press('Enter');
-    await expect(page.locator('.status')).toContainText('Gewählt: Montag, 08:00, T. Alpha, frei');
+    await expect(page.locator('.status')).toContainText(`Gewählt: ${name}`);
   });
 
   test('Tagesreiter: Pfeile wechseln den Tag', async ({ page }) => {
