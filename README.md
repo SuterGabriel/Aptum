@@ -6,7 +6,12 @@ Terminplanung und Verordnungsverwaltung für Physio- und Ergotherapiepraxen.
 Frage: Passt dieser Termin zu Therapeut, Raum, Patient **und** Verordnung? Die
 vier Dimensionen unten sind der Grund für den Namen.
 
-**Stand: Stufe 0 abgeschlossen.** Der Domänenkern ist noch nicht geschrieben.
+**Stand: Stufe 1 angefangen.** Der Domänenkern trägt die Dimension
+*Verordnung* — Fristen, Unterbrechung, Frequenz und Menge als benannte Regeln
+mit parametrisierten Grenzfalltests. Die Dimensionen Therapeut und Raum fehlen
+noch, und damit die Slot-Berechnung, die sie schneidet. Spring, Multi-Tenancy
+und das Angular-Frontend sind ebenfalls offen.
+
 Vorgezogen aus Stufe 2 sind die Gestaltungstoken und die Kontrastprüfung
 (ADR-006), weil der Auftrag an die Gestaltung eine Grundlage brauchte. Was
 hier behauptet wird, ist an der jeweiligen Stelle im Repo nachprüfbar oder als
@@ -69,10 +74,11 @@ KI-Einsatz protokolliert wird.
 Fehlt ein Beleg, wird die CI rot. Entweder der Beleg wird nachgeliefert, oder
 die Behauptung gestrichen.
 
-Daneben stehen drei weitere Gates: die Kontrastprüfung aus den Farbtoken, ein
-Verweis-Check über die Markdown-Querverweise und eine Prosa-Prüfung gegen
-ausgeschriebene Umlaute. Alle vier laufen auch vor dem Commit auf der eigenen
-Maschine. Wie sie zugeschnitten sind und was sie *nicht* abfangen, steht in
+Daneben stehen vier weitere Gates: die Kontrastprüfung aus den Farbtoken, ein
+Verweis-Check über die Markdown-Querverweise, eine Prosa-Prüfung gegen
+ausgeschriebene Umlaute und der Regel-Check, der keine Fachzahl ohne belegte
+Fundstelle in den Domänencode lässt. Alle fünf laufen auch vor dem Commit auf
+der eigenen Maschine. Wie sie zugeschnitten sind und was sie *nicht* abfangen, steht in
 [docs/PIPELINE.md](docs/PIPELINE.md).
 
 ## Wegweiser
@@ -94,7 +100,7 @@ Maschine. Wie sie zugeschnitten sind und was sie *nicht* abfangen, steht in
 | Stufe | Inhalt | Stand |
 |---|---|---|
 | 0 | Setup, Regeln, Skills, CI-Grundgerüst, ADR-001 | **erledigt** |
-| 1 | Domänenkern in reinem Java, dann Spring, Multi-Tenancy, Angular-Suchflow | offen |
+| 1 | Domänenkern in reinem Java, dann Spring, Multi-Tenancy, Angular-Suchflow | **in Arbeit** — Verordnungsregeln stehen, Spring und Frontend offen |
 | 2 | Kalender-Grid, Tabelle, WCAG, End-to-End-Tests | offen |
 | 3 | AI-Layer, MCP-Server, Evals, Provider-Vergleich | offen |
 | 4 | Terraform, Helm, ArgoCD, Observability | offen |

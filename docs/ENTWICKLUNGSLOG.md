@@ -418,6 +418,66 @@ Tag.
 
 ---
 
+## 2026-09-10 — Stufe 1, Mengenprüfung und ein veraltetes README
+
+**Was delegiert wurde:** Zuerst eine Prüfung, ob wir noch dem eigenen Plan
+folgen. Dann die Mengenprüfung, mit der Rang 1 der Priorisierung abgeschlossen
+ist. 74 Tests grün, davon 26 neu.
+
+**Was die Planprüfung ergeben hat.** Zwei Befunde, beide unangenehm:
+
+Das README behauptete im ersten Absatz *„Stufe 0 abgeschlossen. Der Domänenkern
+ist noch nicht geschrieben"* — bei fünf Regelklassen und 48 Tests. Dazu die
+Stufentabelle mit Stufe 1 auf `offen` und ein Satz über „drei weitere Gates",
+von denen es inzwischen vier sind. Das steht in der Datei, die ein Leser zuerst
+öffnet, und kein Gate fängt es, weil es Prosa ist.
+
+Dritter Fall derselben Art nach den 31 Kontrastpaaren und den Zählungen in
+PIPELINE.md. Handgezählte Zahlen und Standsätze in Fließtext veralten still. Der
+Punkt ist inzwischen belegt genug, dass ein Generierungsschritt für die
+mechanischen Teile keine Spielerei mehr wäre.
+
+Der zweite Befund war der eigene Vorschlag: Ich wollte zur Slot-Berechnung
+weitergehen, obwohl Rang 1 laut Produktsicht *Fristen-, Unterbrechungs- und
+Mengenprüfung* verlangt und die Mengenprüfung fehlte. Die Frequenzregel war eine
+sinnvolle Ergänzung, aber sie war keine Ersetzung. Aufgefallen ist es nur, weil
+die Frage gestellt wurde — nicht, weil etwas rot geworden wäre.
+
+**Was am Modell besser wurde.** Die Diagnosegruppe trägt die Höchstmengen, und
+sie bestimmt die Therapieform. Damit ist `therapieform` aus der Verordnung
+verschwunden statt ein Feld dazuzukommen: Es gibt keine Physio-Verordnung mit
+ergotherapeutischer Gruppe, und ein Feld, das man nicht hat, kann nicht
+widersprüchlich gefüllt werden.
+
+**Die fachliche Falle dieses Abschnitts.** Höchstmenge und orientierende
+Behandlungsmenge sehen gleich aus und binden verschieden. Die erste ist eine
+harte Grenze je Rezept, die zweite ausdrücklich ein Richtwert ohne
+Obergrenzenwirkung. Eine naive Umsetzung prüft gegen die falsche und lehnt
+zulässige Verordnungen ab. Ein Test hält die Unterscheidung fest: Bei jeder
+Gruppe liegt die orientierende Menge über der Höchstmenge, kann also von einem
+einzelnen Rezept gar nicht erreicht werden — sie bezieht sich auf den
+Verordnungsfall, nicht auf das Blatt.
+
+**Was die Gates gelehrt haben, vierter Fall.** Der Regel-Check sah nur
+`domain/regel/` an. Die Katalogzahlen liegen aber an der Diagnosegruppe, also im
+Modell, und wären als einzige Fachzahlen ungeprüft geblieben. Der Zuschnitt geht
+jetzt über den ganzen Domänenkern; aus 5 geprüften Klassen wurden 16.
+
+Ein Umweg war dafür nötig: Eine Enum-Konstante darf keine statischen Felder
+ihrer eigenen Enum verwenden, sonst hätten die Werte roh in der Konstantenliste
+gestanden und keiner hätte eine Fundstelle getragen. Die Zahlen liegen deshalb
+in einem verschachtelten Interface.
+
+**Was nicht funktionierte.** Eine ASCII-Umschrift ist durch den Agenten-Hook
+gerutscht, weil die Datei über ein Shell-Skript geändert wurde und der Hook nur
+auf `Write` und `Edit` hört. Gefangen hat es der Prosa-Check beim Gesamtlauf.
+Das ist kein Fehler, sondern der Grund, warum dieselben Gates zweimal laufen —
+aber es zeigt, dass die schnelle Stufe Lücken hat, die die langsame schließt.
+
+**Zeitschätzung:** delegiert etwa fünfzig Minuten, von Hand geschätzt ein Tag.
+
+---
+
 ## Vorlage für weitere Einträge
 
 ```

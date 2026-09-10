@@ -2,6 +2,7 @@ package de.aptum.scheduling.domain.regel;
 
 import de.aptum.scheduling.domain.model.Behandlungstermin;
 import de.aptum.scheduling.domain.model.Behandlungsverlauf;
+import de.aptum.scheduling.domain.model.Diagnosegruppe;
 import de.aptum.scheduling.domain.model.Frequenz;
 import de.aptum.scheduling.domain.model.Therapieform;
 import de.aptum.scheduling.domain.model.Unterbrechungskennzeichen;
@@ -55,6 +56,19 @@ final class Verlauf {
     }
 
     static Verordnung verordnung(Therapieform therapieform, int einheiten, Frequenz frequenz) {
-        return new Verordnung(ERSTER_TAG.minusDays(3), false, therapieform, einheiten, frequenz);
+        return verordnung(vertreterFuer(therapieform), einheiten, frequenz);
+    }
+
+    static Verordnung verordnung(Diagnosegruppe gruppe, int einheiten, Frequenz frequenz) {
+        return new Verordnung(ERSTER_TAG.minusDays(3), false, gruppe, einheiten, frequenz);
+    }
+
+    /**
+     * Eine Diagnosegruppe je Therapieform, für Tests, die nur die Form
+     * brauchen. Beide lassen zehn Einheiten je Verordnung zu, damit die
+     * Mengenregel den anderen Tests nicht dazwischenfunkt.
+     */
+    static Diagnosegruppe vertreterFuer(Therapieform therapieform) {
+        return therapieform.istErgotherapie() ? Diagnosegruppe.SB1 : Diagnosegruppe.ZN;
     }
 }

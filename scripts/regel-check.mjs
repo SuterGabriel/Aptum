@@ -144,7 +144,13 @@ function javaSammeln(verzeichnis, gesammelt = []) {
 }
 
 /**
- * Nur Regelklassen. Anderswo im Domain-Modul sind Zahlen unverdächtig.
+ * Das ganze Domain-Modul, nicht nur der Ordner `regel`.
+ *
+ * Der erste Zuschnitt sah nur `/domain/regel/` an. Die Höchstmengen des
+ * Heilmittelkatalogs liegen aber an der Diagnosegruppe, also im Modell — und
+ * wären damit als einzige Fachzahlen ungeprüft geblieben. Eine Zahl aus der
+ * Richtlinie ist überall im Domänenkern belegpflichtig, nicht nur dort, wo
+ * der Ordner danach heißt.
  *
  * Testquellen sind ausgenommen, und das ist kein Schlupfloch: Die Grenzwerte
  * in einem Grenzfalltest — Tag 28 zulässig, Tag 29 nicht — sind der Zweck
@@ -153,7 +159,7 @@ function javaSammeln(verzeichnis, gesammelt = []) {
  */
 function istRegelklasse(pfad) {
   const p = pfad.replace(/\\/g, '/');
-  return p.includes('/domain/regel/') && !p.includes('/src/test/');
+  return p.includes('/domain/') && !p.includes('/src/test/');
 }
 
 function codePruefen(pfad, katalog) {

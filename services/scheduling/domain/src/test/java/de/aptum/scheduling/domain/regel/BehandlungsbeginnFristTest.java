@@ -29,7 +29,8 @@ class BehandlungsbeginnFristTest {
 
     private Pruefergebnis pruefeNach(long tage, boolean dringlich) {
         return regel.pruefe(
-                new Verordnung(AUSSTELLUNG, dringlich, Therapieform.PHYSIOTHERAPIE, EINHEITEN,
+                new Verordnung(AUSSTELLUNG, dringlich,
+                        Verlauf.vertreterFuer(Therapieform.PHYSIOTHERAPIE), EINHEITEN,
                         Verlauf.REGELFREQUENZ),
                 AUSSTELLUNG.plusDays(tage));
     }
