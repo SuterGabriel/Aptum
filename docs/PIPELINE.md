@@ -26,6 +26,14 @@ einmal nötig — ohne `npm install` gibt es keinen Schritt, der es nebenbei
 erledigt. Ohne diesen Aufruf sucht Git seine Hooks weiter in `.git/hooks/`,
 und das Verzeichnis liegt außerhalb der Versionierung.
 
+**Für die Backend-Tests läuft Docker.** Die Infrastruktur-Tests starten ein
+echtes Postgres über Testcontainers; ohne laufenden Daemon fallen sie nach
+einer halben Sekunde mit „Could not find a valid Docker environment". Auf
+Windows kommt eine Falle dazu: Docker 29 verlangt mindestens API 1.40, und
+docker-java handelt ohne Vorgabe eine ältere aus — der Daemon antwortet dann
+mit 400, und die Meldung sieht aus, als gäbe es kein Docker. Das Pom des
+Infrastruktur-Moduls setzt deshalb `api.version` in der Test-JVM.
+
 ## Stufe 1: der Git-Hook
 
 `.githooks/pre-commit` führt fünf Gates aus. Der Zuschnitt ist ungleich, und
@@ -75,7 +83,7 @@ Ergebnisses, nicht nur Werkzeug.
 | `dokumente` | Ausgeschriebene Umlaute in Prosa · tote Verweise zwischen Markdown-Dateien |
 | `regeln` | Der Regelkatalog ist vollständig ausgezeichnet, und kein Domänencode nennt eine Zahl ohne belegte Fundstelle |
 | `kontrast` | Jedes geforderte Farbpaar aus `tokens.css` hält seine WCAG-Schwelle |
-| `backend` | Formatierung (Spotless), Tests aller drei Module, ArchUnit gegen ADR-001 in domain und infrastructure — der einzige Job mit JVM, noch ohne Datenbank |
+| `backend` | Formatierung (Spotless), Tests aller drei Module, ArchUnit gegen ADR-001, und ein echtes Postgres über Testcontainers für den Isolationstest aus ADR-002 — der einzige Job mit JVM und Docker |
 
 Ab Stufe 1 kommen Kompilieren, Domain-Tests und ArchUnit dazu, später
 Testcontainers, Playwright mit axe-core und die Eval-Suite. Sie stehen als

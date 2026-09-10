@@ -37,10 +37,42 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-actuator</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-data-jpa</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.flywaydb</groupId>
+      <artifactId>flyway-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.flywaydb</groupId>
+      <artifactId>flyway-database-postgresql</artifactId>
+    </dependency>
 
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <!--
+      Testcontainers: ein echtes Postgres je Testklasse. Row Level Security
+      laesst sich nicht gegen H2 pruefen, und ein Isolationstest gegen eine
+      andere Datenbank als die produktive waere eine Behauptung.
+    -->
+    <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>postgresql</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>junit-jupiter</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -52,6 +84,21 @@
 
   <build>
     <plugins>
+      <!--
+        Docker 29 verlangt mindestens API 1.40; docker-java handelt ohne
+        Vorgabe eine aeltere aus, und der Daemon antwortet mit 400 - was
+        Testcontainers als "kein Docker gefunden" meldet. Die Eigenschaft
+        muss in die geforkte Test-JVM, nicht in die von Maven; eine
+        Umgebungsvariable liest docker-java dafuer nicht. Aeltere Daemons
+        koennen 1.44 ebenfalls, der Wert ist also nach unten vertraeglich.
+      -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <argLine>-Dapi.version=1.44</argLine>
+        </configuration>
+      </plugin>
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>

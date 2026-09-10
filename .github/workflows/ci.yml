@@ -89,8 +89,9 @@ jobs:
     name: Backend bauen und testen
     runs-on: ubuntu-latest
     # Alle drei Module: domain, application, infrastructure. Java 21 und Maven
-    # nach ADR-008. Der Spring-Kontext startet im Test, aber ohne Datenbank -
-    # die kommt mit dem Job backend-it und Testcontainers.
+    # nach ADR-008. Die Infrastruktur-Tests starten ein echtes Postgres über
+    # Testcontainers - ubuntu-latest bringt Docker mit. Darunter der
+    # Isolationstest aus ADR-002: Mandant A sieht nichts von Mandant B.
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
@@ -116,10 +117,6 @@ jobs:
   # Bewusst als auskommentiertes Gerüst, nicht als leerer Job, der immer
   # grün ist. Ein Job, der nichts prüft und trotzdem grün meldet, ist
   # schlimmer als kein Job.
-  #
-  # backend-it:
-  #   Testcontainers mit echtem Postgres, inklusive Multi-Tenant-Isolationstest:
-  #   Mandant A sieht nichts von Mandant B.
   #
   # frontend:
   #   Lint, Unit-Tests, Bundle-Größen-Budget.

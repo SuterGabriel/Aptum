@@ -138,6 +138,12 @@ pruefe "ADR-009 entscheidet Blockieren gegen Warnen" datei docs/adr/ADR-009-bloc
 pruefe "Modul application existiert" datei services/scheduling/application/pom.xml
 pruefe "Modul infrastructure existiert" datei services/scheduling/infrastructure/pom.xml
 pruefe "ArchUnit prüft die Modulgrenzen" datei services/scheduling/infrastructure/src/test/java/de/aptum/scheduling/infrastructure/ModulgrenzenTest.java
+
+echo
+echo "ADR-002 — Mandantentrennung ist geprüft, nicht behauptet"
+pruefe "Migration mit Row Level Security" enthaelt services/scheduling/infrastructure/src/main/resources/db/migration/V1__mandantentrennung.sql "row level security"
+pruefe "Isolationstest existiert" datei services/scheduling/infrastructure/src/test/java/de/aptum/scheduling/infrastructure/mandant/MandantIsolationTest.java
+pruefe "Mandant wird an genau einer Stelle gesetzt" datei services/scheduling/infrastructure/src/main/java/de/aptum/scheduling/infrastructure/mandant/MandantTransactionManager.java
 pruefe "stumme Lücke 1 ist Fixture" datei scripts/fixtures/regel-check/domain/NachbarBorgt.java
 pruefe "stumme Lücke 2 ist Fixture" datei scripts/fixtures/regel-check/domain/KlassenkommentarBorgt.java
 pruefe "Wertabgleich ist Fixture" datei scripts/fixtures/regel-check/domain/FalscherWert.java

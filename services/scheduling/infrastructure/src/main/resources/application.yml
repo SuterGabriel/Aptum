@@ -2,6 +2,25 @@ spring:
   application:
     name: aptum-scheduling
 
+  # Zwei Verbindungen, zwei Rollen. Die Migration läuft mit Rechten, die
+  # Tabellen anlegen dürfen. Die Anwendung läuft als Rolle, der die Tabellen
+  # nicht gehören - nur so greift Row Level Security. Ein Eigentümer oder
+  # Superuser umgeht die Policy still, und der Isolationstest wäre grün aus
+  # dem falschen Grund (ADR-002).
+  datasource:
+    url: ${APTUM_DB_URL:jdbc:postgresql://localhost:5432/aptum}
+    username: ${APTUM_DB_USER:aptum_app}
+    password: ${APTUM_DB_PASSWORD:aptum}
+  flyway:
+    url: ${APTUM_DB_URL:jdbc:postgresql://localhost:5432/aptum}
+    user: ${APTUM_DB_ADMIN_USER:aptum}
+    password: ${APTUM_DB_ADMIN_PASSWORD:aptum}
+  jpa:
+    # Das Schema kommt aus der Migration, nie aus den Entities.
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
+
 management:
   endpoints:
     web:

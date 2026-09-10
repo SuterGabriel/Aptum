@@ -41,7 +41,7 @@ const UEBERSPRINGEN = new Set([
 const MARKDOWN = new Set(['.md']);
 const NUR_KOMMENTARE = new Set([
   '.sh', '.mjs', '.js', '.cjs', '.css', '.yml', '.yaml',
-  '.java', '.ts', '.html', '.xml', '.py',
+  '.java', '.ts', '.html', '.xml', '.py', '.sql',
 ]);
 const DOTFILES_MIT_KOMMENTAREN = new Set(['.gitignore', '.gitattributes', '.editorconfig']);
 
@@ -122,7 +122,7 @@ function prosaZeilen(inhalt, art) {
       const oeffnet = /^\s*\/\*/.test(zeile);
       const schliesst = /\*\//.test(zeile);
       const sternzeile = /^\s*\*/.test(zeile) && !oeffnet;
-      const istProsa = oeffnet || /^\s*(#|\/\/)/.test(zeile) || (sternzeile && imCodeblock);
+      const istProsa = oeffnet || /^\s*(#|\/\/|--)/.test(zeile) || (sternzeile && imCodeblock);
       if (oeffnet && !schliesst) imCodeblock = true;
       if (schliesst) imCodeblock = false;
       if (!istProsa) return '';

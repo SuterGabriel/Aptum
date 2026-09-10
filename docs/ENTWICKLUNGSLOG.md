@@ -874,6 +874,65 @@ davon die Hälfte für die Frage, warum `-pl` ohne `-am` nicht auflöst.
 
 ---
 
+## 2026-09-10 — Stufe 1, das Gate der ADR-002
+
+**Was delegiert wurde:** Schritt B der Anwendungsschicht: Postgres über
+Testcontainers, Flyway-Migration mit Row Level Security, ein
+Transaktionsmanager, der den Mandanten je Transaktion setzt, und der
+Isolationstest. 158 Tests grün, davon 6 neu — und die sechs haben die meiste
+Arbeit gemacht.
+
+**Was die Testsuite abgefangen hat.** Vier Fehler, jeder eine eigene Lehre,
+in der Reihenfolge, in der sie auftraten:
+
+1. *„Could not find a valid Docker environment"* — aber Docker lief. Docker
+   29 verlangt mindestens API 1.40; docker-java handelt ohne Vorgabe eine
+   ältere aus, der Daemon antwortet mit 400, und Testcontainers liest den
+   Fehlerkörper als leere Info-Struktur. Die Meldung sagt „kein Docker", die
+   Ursache ist „falsche Version". Die Eigenschaft muss in die geforkte
+   Test-JVM; eine Umgebungsvariable liest docker-java dafür nicht. Steht jetzt
+   im Pom, mit Begründung.
+2. *Connection refused* auf einem Port, den es nicht mehr gab. `@Container`
+   startet und stoppt je Testklasse, Spring cacht den Kontext über Klassen
+   hinweg. Die zweite Klasse fand einen Kontext mit der URL eines toten
+   Containers. Ein Container je JVM, einmal gestartet, nie von Hand gestoppt.
+3. *„new row violates row-level security policy"* beim Schreiben als eigener
+   Mandant — die Policy griff also, aber der Mandant fehlte. Eine Sonde zeigte:
+   dieselbe Verbindung, richtige Rolle, Variable gesetzt. Erst die Ergebnisse
+   je Methode verrieten die Kette: Der Test „ohne Mandant beginnt keine
+   Transaktion" lief zuerst, und mein `doBegin` warf *nach* `super.doBegin()`.
+   Der EntityManager blieb am Thread gebunden; der nächste Test hielt ihn für
+   seine Transaktion, `doBegin` lief nie, kein Mandant, Policy verletzt, alles
+   danach „transaction aborted". Der Test, der Lautstärke prüfen sollte,
+   brachte die fünf anderen zum Schweigen. Jetzt wird der Mandant *vor* dem
+   Beginn geholt, und ein Fehler danach räumt auf wie Spring selbst.
+4. Zählungen 3 und 4 statt 1 — keine Lücke, sondern Zeilen, die sich über
+   die Tests ansammelten. Aufräumen als jeder Mandant selbst; die Policy
+   begrenzt auch das Löschen.
+
+**Was die Gegenproben belegen.** Policy abgeschaltet: A sieht die Zeile von
+B, und `WITH CHECK` schweigt — fünf Tests rot. `set_config` auf einen anderen
+Namen umgebogen: alle sechs rot, weil die Datenbank dann auch die eigenen
+Zeilen sperrt. Das ist der Satz aus der ADR, gemessen: Die vergessene
+WHERE-Klausel fällt geschlossen aus, nicht offen.
+
+**Was an diesem Schritt hängen blieb.** Zwei Rollen, wie im Betrieb: Flyway
+als Superuser, die Anwendung als `aptum_app`, angelegt vom Init-Skript des
+Containers. Wer hier den Container-Benutzer nähme, bekäme grüne Tests, die
+nichts prüfen — Superuser sehen jede Zeile. Das steht im Test, damit es
+niemand vereinfacht.
+
+**Was die Filter gelehrt haben, zum vierten Mal heute.** Der Rücklauf nach den
+Gegenproben gab nichts aus, weil mein Filter nur Fehlerzeilen zeigte. Ein
+stummes Grün ist kein Grün. Der letzte Lauf greift jetzt die Erfolgszeile ab,
+nicht die Abwesenheit einer Fehlerzeile.
+
+**Zeitschätzung:** delegiert gut zwei Stunden, von Hand geschätzt drei Tage —
+davon zwei für Fehler drei, weil die Meldung „Policy verletzt" auf die
+Datenbank zeigt und die Ursache im Transaktionsmanager lag.
+
+---
+
 ## Vorlage für weitere Einträge
 
 ```
