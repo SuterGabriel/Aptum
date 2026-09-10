@@ -655,6 +655,56 @@ Controller-Klasse zur Sprache kommen muss.
 
 ---
 
+## 2026-09-10 — Stufe 1, das Zeitmodell
+
+**Was delegiert wurde:** Etappe C1 der Slot-Berechnung — Zeitraum, Arbeitszeit,
+Abwesenheit, Termin, die Praxiseinstellung für Rüstzeit und Nachruhe, und zwei
+Regeln: `TherapeutVerfuegbar` und `RaumFrei`. 130 Tests grün, davon 19 neu.
+
+**Der Satz aus dem README wird zum Test.** *Nachruhezeiten, die den Raum
+blockieren, aber nicht die Therapeutin.* Der `Termin` beantwortet deshalb zwei
+Fragen getrennt: was er die Therapeutin belegt (Behandlung plus Rüstzeit auf
+beiden Seiten) und was er den Raum belegt (dasselbe plus Nachruhe, wenn das
+Heilmittel eine vorsieht). Die beiden Regeln fragen verschiedene Zeiträume ab
+und rechnen nichts selbst nach.
+
+In der Gegenprobe der Therapeutin die Nachruhe mit angerechnet: zwei Tests
+rot — einmal die Dauer, einmal der Fall, dass sie nach dem Bad nebenan frei
+sein müsste. Wer beide Ressourcen gleich behandelt, verschenkt Behandlungszeit
+oder legt zwei Patienten ins selbe Bad.
+
+**Eine Annahme, benannt statt gefragt.** Die Rüstzeit bindet Therapeutin *und*
+Raum — wer den Raum vorbereitet, ist dabei nicht frei. Die Quellen sagen dazu
+nichts; die Rüstzeit ist ohnehin ein Praxisparameter, weil der Vertragstext für
+die Physiotherapie offenlässt, ob sie zusätzlich einzuplanen ist. Die Nachruhe
+hat einen belegten Richtwert (`HM-ZEIT-16`), der als Voreinstellung dient.
+
+**Sommerzeit, festgehalten bevor es Serien gibt.** Der Skill nennt den Fall:
+Eine Serie „jeden Dienstag 14:00" verschiebt sich um eine Stunde, wenn jemand
+168 Stunden addiert statt eine Woche. Drei Tests halten fest, dass das
+Zeitmodell in `Europe/Berlin` rechnet, dass die Umstellungswoche 167 Stunden
+hat, und — absichtlich — dass die falsche Rechnung wirklich bei 15:00 landet.
+Serientermine gibt es noch nicht; die Falle ist trotzdem schon zu.
+
+**Was nicht funktionierte.** Neun Umschriften in `//`-Kommentaren über vier
+Testdateien, alle vom Hook gefangen. Inzwischen ein Muster ohne Neuigkeitswert.
+Dazu eine Version von `Arbeitszeit.deckt` mit einer doppelten Mitternachtsprüfung,
+die beim zweiten Lesen unverständlich war — nach Regel 4 ersetzt durch eine,
+die in einem Satz erklärbar ist: über Mitternacht hinaus ist keine Arbeitszeit.
+
+**Was bleibt.** Eine Mittagspause — zwei Blöcke je Tag — kennt die Arbeitszeit
+nicht. Halbtägige Abwesenheiten auch nicht; sie wären eine geänderte
+Arbeitszeit an diesem Tag, keine Abwesenheit. Beides kommt, wenn eine Regel es
+braucht. Und Etappe C2 fehlt: die `SlotSuche`, die aus Verordnung, Therapeut,
+Raum und Zeit die Vorschläge berechnet — das, was das README im ersten Absatz
+verspricht.
+
+**Zeitschätzung:** delegiert etwa fünfzig Minuten, von Hand geschätzt zwei Tage.
+Der teure Teil wäre die Zeitzone gewesen — nicht sie richtig zu machen, sondern
+zu merken, wo man sie falsch gemacht hat.
+
+---
+
 ## Vorlage für weitere Einträge
 
 ```

@@ -131,4 +131,17 @@ public enum Heilmittel {
     public boolean brauchtAbrechnungserlaubnis() {
         return zertifikatsleistung.istZertifikatspflichtig();
     }
+
+    /**
+     * Folgt auf diese Behandlung eine Nachruhe, die den Raum bindet?
+     *
+     * <p>Der Katalog sieht sie nach Bädern, Unterwasserdruckstrahlmassage und
+     * Bewegungsbad vor ({@code @fundstelle HM-ZEIT-16}). Von diesen dreien
+     * kennt das Modell bisher nur das Bewegungsbad; deshalb ist die Nachruhe
+     * hier an die Raumanforderung gebunden statt an ein eigenes Feld. Kommen
+     * die anderen Bäder dazu, wird daraus ein eigenes Merkmal.
+     */
+    public boolean brauchtNachruhe() {
+        return raumanforderung == Raumanforderung.BEWEGUNGSBAD;
+    }
 }
