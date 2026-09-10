@@ -1163,6 +1163,16 @@ durchließ: `track v.beginn + v.therapeut` mit zwei optionalen Feldern aus dem
 OpenAPI-Dokument. Die erzeugten Typen sagen ehrlich, dass springdoc nichts
 als Pflichtfeld kennzeichnet — und der Build nimmt sie beim Wort.
 
+**Was die CI abgefangen hat, was lokal grün war.** Die eingecheckten
+API-Typen waren vor dem Prettier-Ausschluss noch einmal formatiert worden —
+einfache Anführungszeichen, zwei Leerzeichen. Lokal fiel das nicht auf, weil
+das Drift-Gate nur in der CI läuft. Dort erzeugt `openapi-typescript` die
+rohe Fassung, und `git diff` meldet 508 geänderte Zeilen, von denen keine
+eine Typänderung ist. Nachgewiesen, bevor ich das behaupte: beide Fassungen
+ohne Whitespace und mit vereinheitlichten Anführungszeichen haben dieselbe
+Prüfsumme. Erzeugte Dateien werden eingecheckt, wie sie erzeugt werden —
+das Gate fragt nicht, ob eine Änderung nur hübsch ist.
+
 **Was die Testsuite abgefangen hat.** Nichts Fachliches; das liegt im
 Backend. Was der Suchflow abfängt, ist Zeit: Race Conditions und tote
 Streams sind Fehler, die im Browser nie reproduzierbar auftreten und im

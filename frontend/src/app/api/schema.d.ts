@@ -4,285 +4,283 @@
  */
 
 export interface paths {
-  '/verordnungen': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/verordnungen": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["anlegen"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    post: operations['anlegen'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/termine': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/termine": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["buchen"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    post: operations['buchen'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/termine/suche': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/termine/suche": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["suchen"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    post: operations['suchen'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
 }
 export type webhooks = Record<string, never>;
 export interface components {
-  schemas: {
-    Fehler: {
-      fehler?: string;
+    schemas: {
+        Fehler: {
+            fehler?: string;
+        };
+        VerordnungAnlage: {
+            /** Format: date */
+            ausstellungsdatum?: string;
+            dringlicherBedarf?: boolean;
+            diagnosegruppe?: string;
+            /** Format: int32 */
+            verordneteEinheiten?: number;
+            /** Format: int32 */
+            frequenzMin?: number;
+            /** Format: int32 */
+            frequenzMax?: number;
+        };
+        VerordnungAngelegt: {
+            /** Format: uuid */
+            id?: string;
+        };
+        Buchung: {
+            /** Format: uuid */
+            verordnung?: string;
+            heilmittel?: string;
+            therapeut?: string;
+            raum?: string;
+            /** Format: date-time */
+            beginn?: string;
+            uebersteuerung?: components["schemas"]["Uebersteuerung"];
+        };
+        Uebersteuerung: {
+            begruendung?: string;
+            von?: string;
+        };
+        Buchungsantwort: {
+            /** Format: uuid */
+            termin?: string;
+            ausgang?: string;
+            regeln?: components["schemas"]["Regel"][];
+        };
+        Regel: {
+            regel?: string;
+            ausgang?: string;
+            begruendung?: string;
+        };
+        Suche: {
+            /** Format: uuid */
+            verordnung?: string;
+            heilmittel?: string;
+            /** Format: date */
+            von?: string;
+            /** Format: date */
+            bis?: string;
+            fruehestens?: string;
+            spaetestens?: string;
+            wochentage?: ("MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY" | "SATURDAY" | "SUNDAY")[];
+        };
+        Suchantwort: {
+            zusammenfassung?: string;
+            vorschlaege?: components["schemas"]["Terminvorschlag"][];
+            ausgeschlossen?: {
+                [key: string]: number;
+            };
+            /** Format: int32 */
+            geprueft?: number;
+        };
+        Terminvorschlag: {
+            /** Format: date-time */
+            beginn?: string;
+            /** Format: date-time */
+            ende?: string;
+            therapeut?: string;
+            raum?: string;
+            warnungen?: components["schemas"]["Regel"][];
+        };
     };
-    VerordnungAnlage: {
-      /** Format: date */
-      ausstellungsdatum?: string;
-      dringlicherBedarf?: boolean;
-      diagnosegruppe?: string;
-      /** Format: int32 */
-      verordneteEinheiten?: number;
-      /** Format: int32 */
-      frequenzMin?: number;
-      /** Format: int32 */
-      frequenzMax?: number;
-    };
-    VerordnungAngelegt: {
-      /** Format: uuid */
-      id?: string;
-    };
-    Buchung: {
-      /** Format: uuid */
-      verordnung?: string;
-      heilmittel?: string;
-      therapeut?: string;
-      raum?: string;
-      /** Format: date-time */
-      beginn?: string;
-      uebersteuerung?: components['schemas']['Uebersteuerung'];
-    };
-    Uebersteuerung: {
-      begruendung?: string;
-      von?: string;
-    };
-    Buchungsantwort: {
-      /** Format: uuid */
-      termin?: string;
-      ausgang?: string;
-      regeln?: components['schemas']['Regel'][];
-    };
-    Regel: {
-      regel?: string;
-      ausgang?: string;
-      begruendung?: string;
-    };
-    Suche: {
-      /** Format: uuid */
-      verordnung?: string;
-      heilmittel?: string;
-      /** Format: date */
-      von?: string;
-      /** Format: date */
-      bis?: string;
-      fruehestens?: string;
-      spaetestens?: string;
-      wochentage?: (
-        'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'FRIDAY' | 'SATURDAY' | 'SUNDAY'
-      )[];
-    };
-    Suchantwort: {
-      zusammenfassung?: string;
-      vorschlaege?: components['schemas']['Terminvorschlag'][];
-      ausgeschlossen?: {
-        [key: string]: number;
-      };
-      /** Format: int32 */
-      geprueft?: number;
-    };
-    Terminvorschlag: {
-      /** Format: date-time */
-      beginn?: string;
-      /** Format: date-time */
-      ende?: string;
-      therapeut?: string;
-      raum?: string;
-      warnungen?: components['schemas']['Regel'][];
-    };
-  };
-  responses: never;
-  parameters: never;
-  requestBodies: never;
-  headers: never;
-  pathItems: never;
+    responses: never;
+    parameters: never;
+    requestBodies: never;
+    headers: never;
+    pathItems: never;
 }
 export type $defs = Record<string, never>;
 export interface operations {
-  anlegen: {
-    parameters: {
-      query?: never;
-      header: {
-        /**
-         * @description Die Praxis, für die die Anfrage gilt. Platzhalter für Authentifizierung: In einer echten Anwendung käme der Mandant aus einem signierten Token.
-         * @example praxis-a
-         */
-        'X-Mandant': string;
-      };
-      path?: never;
-      cookie?: never;
+    anlegen: {
+        parameters: {
+            query?: never;
+            header: {
+                /**
+                 * @description Die Praxis, für die die Anfrage gilt. Platzhalter für Authentifizierung: In einer echten Anwendung käme der Mandant aus einem signierten Token.
+                 * @example praxis-a
+                 */
+                "X-Mandant": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VerordnungAnlage"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["VerordnungAngelegt"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Fehler"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Fehler"];
+                };
+            };
+        };
     };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['VerordnungAnlage'];
-      };
+    buchen: {
+        parameters: {
+            query?: never;
+            header: {
+                /**
+                 * @description Die Praxis, für die die Anfrage gilt. Platzhalter für Authentifizierung: In einer echten Anwendung käme der Mandant aus einem signierten Token.
+                 * @example praxis-a
+                 */
+                "X-Mandant": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["Buchung"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Buchungsantwort"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Fehler"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Fehler"];
+                };
+            };
+        };
     };
-    responses: {
-      /** @description Created */
-      201: {
-        headers: {
-          [name: string]: unknown;
+    suchen: {
+        parameters: {
+            query?: never;
+            header: {
+                /**
+                 * @description Die Praxis, für die die Anfrage gilt. Platzhalter für Authentifizierung: In einer echten Anwendung käme der Mandant aus einem signierten Token.
+                 * @example praxis-a
+                 */
+                "X-Mandant": string;
+            };
+            path?: never;
+            cookie?: never;
         };
-        content: {
-          '*/*': components['schemas']['VerordnungAngelegt'];
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["Suche"];
+            };
         };
-      };
-      /** @description Bad Request */
-      400: {
-        headers: {
-          [name: string]: unknown;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Suchantwort"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Fehler"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Fehler"];
+                };
+            };
         };
-        content: {
-          '*/*': components['schemas']['Fehler'];
-        };
-      };
-      /** @description Not Found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          '*/*': components['schemas']['Fehler'];
-        };
-      };
     };
-  };
-  buchen: {
-    parameters: {
-      query?: never;
-      header: {
-        /**
-         * @description Die Praxis, für die die Anfrage gilt. Platzhalter für Authentifizierung: In einer echten Anwendung käme der Mandant aus einem signierten Token.
-         * @example praxis-a
-         */
-        'X-Mandant': string;
-      };
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['Buchung'];
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          '*/*': components['schemas']['Buchungsantwort'];
-        };
-      };
-      /** @description Bad Request */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          '*/*': components['schemas']['Fehler'];
-        };
-      };
-      /** @description Not Found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          '*/*': components['schemas']['Fehler'];
-        };
-      };
-    };
-  };
-  suchen: {
-    parameters: {
-      query?: never;
-      header: {
-        /**
-         * @description Die Praxis, für die die Anfrage gilt. Platzhalter für Authentifizierung: In einer echten Anwendung käme der Mandant aus einem signierten Token.
-         * @example praxis-a
-         */
-        'X-Mandant': string;
-      };
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['Suche'];
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          '*/*': components['schemas']['Suchantwort'];
-        };
-      };
-      /** @description Bad Request */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          '*/*': components['schemas']['Fehler'];
-        };
-      };
-      /** @description Not Found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          '*/*': components['schemas']['Fehler'];
-        };
-      };
-    };
-  };
 }
