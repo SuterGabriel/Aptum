@@ -24,7 +24,7 @@ Projekt-ID 3038770 · Projekt-Nr. a1WSZ0000088BoH2AU · Start 09.09.2026 ·
 
 | # | Anforderung (wörtlich) | Status | Beleg im Repo |
 |---|---|---|---|
-| S1 | Sehr gute Kenntnisse in dem Frontend-Framework Angular | in Arbeit | Angular 20 in `frontend/`, Standalone, OnPush, CDK ohne Komponenten-Set (ADR-006); Terminsuche in `frontend/src/app/suche/`; Grid folgt |
+| S1 | Sehr gute Kenntnisse in dem Frontend-Framework Angular | in Arbeit | Angular 20 in `frontend/`, Standalone, OnPush, Signals, CDK ohne Komponenten-Set (ADR-006); Terminsuche in `frontend/src/app/suche/`, Kalender-Grid in `frontend/src/app/kalender/` |
 | S2 | Sehr gutes Verständnis von rxjs-Bibliothek | belegt | Kanonischer Suchflow in `frontend/src/app/suche/termin-suche.service.ts` (debounce, switchMap, inneres catchError, retry nur bei 5xx); jede Zusage einzeln getestet in `termin-suche.service.spec.ts` |
 | S3 | Erfahrung mit Spring Boot, REST-APIs sowie Microservices-Architekturen | in Arbeit | Spring Boot 3.5, JPA-Adapter hinter Ports, REST in `services/scheduling/infrastructure/src/main/java/de/aptum/scheduling/infrastructure/rest/`, Ende-zu-Ende-Test über HTTP gegen Postgres; von drei geplanten Services existiert einer |
 | S4 | Erfahrung in Java (Java 11 oder höher) | belegt | Java 21 in drei Modulen: Domänenkern mit elf Regelklassen und Slot-Suche in `services/scheduling/domain/`, Anwendungsfälle in `services/scheduling/application/`, Spring Boot in `services/scheduling/infrastructure/` |
@@ -41,7 +41,7 @@ Projekt-ID 3038770 · Projekt-Nr. a1WSZ0000088BoH2AU · Start 09.09.2026 ·
 | # | Anforderung (wörtlich) | Status | Beleg im Repo |
 |---|---|---|---|
 | S6 | Erfahrung mit ag-grid von Vorteil | offen | Abrechnungsübersicht in `frontend/` |
-| S7 | Kenntnisse in barrierefreier Software-Entwicklung (WCAG) von Vorteil | in Arbeit | Kontrastprüfung läuft in CI (Job `kontrast`, jedes `@kontrast`-Paar aus `tokens.css`); axe-core im Unit-Test der Terminsuche (`frontend/src/app/suche/termin-suche.spec.ts`), ESLint mit Template-Regeln; Playwright über das Grid folgt |
+| S7 | Kenntnisse in barrierefreier Software-Entwicklung (WCAG) von Vorteil | in Arbeit | Kontrastprüfung läuft in CI (Job `kontrast`, jedes `@kontrast`-Paar aus `tokens.css`); axe-core im Unit-Test jeder Seite und des Grids (`frontend/src/app/kalender/kalender-grid.spec.ts`: Rollen, Roving Tabindex, Tastatur, Namen je Zelle), ESLint mit Template-Regeln; Playwright über das Grid folgt |
 
 ### A.3 Aufgaben aus der Ausschreibung (was das Projekt abbildet)
 
@@ -50,7 +50,7 @@ Projekt-ID 3038770 · Projekt-Nr. a1WSZ0000088BoH2AU · Start 09.09.2026 ·
 | SA1 | Weiterentwicklung der Praxissoftware für Physio- und Ergotherapien | in Arbeit | Domäne des gesamten Projekts, `docs/PRODUKT.md` |
 | SA2 | Harmonisierung mehrerer Systeminstanzen | nicht belegbar | Bestandsaufgabe, setzt gewachsene Systeminstanzen voraus — siehe Abschnitt D |
 | SA3 | Ausbau der Multi-Mandanten-Architektur | belegt | `docs/adr/ADR-002-multi-tenancy.md`; Row Level Security in `services/scheduling/infrastructure/src/main/resources/db/migration/V1__mandantentrennung.sql`; Isolationstest `services/scheduling/infrastructure/src/test/java/de/aptum/scheduling/infrastructure/mandant/MandantIsolationTest.java` gegen echtes Postgres |
-| SA4 | Weiterentwicklung von Kalender- und Verfügbarkeitsfunktionen | in Arbeit | Slot-Suche über vier Dimensionen in `services/scheduling/domain/src/main/java/de/aptum/scheduling/domain/suche/`; Kalender-Grid folgt in Stufe 2 |
+| SA4 | Weiterentwicklung von Kalender- und Verfügbarkeitsfunktionen | in Arbeit | Slot-Suche über vier Dimensionen in `services/scheduling/domain/src/main/java/de/aptum/scheduling/domain/suche/`; Wochenansicht in `services/scheduling/domain/src/main/java/de/aptum/scheduling/domain/kalender/Wochenansicht.java`, Endpunkt `services/scheduling/infrastructure/src/main/java/de/aptum/scheduling/infrastructure/rest/KalenderController.java`; Grid in `frontend/src/app/kalender/` |
 | SA5 | Berücksichtigung fachlicher und regulatorischer Anforderungen der Branche | belegt | `.claude/skills/heilmittel-domain/regeln.md` — jede Regel mit Wert, Fundstelle und Beleg-Status |
 | SA6 | Entwicklung von Java-Backends und REST-APIs | belegt | REST in `services/scheduling/infrastructure/src/main/java/de/aptum/scheduling/infrastructure/rest/`, OpenAPI erzeugt und gegen die laufende Anwendung geprüft: `docs/api/openapi.json` |
 | SA7 | Umsetzung und Optimierung von Microservices | offen | drei Services, bewusst wenige |
@@ -70,7 +70,7 @@ Verlängerung möglich · 80–100 % · AI-native Healthcare SaaS
 | # | Anforderung (wörtlich) | Status | Beleg im Repo |
 |---|---|---|---|
 | C1 | Mehrjährige Senior-Erfahrung als Full-Stack Engineer mit modernen Webanwendungen | teilweise belegbar | Portfolio + dieses Projekt |
-| C2 | Tiefe in mindestens einem Frontend-Stack (React oder Angular) | in Arbeit | Angular 20 in `frontend/`; Terminsuche steht, Grid folgt |
+| C2 | Tiefe in mindestens einem Frontend-Stack (React oder Angular) | belegt | Angular 20 in `frontend/`: Terminsuche mit kanonischem Suchflow, selbst gebautes Kalender-Grid mit Roving Tabindex (ADR-003) |
 | C3 | Tiefe in einem Backend-Stack (Java/Spring Boot oder Python) | in Arbeit | Java 21 in `services/scheduling/domain/`, Spring Boot 3.5 in `services/scheduling/infrastructure/` |
 | C4 | Solide Kenntnisse der relevanten Cloud- und DevOps-Praktiken (u. a. Kubernetes, Helm, ArgoCD, Terraform) | offen | `infra/` |
 | C5 | Nachweisbarer, effektiver Einsatz von KI in der Softwareentwicklung | belegt | `docs/ENTWICKLUNGSLOG.md` — je Schritt, was delegiert wurde, was die Gates abgefangen haben und was nicht funktionierte; `.claude/` versioniert; `docs/PIPELINE.md` |

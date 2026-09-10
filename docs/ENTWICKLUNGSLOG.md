@@ -1234,6 +1234,62 @@ getan: `OpenApiTest` rot, weil ein Pfad dazukam; nach dem Aktualisieren
 
 ---
 
+## 2026-09-10 — Stufe 2, Schritt 2: das Kalender-Grid
+
+**Was delegiert wurde:** Das Grid selbst, die Seite drum herum, 16 neue
+Frontend-Tests, davon zwei mit axe. 27 grün.
+
+**Was gut lief.** Die Trennung in drei Teile, die je für sich testbar sind.
+`raster.ts` macht aus der Woche des Backends reine Daten — je Viertelstunde
+und Therapeutin eine Zelle mit Zustand, Text und zugänglichem Namen. Ohne
+eine einzige Datumsrechnung: Das Backend liefert Wandzeit der Praxis, und
+ISO-Zeitstempel sind als Text vergleichbar. Nach dem Zeitzonen-Fund vom
+Vormittag war das kein Stil, sondern Vorsicht. `kalender-grid` weiß nichts
+von Belegungen, nur von Zellen, Fokus und Tasten. Die Seite lädt, blättert
+und zeigt die Legende. Der Test für das Grid drückt Tasten und liest, welche
+Zelle danach `tabindex="0"` trägt — das ist der Roving Tabindex als
+Behauptung, die kaputtgehen kann.
+
+Frei liefert das Backend nicht. Das ist der Satz, den ich mir beim Schreiben
+am öftesten gesagt habe: Frei ist, was übrig bleibt, und das weiß jedes
+Gitter selbst.
+
+**Was nicht funktionierte.** Der Lint mit den Template-Regeln zur
+Barrierefreiheit hat den ersten Entwurf abgelehnt: `(click)` auf der Zelle
+ohne Tastatur-Handler. Der lag auf dem Host-Element — für den Lint
+unsichtbar, für den Browser gleichwertig. Ich hätte die Regel für diese
+Zeile abschalten können; stattdessen liegt `keydown` jetzt auf der Zelle,
+und der Test schickt die Taste dorthin, wo sie im Browser ankommt: an die
+Zelle mit dem Fokus. Das ist der bessere Test.
+
+Der Beleg-Check hat danach zwei Pfade im Anforderungs-Mapping abgelehnt:
+`domain/kalender/` und `GET /kalender/woche` — beides keine Dateien. Nur
+Dateien sind Belege. Ich hatte es bequem geschrieben; das Gate hat es nicht
+durchgelassen.
+
+**Was der Audit-Agent gefunden hat, was axe nicht sieht.** Vor dem Commit
+lief der `a11y-auditor` aus `.claude/agents`, wie er es für jede Änderung
+am Grid verlangt. Drei Befunde, alle drei an axe vorbei: Die Tagesreiter
+hatten Roving Tabindex ohne Pfeilsteuerung — inaktive Reiter mit
+`tabindex=-1` und kein `keydown`, per Tastatur unerreichbar, WCAG 2.1.1.
+Die beiden axe-Tests der Seite waren grün. `aria-selected` auf den
+Zellen war an den Fokus gekoppelt, nicht an eine Auswahl; ein Screenreader
+hätte bei jedem Pfeildruck „ausgewählt" gesagt. Und die Ansage „nicht
+buchbar" war höflich statt sofort — Antwort auf eine Aktion, nicht
+Hintergrund. Alle drei behoben, für die Reiter mit Test. Die Lehre ist die
+aus dem Skill: axe prüft Struktur, nicht Verhalten. Ein grüner axe-Lauf
+belegt, dass nichts Falsches im DOM steht — nicht, dass man hinkommt.
+
+**Was die Testsuite abgefangen hat.** Nichts Fachliches — und das ist
+diesmal die Pointe. Die Zustände im Gitter sind die Blöcke aus
+`Wochenansicht`, und die nimmt ihre Grenzen aus `Termin`. Ob Rüstzeit und
+Nachruhe richtig liegen, ist in der Domäne getestet, nicht im Frontend.
+
+**Zeitschätzung:** delegiert etwa zwei Stunden. Von Hand zwei Tage, wovon
+ein halber für die Tastaturnavigation und ihre Tests draufginge.
+
+---
+
 ## Vorlage für weitere Einträge
 
 ```

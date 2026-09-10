@@ -1,0 +1,150 @@
+.seite {
+  display: grid;
+  gap: var(--abstand-4);
+}
+
+.kopf {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--abstand-4);
+}
+
+h1 {
+  font-size: var(--schrift-xl);
+  margin: 0;
+}
+
+.wochen {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--abstand-2);
+}
+
+.wochen button,
+.tage button {
+  min-height: var(--hitflaeche-min);
+  min-width: var(--hitflaeche-min);
+  padding: var(--abstand-1) var(--abstand-3);
+  border: var(--rand-duenn) solid var(--border-strong);
+  border-radius: var(--radius-klein);
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  font: inherit;
+  cursor: pointer;
+}
+
+.tage {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--abstand-1);
+}
+
+.tage button {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: var(--zeilenhoehe-eng);
+  font-size: var(--schrift-s);
+}
+
+.tage button abbr {
+  text-decoration: none;
+  font-weight: var(--gewicht-mittel);
+}
+
+.tage button.aktiv {
+  background: var(--accent);
+  color: var(--accent-text);
+  border-color: var(--accent-strong);
+}
+
+.zahl {
+  font-family: var(--schrift-zahl);
+  font-variant-numeric: tabular-nums;
+}
+
+.hinweis {
+  color: var(--text-secondary);
+}
+
+.fehler {
+  color: var(--regel-verletzt-text);
+  background: var(--regel-verletzt-bg);
+  border-left: var(--rand-dick) solid var(--regel-verletzt-border);
+  padding: var(--abstand-2) var(--abstand-3);
+  border-radius: var(--radius-klein);
+}
+
+/* ---- Legende und Statuszeile ---------------------------------------- */
+
+.fuss {
+  display: grid;
+  gap: var(--abstand-2);
+}
+
+.legende {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--abstand-2) var(--abstand-4);
+  font-size: var(--schrift-s);
+}
+
+.legende li {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--abstand-2);
+}
+
+.probe {
+  width: 1.5rem;
+  height: 1rem;
+  border: var(--rand-duenn) solid var(--border-strong);
+  border-radius: var(--radius-klein);
+}
+
+.probe.frei {
+  background: var(--slot-frei-bg);
+}
+.probe.belegt {
+  background: var(--slot-belegt-bg);
+  border-left: var(--rand-dick) solid var(--slot-belegt-border);
+}
+.probe.ruestzeit {
+  background: var(--slot-ruestzeit-bg);
+  background-image: var(--muster-ruestzeit);
+}
+.probe.nachruhe {
+  background-color: var(--slot-nachruhe-bg);
+  background-image: var(--muster-nachruhe);
+  background-size: var(--muster-nachruhe-groesse);
+  border-left: var(--rand-dick) dashed var(--slot-nachruhe-border);
+}
+.probe.abwesenheit {
+  background: var(--slot-abwesenheit-bg);
+  background-image: var(--muster-abwesenheit);
+}
+.probe.gesperrt {
+  background: var(--slot-gesperrt-bg);
+  background-image: var(--muster-gesperrt);
+}
+
+.name {
+  font-weight: var(--gewicht-mittel);
+}
+
+.erklaerung {
+  color: var(--text-secondary);
+}
+
+.status {
+  min-height: 1.5em;
+  margin: 0;
+  padding: var(--abstand-2) var(--abstand-3);
+  background: var(--surface-sunken);
+  border-radius: var(--radius-klein);
+  font-size: var(--schrift-s);
+}

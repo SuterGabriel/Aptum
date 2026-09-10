@@ -9,20 +9,11 @@ import {
 } from '@angular/forms';
 import { filter, map } from 'rxjs/operators';
 import { Suche, Terminvorschlag, Wochentag } from '../api/aptum-api';
+import { WOCHENTAGE } from '../zeit';
 import { HEILMITTEL } from './heilmittel';
 import { LEER, TerminSucheService } from './termin-suche.service';
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-
-/** Wochentage in der Reihenfolge der Woche, mit Kurzform für die Auswahl. */
-export const WOCHENTAGE: readonly { code: Wochentag; kurz: string; lang: string }[] = [
-  { code: 'MONDAY', kurz: 'Mo', lang: 'Montag' },
-  { code: 'TUESDAY', kurz: 'Di', lang: 'Dienstag' },
-  { code: 'WEDNESDAY', kurz: 'Mi', lang: 'Mittwoch' },
-  { code: 'THURSDAY', kurz: 'Do', lang: 'Donnerstag' },
-  { code: 'FRIDAY', kurz: 'Fr', lang: 'Freitag' },
-  { code: 'SATURDAY', kurz: 'Sa', lang: 'Samstag' },
-];
 
 /** Ein Wunschfenster ist gültig, wenn es nicht vor sich selbst endet. */
 function fensterGueltig(gruppe: AbstractControl) {

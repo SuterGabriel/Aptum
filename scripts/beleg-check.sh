@@ -169,6 +169,9 @@ pruefe "API-Typen sind aus OpenAPI erzeugt" datei frontend/src/app/api/schema.d.
 pruefe "Suchflow ist der aus dem Skill" enthaelt frontend/src/app/suche/termin-suche.service.ts "switchMap"
 pruefe "Suchflow wird einzeln getestet" datei frontend/src/app/suche/termin-suche.service.spec.ts
 pruefe "Terminsuche hat einen axe-Test" enthaelt frontend/src/app/suche/termin-suche.spec.ts "axe.run"
+pruefe "Grid ist ein Grid-Widget" enthaelt frontend/src/app/kalender/kalender-grid.html 'role="gridcell"'
+pruefe "Grid hat Roving Tabindex und einen axe-Test" enthaelt frontend/src/app/kalender/kalender-grid.spec.ts "axe.run"
+pruefe "Wochenansicht nimmt die Grenzen aus Termin" enthaelt services/scheduling/domain/src/main/java/de/aptum/scheduling/domain/kalender/Wochenansicht.java "belegtRaum"
 pruefe "stumme Lücke 1 ist Fixture" datei scripts/fixtures/regel-check/domain/NachbarBorgt.java
 pruefe "stumme Lücke 2 ist Fixture" datei scripts/fixtures/regel-check/domain/KlassenkommentarBorgt.java
 pruefe "Wertabgleich ist Fixture" datei scripts/fixtures/regel-check/domain/FalscherWert.java

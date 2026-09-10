@@ -1,0 +1,149 @@
+:host {
+  display: block;
+  overflow-x: auto;
+}
+
+.grid {
+  display: flex;
+  flex-direction: column;
+  min-width: max-content;
+  border: var(--rand-duenn) solid var(--border-subtle);
+  border-radius: var(--radius-gross);
+  background: var(--surface-raised);
+}
+
+.zeile {
+  display: flex;
+  height: var(--grid-zeilenhoehe);
+}
+
+.zeile.kopf {
+  height: auto;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--surface-sunken);
+  border-bottom: var(--rand-duenn) solid var(--border-strong);
+}
+
+.zeile.kopf .zelle,
+.zeile.kopf .zeit {
+  padding: var(--abstand-2) var(--abstand-3);
+  font-weight: var(--gewicht-mittel);
+  border-top: none;
+}
+
+.zeit {
+  flex: 0 0 var(--grid-zeitspalte);
+  font-size: var(--schrift-xs);
+  color: var(--text-secondary);
+  padding: 0 var(--abstand-2);
+  display: flex;
+  align-items: flex-start;
+  line-height: var(--grid-zeilenhoehe);
+  border-right: var(--rand-duenn) solid var(--border-subtle);
+}
+
+.zahl {
+  font-family: var(--schrift-zahl);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Die Zwischenzeiten stehen für Screenreader im Rowheader, sichtbar nur die vollen Stunden. */
+.still {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.zelle {
+  flex: 1 1 0;
+  min-width: var(--grid-spaltenbreite-min);
+  position: relative;
+  border-top: var(--rand-duenn) solid var(--border-subtle);
+  border-left: var(--rand-duenn) solid var(--border-subtle);
+  font-size: var(--schrift-xs);
+  line-height: var(--grid-zeilenhoehe);
+  padding: 0 var(--abstand-2);
+  white-space: nowrap;
+  overflow: visible;
+}
+
+.zeile.volle-stunde .zelle,
+.zeile.volle-stunde .zeit {
+  border-top-color: var(--border-strong);
+}
+
+/* ---- Die sechs Zustände: Farbe plus Muster oder Text, nie Farbe allein ---- */
+
+.zelle.frei {
+  background: var(--slot-frei-bg);
+  color: var(--slot-frei-text);
+  cursor: pointer;
+}
+
+.zelle.belegt {
+  background: var(--slot-belegt-bg);
+  color: var(--slot-belegt-text);
+  border-left: var(--rand-dick) solid var(--slot-belegt-border);
+}
+
+.zelle.ruestzeit {
+  background: var(--slot-ruestzeit-bg);
+  background-image: var(--muster-ruestzeit);
+  color: var(--slot-ruestzeit-text);
+}
+
+.zelle.nachruhe {
+  background-color: var(--slot-nachruhe-bg);
+  background-image: var(--muster-nachruhe);
+  background-size: var(--muster-nachruhe-groesse);
+  color: var(--slot-nachruhe-text);
+  border-left: var(--rand-dick) dashed var(--slot-nachruhe-border);
+}
+
+.zelle.abwesenheit {
+  background: var(--slot-abwesenheit-bg);
+  background-image: var(--muster-abwesenheit);
+  color: var(--slot-abwesenheit-text);
+}
+
+.zelle.gesperrt {
+  background: var(--slot-gesperrt-bg);
+  background-image: var(--muster-gesperrt);
+  color: var(--slot-gesperrt-text);
+}
+
+/* Fortsetzungen eines Blocks: keine Trennlinie, damit er als ein Block lesbar ist. */
+.zelle:not(.frei):not(.blockbeginn) {
+  border-top-color: transparent;
+}
+
+.text {
+  display: inline-flex;
+  gap: var(--abstand-2);
+  font-weight: var(--gewicht-mittel);
+}
+
+.raum {
+  font-weight: var(--gewicht-normal);
+  opacity: 0.85;
+}
+
+.zelle:focus-visible {
+  z-index: 2;
+  outline: var(--focus-ring-breite) solid var(--focus-ring);
+  outline-offset: calc(-1 * var(--focus-ring-breite));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .zelle.frei {
+    transition: background-color var(--uebergang-schnell);
+  }
+  .zelle.frei:hover {
+    background: var(--surface-sunken);
+  }
+}

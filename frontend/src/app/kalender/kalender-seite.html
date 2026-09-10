@@ -1,0 +1,57 @@
+<div class="seite">
+  <header class="kopf">
+    <h1>Kalender</h1>
+    <nav class="wochen" aria-label="Woche wählen">
+      <button type="button" (click)="blaettere(-1)" aria-label="Vorige Woche">‹</button>
+      <span class="woche zahl">Woche ab {{ montag() | date: 'd. MMMM yyyy' }}</span>
+      <button type="button" (click)="blaettere(1)" aria-label="Nächste Woche">›</button>
+    </nav>
+    <div class="tage" role="tablist" aria-label="Tag wählen">
+      @for (t of tage(); track t.datum) {
+        <button
+          type="button"
+          role="tab"
+          [attr.aria-selected]="t.datum === tag()"
+          [tabindex]="t.datum === tag() ? 0 : -1"
+          [class.aktiv]="t.datum === tag()"
+          (click)="waehleTag(t.datum)"
+          (keydown)="reiterTastatur($event)"
+        >
+          <abbr [title]="t.lang">{{ t.kurz }}</abbr>
+          <span class="zahl">{{ t.datum | date: 'd.M.' }}</span>
+        </button>
+      }
+    </div>
+  </header>
+
+  @switch (zustand().status) {
+    @case ('laedt') {
+      <p class="hinweis" aria-live="polite">Woche wird geladen.</p>
+    }
+    @case ('fehler') {
+      @if (zustand(); as z) {
+        @if (z.status === 'fehler') {
+          <p class="fehler" role="alert">{{ z.meldung }}</p>
+        }
+      }
+    }
+    @case ('fertig') {
+      @if (raster(); as r) {
+        <app-kalender-grid [raster]="r" (slotGewaehlt)="slotGewaehlt($event)" />
+      }
+    }
+  }
+
+  <footer class="fuss">
+    <ul class="legende" aria-label="Legende">
+      @for (l of legende; track l.zustand) {
+        <li>
+          <span class="probe" [class]="'probe ' + l.zustand" aria-hidden="true"></span>
+          <span class="name">{{ label[l.zustand] }}</span>
+          <span class="erklaerung">{{ l.erklaerung }}</span>
+        </li>
+      }
+    </ul>
+    <p class="status" aria-live="polite">{{ status() }}</p>
+  </footer>
+</div>

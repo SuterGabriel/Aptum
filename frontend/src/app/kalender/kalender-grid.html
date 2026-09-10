@@ -1,0 +1,43 @@
+<div
+  class="grid"
+  role="grid"
+  [attr.aria-label]="raster().wochentag + ', ' + raster().tag"
+  [attr.aria-rowcount]="zeilenAnzahl() + 1"
+  [attr.aria-colcount]="spaltenAnzahl() + 1"
+>
+  <div class="zeile kopf" role="row">
+    <div class="zeit" role="columnheader">Zeit</div>
+    @for (t of raster().therapeuten; track t) {
+      <div class="zelle" role="columnheader">{{ t }}</div>
+    }
+  </div>
+
+  @for (zeile of raster().zeilen; track zeile.uhrzeit; let z = $index) {
+    <div class="zeile" [class.volle-stunde]="zeile.volleStunde" role="row">
+      <div class="zeit zahl" role="rowheader">
+        <span [class.still]="!zeile.volleStunde">{{ zeile.uhrzeit }}</span>
+      </div>
+      @for (zelle of zeile.zellen; track zelle.beginn + zelle.therapeut; let s = $index) {
+        <div
+          class="zelle"
+          role="gridcell"
+          [class]="'zelle ' + zelle.zustand"
+          [class.blockbeginn]="zelle.blockbeginn"
+          [tabindex]="istFokus(z, s) ? 0 : -1"
+          [attr.aria-label]="zelle.name"
+          (click)="klick(z, s, zelle)"
+          (keydown)="tastatur($event)"
+        >
+          @if (zelle.blockbeginn && zelle.text) {
+            <span class="text" aria-hidden="true">
+              {{ zelle.text }}
+              @if (zelle.raum) {
+                <span class="raum">{{ zelle.raum }}</span>
+              }
+            </span>
+          }
+        </div>
+      }
+    </div>
+  }
+</div>

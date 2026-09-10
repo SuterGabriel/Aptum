@@ -15,6 +15,9 @@ export type Suchantwort = components['schemas']['Suchantwort'];
 export type Terminvorschlag = components['schemas']['Terminvorschlag'];
 export type Regel = components['schemas']['Regel'];
 export type Wochentag = NonNullable<Suche['wochentage']>[number];
+export type Woche = components['schemas']['Woche'];
+export type Spalte = components['schemas']['Spalte'];
+export type Belegung = components['schemas']['Belegung'];
 
 /** Ein dünner Client: ein Aufruf je Operation, keine Logik. */
 @Injectable({ providedIn: 'root' })
@@ -23,5 +26,10 @@ export class AptumApi {
 
   suchen(suche: Suche): Observable<Suchantwort> {
     return this.http.post<Suchantwort>('/termine/suche', suche);
+  }
+
+  /** Die Woche, in der der Tag liegt. */
+  woche(tag: string): Observable<Woche> {
+    return this.http.get<Woche>('/kalender/woche', { params: { tag } });
   }
 }
