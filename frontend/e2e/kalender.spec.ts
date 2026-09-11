@@ -55,11 +55,16 @@ test.describe('Kalender-Grid', () => {
     // Die erste freie Zelle der Spalte suchen statt sie zu kennen: Nach vielen
     // Läufen gegen dieselbe Datenbank ist 08:00 nicht mehr frei.
     await page.keyboard.press('Control+Home');
+    // Nach jedem Pfeildruck warten, bis der Fokus wirklich gewandert ist: Er
+    // bewegt sich erst nach Angulars Render-Zyklus, und ein Lesen davor liefert
+    // die alte Zelle. Auf dem CI-Runner war das eine Zelle Versatz - der Name
+    // sagte 08:00, der Fokus stand auf 08:15.
     let name = '';
     for (let i = 0; i < 48; i++) {
       name = (await page.locator(':focus').getAttribute('aria-label')) ?? '';
       if (name.endsWith(', frei')) break;
       await page.keyboard.press('ArrowDown');
+      await expect(page.locator(':focus')).not.toHaveAttribute('aria-label', name);
     }
     expect(name).toMatch(/, T\. Alpha, frei$/);
     await page.keyboard.press('Enter');
