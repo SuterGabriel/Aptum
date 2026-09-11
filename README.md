@@ -136,20 +136,30 @@ verletzten Regeln; dieselbe Anfrage mit `X-Mandant: praxis-b` antwortet mit
 Für die Entwicklung ohne Container: `mvn` im Scheduling-Dienst, `uv run` im
 AI-Dienst, `npm start` im Frontend — die READMEs der Verzeichnisse sagen wie.
 
-Dasselbe in Kubernetes, lokal mit `kind`:
+Dasselbe in Kubernetes, lokal mit `kind` — und zwar so, wie es die CI bei
+jedem Push tut (ADR-010): Terraform stellt ArgoCD, ArgoCD rollt aus dem Repo
+aus.
 
 ```bash
 docker compose build
 kind create cluster --config deploy/kind/cluster.yaml
 for i in scheduling ai-assist frontend; do kind load docker-image aptum-$i:latest --name aptum; done
-helm install aptum deploy/helm/aptum --wait
-helm test aptum --logs
+(cd deploy/terraform/plattform && terraform init && terraform apply)   # Namespace, ArgoCD
+(cd deploy/terraform/anwendung && terraform init && terraform apply)   # die Application
+kubectl get application aptum -n argocd -o jsonpath='{.status.sync.status} {.status.health.status}'
 ```
 
-Das ist der Ablauf, den die CI im Job `cluster` bei jedem Push fährt. Der
-Rauchtest läuft als Pod im Cluster und fragt durch den Reverse Proxy alle
-drei Dienste — grün heißt, das Chart funktioniert, nicht nur, dass es
-syntaktisch stimmt.
+Sobald dort `Synced Healthy` steht, hat ArgoCD das Chart aus `main`
+ausgerollt. Der Rauchtest läuft als Pod im Cluster und fragt durch den
+Reverse Proxy alle drei Dienste — grün heißt, die Kette steht, so wie ArgoCD
+sie gebaut hat:
+
+```bash
+helm template aptum deploy/helm/aptum --show-only templates/tests/rauchtest.yaml | kubectl apply -n aptum -f -
+kubectl logs -n aptum aptum-rauchtest -f
+```
+
+Wer nur das Chart prüfen will, ohne ArgoCD: `helm install aptum deploy/helm/aptum --wait && helm test aptum --logs`.
 
 ## Wegweiser
 
@@ -173,7 +183,7 @@ syntaktisch stimmt.
 | 1 | Domänenkern in reinem Java, dann Spring, Multi-Tenancy, Angular-Suchflow | **abgeschlossen** — Domänenkern mit Slot-Suche, Spring Boot in drei Modulen, RLS gegen echtes Postgres, REST mit OpenAPI, Terminsuche in Angular |
 | 2 | Kalender-Grid, Tabelle, WCAG, End-to-End-Tests | **in Arbeit** — Kalender-Grid, Buchungsdialog mit Regelprüfung, Playwright mit axe als CI-Job; Verordnungsübersicht und Tabelle offen |
 | 3 | AI-Layer, MCP-Server, Evals, Provider-Vergleich | **in Arbeit** — Verordnungserfassung aus Freitext in `services/ai-assist/` (Python), Pseudonymisierung vor dem Aufruf, zwei Provider, Eval-Suite mit 55 Fällen in `evals/`, MCP-Server mit vier Werkzeugen, Seite „Verordnung erfassen“; Provider-Vergleich offen |
-| 4 | Container, Helm, ArgoCD, Terraform, Observability | **in Arbeit** — drei Dienste als Container, `compose.yml` fährt alles mit einem Befehl hoch; Helm-Chart in `deploy/helm/aptum/`, das die CI bei jedem Push in einen `kind`-Cluster installiert und mit `helm test` prüft; Terraform und ArgoCD folgen |
+| 4 | Container, Helm, ArgoCD, Terraform, Observability | **in Arbeit** — drei Dienste als Container, `compose.yml` fährt alles mit einem Befehl hoch; Helm-Chart in `deploy/helm/aptum/`; Terraform in zwei Ständen (`deploy/terraform/`) stellt ArgoCD, ArgoCD rollt aus dem Repo aus — die CI fährt das bei jedem Push in einem `kind`-Cluster (ADR-010); Observability und `docs/BETRIEB.md` folgen |
 | 5 | Demo, ADRs vervollständigen, Mapping | offen |
 
 ## Daten

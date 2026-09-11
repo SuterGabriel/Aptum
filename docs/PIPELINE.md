@@ -91,7 +91,7 @@ Ergebnisses, nicht nur Werkzeug.
 | `ai-assist` | Der Python-Dienst: Ruff (Format und Lint), mypy strict, pytest gegen aufgezeichnete Antworten — ohne Schlüssel, ohne Netz |
 | `sonar` | SonarCloud über alle drei Stacks mit Abdeckung aus JaCoCo, Karma und pytest-cov; Quality Gate als Merge-Bedingung — ein fremdes Werkzeug neben den eigenen Gates |
 | `evals` | Die Eval-Suite gegen das Modell, feldweise — nur bei Änderung an Prompt, Schema, Provider oder Fällen, oder von Hand; ohne Schlüssel sichtbar übersprungen, nie stumm grün; bricht nur, wenn ein Fall neu scheitert |
-| `cluster` | Die drei Bilder bauen, in einen `kind`-Cluster laden, das Helm-Chart installieren, `helm test` — ein Pod im Cluster fragt Frontend, beide Dienste und Postgres durch den Reverse Proxy. Ein Chart, das niemand anwendet, ist eine Behauptung; dieses wird bei jedem Push angewendet |
+| `cluster` | So wird deployt: Bilder in die GitHub Container Registry mit dem Commit als Tag; in einem `kind`-Cluster stellt Terraform in zwei Ständen Namespace, Pull-Secret und ArgoCD und meldet die Anwendung an; ArgoCD rollt das Chart aus genau diesem Commit aus; ein Pod im Cluster fragt durch den Reverse Proxy alle drei Dienste und Postgres (ADR-010). Der teuerste Job — und der, der aus vier Werkzeugnamen einen Lauf macht |
 | `e2e` | Alle drei Dienste zusammen im echten Chromium: über die API buchen, den Termin im Grid finden, mit der Tastatur hindurchfahren, einen Freitext erfassen lassen (AI-Dienst mit aufgezeichneten Antworten, ohne Schlüssel), axe über jede Seite — erst nach `backend` und `frontend` |
 
 Abhängigkeiten hält `.github/dependabot.yml` aktuell — wöchentlich, gebündelt

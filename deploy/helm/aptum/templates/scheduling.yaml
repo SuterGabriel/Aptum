@@ -14,6 +14,10 @@ spec:
     metadata:
       labels: {{- include "aptum.selektor" (dict "Release" .Release "komponente" "scheduling") | nindent 8 }}
     spec:
+      {{- if .Values.bilder.pullSecret }}
+      imagePullSecrets:
+        - name: {{ .Values.bilder.pullSecret }}
+      {{- end }}
       securityContext:
         runAsNonRoot: true
         # Dieselbe ID wie im Dockerfile. Ohne Zahl kann kubelet runAsNonRoot

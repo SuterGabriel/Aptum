@@ -1818,6 +1818,61 @@ in der Fehlersuche.
 
 ---
 
+## 2026-09-12 — Stufe 4, Schritt 3: Terraform und ArgoCD, und zweimal gegen die Wand
+
+**Was delegiert wurde:** GitOps. Terraform stellt die Plattform, ArgoCD rollt
+das Chart aus dem Repo aus, die CI fährt das bei jedem Push. Dazu ADR-010.
+
+**Die Entwurfsfrage** war nicht, ob die vier Namen aus der Ausschreibung im
+Repo vorkommen. Sie war, wo die Grenze zwischen Terraform und ArgoCD liegt.
+Terraform für das, was einmal steht — Namespace, Secret, ArgoCD selbst —
+und ArgoCD für das, was sich mit jedem Commit ändert. Die Bilder gehen mit
+dem Commit-Hash als Tag in die Registry, ArgoCD bekommt denselben Hash als
+Revision. Die Pipeline prüft genau den Stand, den sie gebaut hat.
+
+**Zweimal gegen die Wand, beide Male lehrreich.** Erster Versuch: die
+ArgoCD-Application als `kubernetes_manifest` im selben Terraform-Stand wie
+ArgoCD. Fehler beim Planen: „API did not recognize GroupVersionKind“.
+Terraform plant alles vorab, und den Typ Application gibt es erst, wenn
+ArgoCD installiert ist. Zweiter Versuch: die Application über `extraObjects`
+des ArgoCD-Charts mitliefern, damit sie im selben Schritt entsteht wie die
+CRD. Fehler bei der Installation: „no matches for kind Application — ensure
+CRDs are installed first“. Helm prüft alle Manifeste gegen die API, *bevor*
+es die CRDs aus dem Chart installiert. Beide Werkzeuge sind konsequent, nur
+eben nicht so, wie ich es gern gehabt hätte. Die Lösung ist keine
+Umgehung, sondern die Trennung, die im Betrieb ohnehin richtig ist: zwei
+Stände, `plattform/` und `anwendung/`, in fester Reihenfolge. Steht so in
+ADR-010, mit beiden Fehlversuchen.
+
+**Ein dritter, kleiner.** Ein Output, der „registry“ oder leer liefern soll,
+leitete sich aus der sensiblen Token-Variable ab — Terraform weigert sich,
+so etwas ohne Kennzeichnung auszugeben. Aus der Ressource ableiten statt
+aus dem Token, und der Output trägt nur noch den Namen, den er tragen soll.
+
+**Was am Ende lief.** Lokal, in einem Durchgang: `plattform apply` stellt
+ArgoCD in 65 Sekunden, `anwendung apply` legt die Application an, 25
+Sekunden später meldet ArgoCD `Synced Healthy`, vier Pods laufen, und der
+Rauchtest-Pod — derselbe wie im Helm-Test, nur per `kubectl apply` gegen
+das, was ArgoCD deployt hat — meldet „alles da“. Von Terraform bis zur
+angelegten Verordnung, ohne dass jemand `helm install` getippt hat.
+
+**Und die rote CI, die ich drei Commits lang nicht gesehen habe.** Beim
+Blick auf die Läufe fiel auf: `main` war seit dem Vortag rot, Frontend-Job,
+Schritt „API-Typen aktuell“. Grund: Mein `/api`-Umbau lief per Muster über
+`src/**/*.ts` — auch über die beiden *erzeugten* Typdateien, die die Pfade
+als Text enthalten. Das Drift-Gate hat sofort angeschlagen, und ich habe in
+der Zeit auf Sonar und den Cluster geschaut. Der Cluster-Job ist deshalb
+nie gelaufen — er hängt hinter dem Frontend-Job. Zwei Lehren: Erzeugte
+Dateien fasst kein Skript an, auch kein gut gemeintes. Und ein rotes Gate
+liest man, bevor man das nächste baut; sonst baut man auf Sand und merkt
+es erst, wenn der neue Job nie startet.
+
+**Zeitschätzung:** drei Stunden, davon eine für die beiden Fehlversuche.
+Von Hand zwei Tage — und die Application läge als Beispiel im Repo, nie
+angewendet.
+
+---
+
 ## Vorlage für weitere Einträge
 
 ```

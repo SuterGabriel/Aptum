@@ -207,7 +207,11 @@ pruefe "Anwendungsrolle vor Flyway" datei deploy/postgres/01-rolle.sql
 pruefe "Helm-Chart existiert" datei deploy/helm/aptum/Chart.yaml
 pruefe "Chart hat einen Rauchtest, der die Kette prüft" enthaelt deploy/helm/aptum/templates/tests/rauchtest.yaml "helm.sh/hook"
 pruefe "Liveness und Readiness getrennt" enthaelt deploy/helm/aptum/templates/scheduling.yaml "health/readiness"
-pruefe "Chart wird in der CI angewendet" enthaelt .github/workflows/ci.yml "helm test"
+pruefe "Chart wird in der CI von ArgoCD angewendet" enthaelt .github/workflows/ci.yml "Auf ArgoCD warten"
+pruefe "Terraform stellt die Plattform" datei deploy/terraform/plattform/main.tf
+pruefe "Terraform meldet die Anwendung an" enthaelt deploy/terraform/anwendung/main.tf "kind       = \"Application\""
+pruefe "Provider sind festgenagelt" datei deploy/terraform/plattform/.terraform.lock.hcl
+pruefe "ADR-010 begründet GitOps" datei docs/adr/ADR-010-gitops-mit-terraform-und-argocd.md
 pruefe "kind-Cluster ist konfiguriert" datei deploy/kind/cluster.yaml
 pruefe "Prüfung ohne Buchung im Backend" enthaelt services/scheduling/infrastructure/src/main/java/de/aptum/scheduling/infrastructure/rest/TerminController.java "/pruefung"
 pruefe "Wochenansicht nimmt die Grenzen aus Termin" enthaelt services/scheduling/domain/src/main/java/de/aptum/scheduling/domain/kalender/Wochenansicht.java "belegtRaum"

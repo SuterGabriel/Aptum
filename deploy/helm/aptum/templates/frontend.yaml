@@ -13,6 +13,10 @@ spec:
     metadata:
       labels: {{- include "aptum.selektor" (dict "Release" .Release "komponente" "frontend") | nindent 8 }}
     spec:
+      {{- if .Values.bilder.pullSecret }}
+      imagePullSecrets:
+        - name: {{ .Values.bilder.pullSecret }}
+      {{- end }}
       containers:
         - name: frontend
           image: {{ include "aptum.bild" (dict "Values" .Values "komponente" "frontend") }}

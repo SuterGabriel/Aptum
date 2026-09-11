@@ -11,6 +11,9 @@ bilder:
   registry: ""
   tag: latest
   pullPolicy: Never
+  # Name eines dockerconfigjson-Secrets, wenn die Registry privat ist.
+  # Leer: keins. Terraform legt es an, wenn es ein Token hat.
+  pullSecret: ""
 
 postgres:
   bild: postgres:16-alpine

@@ -233,18 +233,34 @@ jobs:
           args: -Dsonar.qualitygate.wait=true
 
   cluster:
-    name: Helm-Chart in kind
+    name: Terraform, ArgoCD und Helm in kind
     runs-on: ubuntu-latest
     needs: [backend, frontend, ai-assist]
-    # Ein Chart, das im Repo liegt und nie angewendet wird, ist eine
-    # Behauptung. Dieses wird bei jedem Push angewendet: drei Bilder bauen,
-    # in einen kind-Cluster laden, installieren, und dann fragt ein Pod im
-    # Cluster durch den Reverse Proxy alle drei Dienste und die Datenbank.
-    # kind ist kein Betrieb - es beweist das Chart, nicht den Betrieb.
+    # So wird deployt - nicht "so könnte man". Die drei Bilder gehen in die
+    # GitHub Container Registry, mit dem Commit als Tag. Terraform stellt in
+    # einem kind-Cluster die Plattform (Namespace, Pull-Secret, ArgoCD) und
+    # meldet die Anwendung an. ArgoCD liest das Chart aus genau diesem Commit
+    # und rollt aus. Dann fragt ein Pod im Cluster durch den Reverse Proxy
+    # alle drei Dienste und die Datenbank. Ein Chart, das niemand anwendet,
+    # ist eine Behauptung; kind ist kein Betrieb, aber es beweist die Kette.
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    permissions:
+      contents: read
+      packages: write
+    env:
+      REGISTRY: ghcr.io/sutergabriel
+      TAG: ${{ github.sha }}
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
-      - name: Bilder bauen
-        run: docker compose build
+      - name: Bei der Registry anmelden
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+      - name: Bilder bauen und veröffentlichen
+        run: |
+          docker compose build
+          for i in scheduling ai-assist frontend; do
+            docker tag aptum-$i:latest $REGISTRY/aptum-$i:$TAG
+            docker push $REGISTRY/aptum-$i:$TAG
+          done
       - uses: azure/setup-helm@1a275c3b69536ee54be43f2070a358922e12c8d4 # v4
       - name: Chart prüfen
         run: helm lint deploy/helm/aptum
@@ -252,19 +268,47 @@ jobs:
         with:
           cluster_name: aptum
           config: deploy/kind/cluster.yaml
-      - name: Bilder in den Cluster laden
+      - uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3
+        with:
+          terraform_wrapper: false
+      # Stand 1: die Plattform. Das Pull-Secret trägt das Token dieses Laufs -
+      # es verfällt mit ihm, und es steht in keiner Datei.
+      - name: Terraform, Stand 1 - Plattform
+        working-directory: deploy/terraform/plattform
+        env:
+          TF_VAR_registry_user: ${{ github.actor }}
+          TF_VAR_registry_token: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          for i in scheduling ai-assist frontend; do
-            kind load docker-image aptum-$i:latest --name aptum
+          terraform init -input=false
+          terraform apply -auto-approve -input=false
+      # Stand 2: die Anmeldung. Revision ist dieser Commit, nicht main - sonst
+      # prüft die Pipeline den Stand von vorhin.
+      - name: Terraform, Stand 2 - Anwendung
+        working-directory: deploy/terraform/anwendung
+        env:
+          TF_VAR_revision: ${{ github.sha }}
+          TF_VAR_image_registry: ghcr.io/sutergabriel
+          TF_VAR_image_tag: ${{ github.sha }}
+          TF_VAR_pull_secret: registry
+        run: |
+          terraform init -input=false
+          terraform apply -auto-approve -input=false
+      - name: Auf ArgoCD warten
+        run: |
+          for i in $(seq 1 90); do
+            st=$(kubectl get application aptum -n argocd -o jsonpath='{.status.sync.status} {.status.health.status}' 2>/dev/null)
+            echo "$st" | grep -q "Synced Healthy" && { echo "ArgoCD: $st"; exit 0; }
+            sleep 5
           done
-      - name: Installieren und auf Bereitschaft warten
-        run: helm install aptum deploy/helm/aptum --wait --timeout 5m
-      # Der Rauchtest läuft als Pod im Cluster: Seite, SPA-Fallback, Woche
-      # über /api, eine Verordnung durch die Domäne, ein Freitext durch den
-      # AI-Dienst. Grün heißt, das Chart funktioniert - nicht nur, dass es
-      # syntaktisch stimmt.
-      - name: helm test
-        run: helm test aptum --logs --timeout 3m
+          echo "ArgoCD nicht synchron: '$st'"; exit 1
+      # Der Rauchtest aus dem Chart, als Pod im Cluster: Seite, SPA-Fallback,
+      # Woche über /api, eine Verordnung durch die Domäne, ein Freitext durch
+      # den AI-Dienst. Grün heißt: Die Kette steht, so wie ArgoCD sie gebaut hat.
+      - name: Rauchtest im Cluster
+        run: |
+          helm template aptum deploy/helm/aptum --show-only templates/tests/rauchtest.yaml | kubectl apply -n aptum -f -
+          kubectl wait -n aptum --for=jsonpath='{.status.phase}'=Succeeded pod/aptum-rauchtest --timeout=180s
+          kubectl logs -n aptum aptum-rauchtest
       - name: Von außen erreichbar
         run: |
           curl -sf -H 'Accept: text/html' localhost:8000/ | grep -q '<app-root'
@@ -272,10 +316,12 @@ jobs:
       - name: Zustand des Clusters sichern
         if: failure()
         run: |
-          kubectl get all -o wide
-          kubectl describe pods
+          kubectl get application aptum -n argocd -o yaml | tail -60 || true
+          kubectl get all -n aptum -o wide || true
+          kubectl describe pods -n aptum || true
+          kubectl logs -n aptum aptum-rauchtest || true
           for c in scheduling ai-assist frontend postgres; do
-            echo "=== $c ==="; kubectl logs -l app.kubernetes.io/component=$c --tail=100 || true
+            echo "=== $c ==="; kubectl logs -n aptum -l app.kubernetes.io/component=$c --tail=100 || true
           done
 
   evals:

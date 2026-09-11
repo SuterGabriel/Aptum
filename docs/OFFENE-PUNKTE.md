@@ -29,11 +29,11 @@ Glaubwürdigkeit, die es belegen soll.
 
 ## 3. Kubernetes-Kette
 
-Stufe 4 hat begonnen: Die drei Dienste laufen als Container, `compose.yml`
-fährt den ganzen Stapel mit einem Befehl hoch. Helm, ein `kind`-Cluster in der
-CI, Terraform und ArgoCD folgen — und zwar so, dass die CI bei jedem Push
-damit deployt, nicht als Dateien, die im Repo liegen und nie angewendet
-werden. Ein Chart, das niemand anwendet, ist eine Behauptung.
+Stufe 4 steht bis auf den Betriebsteil: Container, Helm-Chart, Terraform in
+zwei Ständen, ArgoCD — und die CI fährt das bei jedem Push in einem
+`kind`-Cluster, mit Bildern aus der Registry und dem geprüften Commit als
+Revision (ADR-010). Kein Werkzeug liegt nur als Datei im Repo; jedes wird
+angewendet, und der Lauf bricht, wenn es nicht funktioniert.
 
 Was ein Portfolio-Projekt trotzdem nicht ersetzt: zwei Jahre einen Cluster
 betrieben zu haben. Der Punkt bleibt deshalb auch am Ende „teilweise
