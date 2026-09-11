@@ -107,7 +107,9 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
-          <argLine>-Dapi.version=1.44</argLine>
+          <!-- @{argLine} ist der JaCoCo-Agent aus dem Root-POM; ohne den Platzhalter
+               verdrängt die Docker-Option ihn, und das Modul hat keine Abdeckung. -->
+          <argLine>@{argLine} -Dapi.version=1.44</argLine>
         </configuration>
       </plugin>
       <plugin>

@@ -186,6 +186,8 @@ pruefe "Eval-Fälle: der unleserliche" datei evals/cases/unleserlich-01.json
 pruefe "Eval-Fälle: die fehlende Angabe" datei evals/cases/diagnosegruppe-fehlt.json
 pruefe "Eval-Fälle: der Widerspruch" datei evals/cases/menge-widerspruch.json
 pruefe "CI hat den Job evals" enthaelt .github/workflows/ci.yml "  evals:"
+pruefe "SonarCloud ist konfiguriert" datei sonar-project.properties
+pruefe "CI hat den Job sonar" enthaelt .github/workflows/ci.yml "  sonar:"
 pruefe "Prüfung ohne Buchung im Backend" enthaelt services/scheduling/infrastructure/src/main/java/de/aptum/scheduling/infrastructure/rest/TerminController.java "/pruefung"
 pruefe "Wochenansicht nimmt die Grenzen aus Termin" enthaelt services/scheduling/domain/src/main/java/de/aptum/scheduling/domain/kalender/Wochenansicht.java "belegtRaum"
 pruefe "stumme Lücke 1 ist Fixture" datei scripts/fixtures/regel-check/domain/NachbarBorgt.java

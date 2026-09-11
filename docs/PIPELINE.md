@@ -89,6 +89,7 @@ Ergebnisses, nicht nur Werkzeug.
 | `backend` | Formatierung (Spotless), Tests aller drei Module, ArchUnit gegen ADR-001, und ein echtes Postgres über Testcontainers für den Isolationstest aus ADR-002 — der einzige Job mit JVM und Docker |
 | `frontend` | Prettier, ESLint mit den Template-Regeln zur Barrierefreiheit, API-Typen gegen `docs/api/openapi.json`, Unit-Tests mit axe-core über jede Seite, Build mit Budget |
 | `ai-assist` | Der Python-Dienst: Ruff (Format und Lint), mypy strict, pytest gegen aufgezeichnete Antworten — ohne Schlüssel, ohne Netz |
+| `sonar` | SonarCloud über alle drei Stacks mit Abdeckung aus JaCoCo, Karma und pytest-cov; Quality Gate als Merge-Bedingung — ein fremdes Werkzeug neben den eigenen Gates |
 | `evals` | Die Eval-Suite gegen das Modell, feldweise — nur bei Änderung an Prompt, Schema, Provider oder Fällen, oder von Hand; ohne Schlüssel sichtbar übersprungen, nie stumm grün; bricht nur, wenn ein Fall neu scheitert |
 | `e2e` | Backend und Frontend zusammen im echten Chromium: über die API buchen, den Termin im Grid finden, mit der Tastatur hindurchfahren, axe über jede Seite — erst nach `backend` und `frontend` |
 

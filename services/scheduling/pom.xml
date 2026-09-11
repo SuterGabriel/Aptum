@@ -131,6 +131,30 @@
           </execution>
         </executions>
       </plugin>
+      <!--
+        Abdeckung je Modul als XML, damit SonarCloud sie liest. Keine
+        Schwelle hier: Was zu wenig getestet ist, zeigt Sonar - eine Zahl
+        im Build wäre die zweite Quelle für dieselbe Aussage.
+      -->
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>0.8.12</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>bericht</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>report</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 </project>
