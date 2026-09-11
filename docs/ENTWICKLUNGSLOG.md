@@ -1583,6 +1583,49 @@ gemerkt.
 
 ---
 
+## 2026-09-11 — SonarCloud: was ein fremdes Werkzeug findet
+
+**Was delegiert wurde:** SonarCloud als CI-Job mit Abdeckung aus allen drei
+Stacks, dann die Durchsicht der ersten 45 Funde.
+
+**Der Befund, der zählt.** Null Funde im Java-Code, null in der Angular-App,
+null im Python-Dienst. Alle 45 in `.github/workflows/ci.yml` und in
+`scripts/` — also in den Werkzeugen, die die eigenen Gates *bauen*. Die
+Gates prüften den Code; niemand prüfte die Gates. Ein fremdes Werkzeug
+sieht, was das eigene nicht sehen kann, weil es sich selbst nicht liest.
+
+**Was behoben wurde, und warum echt statt abgelehnt.** Actions auf
+Commit-SHAs gepinnt: Ein Tag wie `v4` kann verschoben werden, ein Commit
+nicht — das ist ein Lieferkettenargument, kein Stil. `npm ci
+--ignore-scripts` und `uv sync --no-build`: beides vorher lokal probiert,
+Build und 35 plus 22 Tests grün, also keine Ausrede. `[[` in den
+Bash-Skripten: Sie laufen unter Bash, der Shebang sagt es. Fünf reguläre
+Ausdrücke mit überlappenden Zeichenklassen — der Prosa-Check hatte ein
+Muster, das bei langen Wörtern quadratisch wird; jetzt zwei einfache
+Schritte. Gegenprobe nach jeder Änderung: alle Gates und die 22 Fälle der
+Regel-Check-Suite liefern dasselbe wie vorher. Dependabot dazu, damit die
+Pins nicht in einem Jahr Museumsstücke sind.
+
+**Was abgelehnt wird, mit Grund.** `evals/run.py` nimmt einen Pfad aus einem
+CLI-Argument — „Path Traversal“. Es ist ein Skript im Repo, das ein Mensch
+aufruft; es gibt keinen Angreifer, der Argumente liefert. Steht so in
+Sonar als akzeptiert.
+
+**Was Sonar nicht sieht.** Prosa, Fundstellen, Belege, Kontraste, die
+Zusage „der AI-Layer schlägt vor“. Deshalb ersetzt es nichts. Es ist die
+zweite Meinung, und die erste hat es sofort gebraucht.
+
+**Nebenbei zwei Dinge, die nicht Sonar fand.** Die Infrastruktur verdrängte
+mit ihrem Docker-`argLine` den JaCoCo-Agenten — ohne `@{argLine}` hatte
+das Modul keine Abdeckung. Und ein e2e-Test las die fokussierte Zelle vor
+dem Render-Zyklus; lokal schnell genug, auf dem Runner eine Zelle Versatz.
+Der Test wartet jetzt, bis sich der Fokus bewegt hat.
+
+**Zeitschätzung:** anderthalb Stunden. Von Hand ein Tag, und die Hälfte der
+Funde würde mit „won't fix“ weggeklickt.
+
+---
+
 ## Vorlage für weitere Einträge
 
 ```

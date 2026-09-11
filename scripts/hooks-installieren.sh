@@ -18,7 +18,7 @@ chmod +x .githooks/* 2>/dev/null || true
 echo "core.hooksPath zeigt jetzt auf .githooks/"
 echo
 echo "Prüfung, ob der Hook greift:"
-if [ -x .githooks/pre-commit ] || [ -f .githooks/pre-commit ]; then
+if [[ -x .githooks/pre-commit ]] || [[ -f .githooks/pre-commit ]]; then
   echo "  ok    .githooks/pre-commit liegt bereit"
 else
   echo "  FEHLT .githooks/pre-commit"

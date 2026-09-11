@@ -8,6 +8,9 @@ on:
   workflow_dispatch:
 
 # Die Pipeline prüft, sie veröffentlicht nichts. Mehr Rechte braucht sie nicht.
+# Jede Action ist auf einen Commit gepinnt, die Hauptversion steht als
+# Kommentar dahinter; Dependabot hebt beides zusammen an. Ein Tag kann
+# verschoben werden, ein Commit nicht - das war ein Fund von SonarCloud.
 permissions:
   contents: read
 
@@ -27,7 +30,7 @@ jobs:
     name: Beleg-Check
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
       - name: Belege prüfen
         run: bash scripts/beleg-check.sh
 
@@ -38,8 +41,8 @@ jobs:
     # und zusammen unter einer Sekunde laufen. Sie bleiben getrennte Schritte,
     # damit im roten Lauf ohne Logsuche sichtbar ist, welches der beiden hing.
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
         with:
           node-version: '24'
       # Der Git-Hook prüft nur vorgemerkte Dateien und ist mit --no-verify
@@ -61,8 +64,8 @@ jobs:
     # auffällt und falsche Fachlogik nicht. Ein Test über eine erfundene
     # Frist ist grün. Das ist der Job, der das abfängt.
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
         with:
           node-version: '24'
       - name: Fundstellen prüfen
@@ -80,8 +83,8 @@ jobs:
     # manuellen Blick. Dieser Job macht daraus eine Zusage, die kaputtgehen
     # kann, sobald jemand eine Farbe anfasst.
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
         with:
           node-version: '24'
       - name: Kontraste nachrechnen
@@ -95,8 +98,8 @@ jobs:
     # Testcontainers - ubuntu-latest bringt Docker mit. Darunter der
     # Isolationstest aus ADR-002: Mandant A sieht nichts von Mandant B.
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5
         with:
           distribution: temurin
           java-version: '21'
@@ -107,7 +110,7 @@ jobs:
       - name: Format, Tests, ArchUnit, Abdeckung
         run: mvn -B --file services/scheduling/pom.xml spotless:check verify
       - name: Abdeckung für Sonar sichern
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
         with:
           name: abdeckung-backend
           path: services/scheduling/**/target/site/jacoco/jacoco.xml
@@ -115,7 +118,7 @@ jobs:
       # Wenn ein Test rot ist, gehört der Bericht dazu - nicht nur das Log.
       - name: Testberichte sichern
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
         with:
           name: surefire-reports
           path: services/scheduling/**/target/surefire-reports/
@@ -132,13 +135,13 @@ jobs:
     # OpenAPI-Dokument neu erzeugt und mit der eingecheckten Fassung
     # verglichen - dieselbe Drift-Prüfung wie im Backend, eine Ebene weiter.
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
         with:
           node-version: '24'
           cache: npm
           cache-dependency-path: frontend/package-lock.json
-      - run: npm ci --no-audit --no-fund
+      - run: npm ci --no-audit --no-fund --ignore-scripts
       - name: Format
         run: npm run format:check
       - name: Lint (inklusive Template-Regeln zur Barrierefreiheit)
@@ -148,7 +151,7 @@ jobs:
       - name: Unit-Tests mit Abdeckung
         run: npm run test:coverage
       - name: Abdeckung für Sonar sichern
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
         with:
           name: abdeckung-frontend
           path: frontend/coverage/aptum/lcov.info
@@ -166,22 +169,22 @@ jobs:
     # ohne Schlüssel und ohne Netz gegen aufgezeichnete Antworten - sie
     # prüfen die Pipeline, nicht das Modell. Das Modell prüft der Eval.
     steps:
-      - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v6
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78 # v7
         with:
           enable-cache: true
           cache-dependency-glob: services/ai-assist/uv.lock
-      - run: uv sync --frozen
+      - run: uv sync --frozen --no-build
       - name: Format
-        run: uv run ruff format --check .
+        run: uv run --frozen ruff format --check .
       - name: Lint
-        run: uv run ruff check .
+        run: uv run --frozen ruff check .
       - name: Typen
-        run: uv run mypy
+        run: uv run --frozen mypy
       - name: Tests mit Abdeckung
-        run: uv run pytest -q --cov=ai_assist --cov-report=xml
+        run: uv run --frozen pytest -q --cov=ai_assist --cov-report=xml
       - name: Abdeckung für Sonar sichern
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
         with:
           name: abdeckung-ai-assist
           path: services/ai-assist/coverage.xml
@@ -198,17 +201,17 @@ jobs:
     # Jobs davor; hier wird nur eingesammelt und kompiliert.
     if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
         with:
           fetch-depth: 0
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5
         with:
           distribution: temurin
           java-version: '21'
           cache: maven
       - name: Klassen für die Java-Analyse
         run: mvn -B -q --file services/scheduling/pom.xml test-compile
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5
         with:
           pattern: abdeckung-*
           path: abdeckung
@@ -223,7 +226,7 @@ jobs:
           cp abdeckung/abdeckung-frontend/lcov.info frontend/coverage/aptum/lcov.info
           cp abdeckung/abdeckung-ai-assist/coverage.xml services/ai-assist/coverage.xml
           find services/scheduling -name jacoco.xml
-      - uses: SonarSource/sonarqube-scan-action@v5
+      - uses: SonarSource/sonarqube-scan-action@fd88b7d7ccbaefd23d8f36f73b59db7a3d246602 # v6
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
@@ -241,7 +244,7 @@ jobs:
       run:
         working-directory: services/ai-assist
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
         with:
           fetch-depth: 2
       - name: Hat sich etwas geändert, das das Modell sieht?
@@ -271,23 +274,23 @@ jobs:
           else
             echo "da=true" >> "$GITHUB_OUTPUT"
           fi
-      - uses: astral-sh/setup-uv@v6
+      - uses: astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78 # v7
         if: steps.schluessel.outputs.da == 'true'
         with:
           enable-cache: true
           cache-dependency-glob: services/ai-assist/uv.lock
-      - run: uv sync --frozen
+      - run: uv sync --frozen --no-build
         if: steps.schluessel.outputs.da == 'true'
       - name: Eval gegen Anthropic
         if: steps.schluessel.outputs.da == 'true'
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: uv run python ../../evals/run.py --provider anthropic --nicht-speichern | tee -a "$GITHUB_STEP_SUMMARY"
+        run: uv run --frozen python ../../evals/run.py --provider anthropic --nicht-speichern | tee -a "$GITHUB_STEP_SUMMARY"
       - name: Eval gegen OpenAI, wenn ein Schlüssel da ist
         if: steps.schluessel.outputs.da == 'true' && env.OPENAI_API_KEY != ''
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: uv run python ../../evals/run.py --provider openai --nicht-speichern | tee -a "$GITHUB_STEP_SUMMARY"
+        run: uv run --frozen python ../../evals/run.py --provider openai --nicht-speichern | tee -a "$GITHUB_STEP_SUMMARY"
 
   e2e:
     name: Ende-zu-Ende mit axe
@@ -308,8 +311,8 @@ jobs:
         ports: ['5432:5432']
         options: --health-cmd "pg_isready -U aptum" --health-interval 5s --health-timeout 5s --health-retries 10
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5
         with:
           distribution: temurin
           java-version: '21'
@@ -325,23 +328,23 @@ jobs:
           nohup java -jar services/scheduling/infrastructure/target/scheduling-infrastructure-*.jar > backend.log 2>&1 &
           for i in $(seq 1 60); do curl -sf localhost:8080/actuator/health && exit 0; sleep 1; done
           echo "Backend nicht gestartet"; cat backend.log; exit 1
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
         with:
           node-version: '24'
           cache: npm
           cache-dependency-path: frontend/package-lock.json
-      - run: npm ci --no-audit --no-fund
+      - run: npm ci --no-audit --no-fund --ignore-scripts
         working-directory: frontend
-      - run: npx playwright install --with-deps chromium
+      - run: npx --no playwright install --with-deps chromium
         working-directory: frontend
       - name: Playwright mit axe
-        run: npx playwright test
+        run: npx --no playwright test
         working-directory: frontend
         env:
           CI: 'true'
       - name: Bericht und Traces sichern
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
         with:
           name: playwright
           path: |

@@ -136,7 +136,7 @@ function prosaZeilen(inhalt, art) {
       .replace(/%\w+%/g, (t) => ' '.repeat(t.length))          // Windows-Variablen
       // Javadoc nennt Bezeichner im Kommentar: `@param begruendung`,
       // `{@code Pruefergebnis}`. Das ist Code in Prosaform, keine Prosa.
-      .replace(/\{@\w+\s+[^}]*\}/g, (t) => ' '.repeat(t.length))
+      .replace(/\{@\w+\s[^}]*\}/g, (t) => ' '.repeat(t.length))
       .replace(/(@\w+)(\s+)(\S+)/g, (t, tag, luecke, wert) => tag + luecke + ' '.repeat(wert.length));
   });
 }
@@ -158,7 +158,10 @@ for (const pfad of alleDateien) {
   } catch {
     continue;
   }
-  for (const [treffer] of inhalt.matchAll(/[\wäöüßÄÖÜ]*[äöüßÄÖÜ][\wäöüßÄÖÜ]*/g)) {
+  // Erst alle Wörter, dann die mit Umlaut - zwei einfache Schritte statt eines
+  // Musters mit überlappenden Klassen, das bei langen Wörtern quadratisch wird.
+  for (const [treffer] of inhalt.matchAll(/[\wäöüßÄÖÜ]+/g)) {
+    if (!/[äöüßÄÖÜ]/.test(treffer)) continue;
     if (treffer.length < 4) continue;
     const form = umschrift(treffer);
     if (!verboten.has(form)) verboten.set(form, treffer);

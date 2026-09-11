@@ -25,11 +25,11 @@ pruefe() {
   fi
 }
 
-datei() { [ -f "$1" ]; }
-ordner_nicht_leer() { [ -d "$1" ] && [ -n "$(ls -A "$1" 2>/dev/null)" ]; }
+datei() { [[ -f "$1" ]]; }
+ordner_nicht_leer() { [[ -d "$1" ]] && [[ -n "$(ls -A "$1" 2>/dev/null)" ]]; }
 enthaelt() { grep -q "$2" "$1" 2>/dev/null; }
-hoechstens_zeilen() { [ "$(wc -l < "$1")" -le "$2" ]; }
-existiert() { [ -e "$1" ]; }
+hoechstens_zeilen() { [[ "$(wc -l < "$1")" -le "$2" ]]; }
+existiert() { [[ -e "$1" ]]; }
 
 # Liefert alle Repo-Pfade aus der Belegspalte von docs/ANFORDERUNGEN.md, die
 # unbedingt behauptet werden.
@@ -74,7 +74,7 @@ pruefe "docs/PRODUKT.md existiert" datei docs/PRODUKT.md
 # Ein Pfad wird als Beleg eingetragen, die Datei entsteht nie. Von Hand fällt
 # das niemandem auf, weil niemand eine Tabelle gegen den Verzeichnisbaum liest.
 while read -r pfad; do
-  [ -n "$pfad" ] || continue
+  [[ -n "$pfad" ]] || continue
   pruefe "Beleg $pfad existiert" existiert "$pfad"
 done <<< "$(behauptete_pfade)"
 
@@ -83,7 +83,7 @@ echo "Schritt 3 — Entscheidungen sind dokumentiert"
 pruefe "DECISIONS.md existiert" datei DECISIONS.md
 pruefe "mindestens eine ADR existiert" ordner_nicht_leer docs/adr
 for adr in docs/adr/ADR-*.md; do
-  [ -e "$adr" ] || continue
+  [[ -e "$adr" ]] || continue
   pruefe "$(basename "$adr"): Abschnitt 'Wann wir anders entscheiden würden'" \
     enthaelt "$adr" "Wann wir anders entscheiden"
   pruefe "$(basename "$adr"): Abschnitt 'Optionen'" enthaelt "$adr" "## Optionen"
@@ -208,7 +208,7 @@ echo "-----------"
 printf '%d Belege vorhanden, %d fehlen.\n' "$ok" "$fehler"
 echo
 
-if [ "$fehler" -gt 0 ]; then
+if [[ "$fehler" -gt 0 ]]; then
   cat <<'HINWEIS'
 Ein Beleg fehlt. Das ist der Sinn dieses Jobs: Dieses Repo behauptet eine
 Arbeitsweise, und die Behauptung soll kaputtgehen, wenn sie nicht mehr stimmt.

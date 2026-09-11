@@ -43,11 +43,11 @@ function hexZuRgb(hex) {
   const kurz = /^#([0-9a-f])([0-9a-f])([0-9a-f])$/i.exec(hex);
   if (kurz) {
     const [, r, g, b] = kurz;
-    return { r: parseInt(r + r, 16), g: parseInt(g + g, 16), b: parseInt(b + b, 16) };
+    return { r: Number.parseInt(r + r, 16), g: Number.parseInt(g + g, 16), b: Number.parseInt(b + b, 16) };
   }
   const lang = /^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec(hex);
   if (!lang) return null;
-  return { r: parseInt(lang[1], 16), g: parseInt(lang[2], 16), b: parseInt(lang[3], 16) };
+  return { r: Number.parseInt(lang[1], 16), g: Number.parseInt(lang[2], 16), b: Number.parseInt(lang[3], 16) };
 }
 
 let quelle;
@@ -61,7 +61,7 @@ try {
 // Farbtoken sammeln. Nur Werte, die eine Hex-Farbe sind — Muster, Abstände
 // und Schriftgrößen sind ebenfalls Token, aber hier nicht zu prüfen.
 const farben = new Map();
-for (const treffer of quelle.matchAll(/(--[\w-]+)\s*:\s*(#[0-9a-fA-F]{3,6})\s*;/g)) {
+for (const treffer of quelle.matchAll(/(--[\w-]+):\s*(#[0-9a-fA-F]{3,6});/g)) {
   const rgb = hexZuRgb(treffer[2]);
   if (rgb) farben.set(treffer[1], { hex: treffer[2].toLowerCase(), rgb });
 }

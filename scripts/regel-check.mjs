@@ -75,7 +75,7 @@ function katalogLesen() {
     }
     if (imCodeblock) return;
 
-    const ueberschrift = /^##\s+(.*)$/.exec(zeile);
+    const ueberschrift = /^##\s*(\S.*)$/.exec(zeile);
     if (ueberschrift) {
       abschnitt = ueberschrift[1].trim();
       return;
@@ -181,7 +181,15 @@ function istRegelklasse(pfad) {
 // in Klammern, am Satzende. Die Auszeichnung drumherum gehört nicht zur ID —
 // sonst zwingt das Gate dazu, Javadoc schlechter zu schreiben.
 function idAusZeile(roh) {
-  return roh.replace(/^[`*("'[{<]+/, '').replace(/[`*.,;:)\]}>"']+$/, '');
+  // Ohne Muster am Zeilenende: Ein `[...]+$` läuft bei langen Zeilen
+  // quadratisch. Zeichen für Zeichen abschneiden ist linear und lesbar.
+  const vorne = '`*("\'[{<';
+  const hinten = '`*.,;:)]}>"\'';
+  let von = 0;
+  let bis = roh.length;
+  while (von < bis && vorne.includes(roh[von])) von++;
+  while (bis > von && hinten.includes(roh[bis - 1])) bis--;
+  return roh.slice(von, bis);
 }
 
 function codePruefen(pfad, katalog) {

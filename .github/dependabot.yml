@@ -1,0 +1,36 @@
+# Hält die gepinnten Actions und die vier Paketwelten aktuell - wöchentlich,
+# gebündelt, damit nicht jeder Patch ein eigener Pull Request ist. Die CI
+# prüft jeden Vorschlag wie jeden anderen Commit.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      actions:
+        patterns: ['*']
+  - package-ecosystem: npm
+    directory: /frontend
+    schedule:
+      interval: weekly
+    groups:
+      angular:
+        patterns: ['@angular/*', 'angular-eslint', '@angular-eslint/*']
+      werkzeuge:
+        patterns: ['*']
+        exclude-patterns: ['@angular/*', 'angular-eslint', '@angular-eslint/*']
+  - package-ecosystem: maven
+    directory: /services/scheduling
+    schedule:
+      interval: weekly
+    groups:
+      maven:
+        patterns: ['*']
+  - package-ecosystem: uv
+    directory: /services/ai-assist
+    schedule:
+      interval: weekly
+    groups:
+      python:
+        patterns: ['*']
