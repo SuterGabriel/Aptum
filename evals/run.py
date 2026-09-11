@@ -156,11 +156,17 @@ def bericht(lauf: Lauf, faelle: list[Fall], alt: dict[str, Any] | None) -> str:
     rot = [e for e in lauf.ergebnisse if not e.gruen]
     zeilen += ["", f"{len(faelle) - len(rot)} von {len(faelle)} Fällen grün."]
     warum = {f.id: f.warum for f in faelle}
+    soll = {f.id: f.erwartet for f in faelle}
     for e in rot:
         falsch = [f for f, ok in e.felder.items() if not ok]
         zeilen.append(
             f"  rot  {e.fall}: {', '.join(falsch)}" + (f" - {e.fehler}" if e.fehler else "")
         )
+        for f in falsch:
+            # Was das Modell sagte, neben dem, was der Fall erwartet - sonst
+            # ist "rot" nur ein Wort.
+            ist = e.tatsaechlich.get(f)
+            zeilen.append(f"       {f}: ist {_kurz(ist)}, soll {_kurz(soll[e.fall][f])}")
         zeilen.append(f"       warum: {warum[e.fall]}")
     neu_rot = regressionen(lauf, alt)
     if neu_rot:
@@ -168,6 +174,16 @@ def bericht(lauf: Lauf, faelle: list[Fall], alt: dict[str, Any] | None) -> str:
         for id_ in neu_rot:
             zeilen.append(f"  {id_}: {warum[id_]}")
     return "\n".join(zeilen)
+
+
+def _kurz(wert: Any) -> str:
+    if wert is None:
+        return "nicht extrahierbar"
+    if isinstance(wert, dict):
+        return f"{wert.get('min_pro_woche')}-{wert.get('max_pro_woche')}/Woche"
+    if isinstance(wert, list | tuple):
+        return f"{wert[0]}-{wert[1]}/Woche"
+    return str(wert)
 
 
 def provider_aus(name: str) -> Provider:

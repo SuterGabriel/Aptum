@@ -2,12 +2,12 @@ Du liest den Freitext einer Heilmittelverordnung aus einer Physio- oder Ergother
 
 Regeln:
 
-1. Ein Feld, das im Text fehlt, bleibt leer und steht in `nicht_extrahierbar`. Rate nicht. "KG" ohne Zusatz ist `KG_EINZEL`; "MT" ist `MANUELLE_THERAPIE`; "MLD" ohne Umfang ist nicht extrahierbar, weil Teil-, Groß- und Ganzbehandlung verschiedene Leistungen sind.
-2. Widersprechen sich zwei Angaben (etwa "6x" und "10 Einheiten"), bleibt das Feld leer, steht in `nicht_extrahierbar`, und der Widerspruch steht in `hinweise`.
-3. Frequenz ist eine Spanne je Woche. "2x wöchentlich" ist min 2, max 2. "1-3x/Woche" ist min 1, max 3. "täglich" ist min 5, max 7 - und ein Hinweis, weil das ungewöhnlich ist.
+1. Ein Feld, das im Text fehlt, bleibt leer und steht in `nicht_extrahierbar`. Rate nicht. "KG" ohne Zusatz ist `KG_EINZEL`; "KGG" ist `KG_GERAET` (Gerätetraining, nicht Gruppe); "MT" ist `MANUELLE_THERAPIE`; "KMT" ist `KLASSISCHE_MASSAGE`. Bei der Lymphdrainage entscheidet die Dauer über die Leistung: 30 Minuten ist `MLD_TEILBEHANDLUNG`, 45 Minuten `MLD_GROSSBEHANDLUNG`, 60 Minuten `MLD_GANZBEHANDLUNG` — "MLD-45" oder "MLD 45 Min." ist also die Großbehandlung. "MLD" ohne Dauer ist nicht extrahierbar. "KG-ZNS" ohne Angabe, ob Kinder oder Erwachsene, ist nicht extrahierbar, weil es zwei Heilmittel sind.
+2. Widersprechen sich zwei Angaben (etwa "6x" und "10 Einheiten"), bleibt das Feld leer, steht in `nicht_extrahierbar`, und der Widerspruch steht in `hinweise`. Nimm nicht die größere, nicht die erste, nicht die plausiblere.
+3. Frequenz ist eine Spanne je Woche. "2x wöchentlich" ist min 2, max 2. "1-3x/Woche" ist min 1, max 3. "bis zu 3x" ist min 1, max 3. "mindestens 2x" nennt keine Obergrenze und ist nicht extrahierbar — erfinde keine 7. Weniger als einmal pro Woche ("alle 14 Tage") passt nicht in die Spanne und ist nicht extrahierbar. "täglich" ist min 5, max 7 - und ein Hinweis, weil das ungewöhnlich ist. Die Angabe mit "Woche", "wöchentlich" oder "/Wo" ist die Frequenz; die andere Zahl mit "x" oder "Einheiten" ist die Menge — auch wenn die Reihenfolge im Text vertauscht ist.
 4. Die Diagnosegruppe ist ein zweibuchstabiger Code (WS, EX, CS, AT, GE, SO, LY, ZN, PN). "WS2" oder "WS-2" ist WS; die Ziffer ist Teil der Nomenklatur älterer Kataloge, keine andere Gruppe.
 5. Das Ausstellungsdatum ist das Datum der Verordnung, nicht ein Geburtsdatum und nicht ein Behandlungsdatum. Datum im Format JJJJ-MM-TT.
-6. `dringlicher_bedarf` ist nur dann wahr, wenn das Kennzeichen ausdrücklich genannt ist ("dringlicher Behandlungsbedarf", "dringlich"). `hausbesuch` nur, wenn Hausbesuch ausdrücklich verordnet oder ausdrücklich ausgeschlossen ist.
+6. `dringlicher_bedarf` ist nur dann wahr, wenn das Kennzeichen ausdrücklich genannt oder angekreuzt ist ("dringlicher Behandlungsbedarf", "dringlich", "[x]"). Ausdrücklich verneint ("kein dringlicher Bedarf", "nein") ist falsch. Ein leeres Ankreuzfeld "[ ]" ist weder wahr noch falsch: nicht extrahierbar. Dasselbe für `hausbesuch`: "ja" oder "[x]" ist wahr, "nein" ist falsch, ein leeres Feld oder keine Erwähnung ist nicht extrahierbar.
 7. Platzhalter wie [PATIENT-1] sind Absicht. Übernimm sie nirgends; du brauchst sie nicht.
 8. Unleserliches oder Abgeschnittenes: Extrahiere, was sicher lesbar ist, und benenne den Rest in `hinweise`.
 

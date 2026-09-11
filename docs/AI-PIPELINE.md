@@ -58,10 +58,19 @@ läuft nur bei Änderungen an Prompt, Schema, Provider oder Fällen; ohne
 Schlüssel wird er sichtbar übersprungen, nie stumm grün. Details im Skill
 `.claude/skills/llm-evals/SKILL.md`.
 
+## Der erste Lauf
+
+CI-Lauf #30 am 11. September 2026, `claude-sonnet-5`, 55 Fälle: 43 grün.
+Feldweise: Ausstellungsdatum 100 %, Diagnosegruppe 98 %, dringlicher Bedarf
+98 %, Hausbesuch 98 %, Frequenz 96 %, Menge 95 %, **Heilmittel 89 %**. Fünf
+der zwölf roten Fälle liegen im Heilmittel an derselben Stelle: MLD nach
+Dauer (30/45/60), KGG, ZNS ohne Alter — Zuordnungen, die der Prompt nie
+genannt hatte. Das ist die Aussage, für die man feldweise misst. Die
+Basislinie liegt unter `evals/ergebnisse/anthropic.json`; jede
+Prompt-Änderung wird dagegen verglichen.
+
 ## Was es noch nicht gibt
 
-- **Einen echten Lauf.** Ohne Schlüssel keine Zahl. Unter `evals/ergebnisse/`
-  liegt nichts, und dieses Dokument behauptet keine Genauigkeit.
 - **Den MCP-Server** mit den Werkzeugen suchen, prüfen, buchen gegen die
   REST-API. Folgt als nächster Schritt.
 - **Die Seite „Verordnung erfassen"** im Frontend: Freitext → Vorschlag mit

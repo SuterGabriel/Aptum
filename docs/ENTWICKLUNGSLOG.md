@@ -1479,6 +1479,48 @@ Fälle. Von Hand ein Tag — und es wären zwanzig Fälle, alle normal.
 
 ---
 
+## 2026-09-11 — Der erste Eval-Lauf, und was er gezeigt hat
+
+**Was passiert ist:** Der Schlüssel lag als Secret, der Lauf wurde von Hand
+angestoßen, 2 Minuten 31 Sekunden gegen `claude-sonnet-5`. 43 von 55
+Fällen grün.
+
+**Die Zahl, die zählt, ist nicht 78 Prozent.** Feldweise: Datum 100,
+Diagnosegruppe 98, Kennzeichen 98, Frequenz 96, Menge 95, Heilmittel 89.
+Und im Heilmittel liegen fünf der zwölf roten Fälle an einer Stelle:
+Lymphdrainage nach Dauer (30, 45, 60 Minuten), KGG als Gerätetraining,
+ZNS ohne Altersangabe. Das sind keine Modellschwächen — das sind
+Zuordnungen, die der Prompt nie genannt hat. Der Skill sagt: Wo Provider
+sich unterscheiden, ist der Prompt zu schwach. Hier reicht ein Provider,
+um es zu sehen.
+
+**Was der Bericht nicht sagen konnte.** `normal-kg-01` rot bei der Menge —
+der Normalfall, „wenn der scheitert, ist alles andere egal“. Nur: Der
+Bericht nannte das Feld, nicht den Wert. Hat das Modell 2 gesagt, weil
+„2x wöchentlich“ dasteht, oder gar nichts? Das ist eine Lücke im Runner,
+und sie ist jetzt zu: Jedes rote Feld zeigt ist und soll. Der nächste
+Lauf wird es zeigen.
+
+**Was ich nicht ändere.** `unleserlich-01` erwartet bei „K# 6x, W$“
+Heilmittel und Diagnosegruppe leer; das Modell hat vermutlich KG und WS
+gelesen. Man könnte die Erwartung lockern — ein Mensch läse es auch so.
+Ich lasse sie stehen: Der Fall prüft genau, ob das Modell bei Unsicherheit
+schweigt, und bei einer Verordnung ist „vermutlich KG“ kein Wert, den ein
+System eintragen sollte. Das Gleiche gilt für das leere Ankreuzfeld.
+
+**Die Iteration.** Vier Regeln im Prompt ergänzt: die Heilmittel-Zuordnungen,
+„nimm nicht die größere Zahl“ beim Widerspruch, „mindestens 2x“ ohne
+Obergrenze ist nicht extrahierbar, und was ein leeres Ankreuzfeld ist. Nicht
+mehr, weil eine Prompt-Änderung, die einen Fall repariert, typischerweise
+einen anderen bricht — und genau das misst der nächste Lauf gegen die
+Basislinie, die aus dem Bericht von Lauf #30 rekonstruiert ist und so
+gekennzeichnet.
+
+**Zeitschätzung:** Auswertung und Iteration eine halbe Stunde. Von Hand:
+ein Beispiel im Playground, das zufällig klappt.
+
+---
+
 ## Vorlage für weitere Einträge
 
 ```
