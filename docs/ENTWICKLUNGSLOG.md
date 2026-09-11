@@ -1641,6 +1641,41 @@ Pfade, sondern weil die automatische Analyse noch lief und der CI-Job gar
 nicht durchkam. Ein Werkzeug, das zwei Wege anbietet und einen davon still
 gewinnen lässt.
 
+**Der erste Lauf aus der CI — und drei neue Erkenntnisse.** Mit abgeschalteter
+automatischer Analyse lief der Job zum ersten Mal richtig durch: Abdeckung
+83,5 Prozent über alle drei Stacks, Sicherheitsbewertung auf 1, noch vier
+Funde. Zwei davon in Java — die automatische Analyse hatte den Java-Code nie
+gesehen, weil ihr die kompilierten Klassen fehlten. Ein Werkzeug, das ohne
+Konfiguration läuft, prüft eben nicht alles, und es sagt nicht, was es
+auslässt.
+
+**Der Fund, der keiner ist.** `java:S8696` verlangt `.equals()` statt `==` bei
+`montag.getDayOfWeek() != DayOfWeek.MONDAY`. `DayOfWeek` ist ein Enum, und bei
+Enums ist `==` die richtige Vergleichsart — Sonar hat dafür sogar eine eigene
+Regel, die genau das fordert. Zwei Regeln desselben Werkzeugs widersprechen
+sich, und hätte ich den Fund brav „behoben“, wäre der Code schlechter
+geworden. Das ist die Grenze eines fremden Werkzeugs: Es kennt den Kontext
+nicht, und wer jeden Fund abarbeitet, ohne ihn zu lesen, verschlimmbessert.
+
+**Die Abdeckung als echter Befund.** Das Gate blieb rot: 73,3 Prozent auf
+neuem Code, Schwelle 80. Die Lücke lagen bei den beiden echten Providern, 0
+Prozent. Die naheliegende Antwort wäre ein Ausschluss gewesen — „braucht
+einen Schlüssel, nicht testbar“. Stimmt aber nicht: Beide nehmen ihren Client
+im Konstruktor, genau dafür. Sechs Tests mit einem Stub prüfen jetzt, was
+dieser Code selbst tut — dass `tool_choice` auf das Werkzeug zeigt, dass eine
+Antwort am Werkzeug vorbei einen Fehler gibt, dass ein erfundenes Feld
+herausfliegt. Beide Provider von 0 auf 100 Prozent, gesamt 93. Das Gate hat
+eine Lücke gezeigt, die ich sonst nicht gesehen hätte.
+
+**Und eine Selbstverletzung.** Beim Umbau des Kontrast-Checks auf
+zeilenweises Lesen hat die Shell meine Backslashes gefressen: Aus `\r?\n`
+wurde ein echter Zeilenumbruch mitten im Muster, und das Gate war syntaktisch
+kaputt — nicht rot, sondern tot. Aufgefallen, weil ich nach jeder Änderung
+die Gegenprobe mache: Token verfälschen, Gate muss rot werden. „2 von 31
+Paaren halten die Anforderung nicht ein“ ist der Beweis, dass es lebt. Ohne
+diese Gewohnheit wäre ein totes Gate durchgerutscht, und tote Gates sind
+schlimmer als fehlende.
+
 **Zeitschätzung:** anderthalb Stunden. Von Hand ein Tag, und die Hälfte der
 Funde würde mit „won't fix“ weggeklickt.
 

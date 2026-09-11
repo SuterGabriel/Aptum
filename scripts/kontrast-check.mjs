@@ -61,10 +61,14 @@ try {
 // Farbtoken sammeln. Nur Werte, die eine Hex-Farbe sind — Muster, Abstände
 // und Schriftgrößen sind ebenfalls Token, aber hier nicht zu prüfen.
 const farben = new Map();
-// Sechs oder drei Stellen, nichts dazwischen: `{3,6}` lässt der Maschine die
-// Wahl und damit das Rückwärtslaufen - und vier- oder fünfstellige Werte
-// gäbe es ohnehin nicht.
-for (const treffer of quelle.matchAll(/(--[\w-]+):\s*(#(?:[0-9a-fA-F]{6}|[0-9a-fA-F]{3}));/g)) {
+// Zeile für Zeile und am Zeilenanfang verankert: Ein Muster, das über die
+// ganze Datei sucht, läuft bei jedem Fehlversuch von der nächsten Stelle neu
+// los. Ein Token steht ohnehin allein auf seiner Zeile. Sechs oder drei
+// Stellen, nichts dazwischen - vier- oder fünfstellige Werte gäbe es nicht.
+const tokenZeile = /^\s*(--[\w-]+):\s*(#(?:[0-9a-fA-F]{6}|[0-9a-fA-F]{3}));/;
+for (const zeile of quelle.split(/\r?\n/)) {
+  const treffer = tokenZeile.exec(zeile);
+  if (!treffer) continue;
   const rgb = hexZuRgb(treffer[2]);
   if (rgb) farben.set(treffer[1], { hex: treffer[2].toLowerCase(), rgb });
 }
