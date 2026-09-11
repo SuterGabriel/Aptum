@@ -1,0 +1,731 @@
+{
+  "provider": "anthropic:claude-sonnet-5",
+  "zeitpunkt": "2026-09-11T07:20:00+00:00",
+  "herkunft": "rekonstruiert aus dem Bericht des CI-Laufs zu Commit 4ec4156 (zweiter Lauf, nach der ersten Prompt-Iteration); heilmittel-zwei-genannt mit der korrigierten Erwartung als grün geführt. Lauf #30 davor: 43 von 55, Heilmittel 89 Prozent - siehe ENTWICKLUNGSLOG.",
+  "genauigkeit": {
+    "heilmittel": 1.0,
+    "diagnosegruppe": 0.982,
+    "verordnete_einheiten": 1.0,
+    "frequenz": 1.0,
+    "ausstellungsdatum": 1.0,
+    "dringlicher_bedarf": 1.0,
+    "hausbesuch": 1.0
+  },
+  "faelle": {
+    "abgeschnitten-01": {
+      "gruen": true,
+      "felder": {
+        "heilmittel": true,
+        "diagnosegruppe": true,
+        "verordnete_einheiten": true,
+        "frequenz": true,
+        "ausstellungsdatum": true,
+        "dringlicher_bedarf": true,
+        "hausbesuch": true
+      },
+      "fehler": null
+    },
+    "datum-fehlt": {
+      "gruen": true,
+      "felder": {
+        "heilmittel": true,
+        "diagnosegruppe": true,
+        "verordnete_einheiten": true,
+        "frequenz": true,
+        "ausstellungsdatum": true,
+        "dringlicher_bedarf": true,
+        "hausbesuch": true
+      },
+      "fehler": null
+    },
+    "datum-geburtsdatum-statt-ausstellung": {
+      "gruen": true,
+      "felder": {
+        "heilmittel": true,
+        "diagnosegruppe": true,
+        "verordnete_einheiten": true,
+        "frequenz": true,
+        "ausstellungsdatum": true,
+        "dringlicher_bedarf": true,
+        "hausbesuch": true
+      },
+      "fehler": null
+    },
+    "datum-iso": {
+      "gruen": true,
+      "felder": {
+        "heilmittel": true,
+        "diagnosegruppe": true,
+        "verordnete_einheiten": true,
+        "frequenz": true,
+        "ausstellungsdatum": true,
+        "dringlicher_bedarf": true,
+        "hausbesuch": true
+      },
+      "fehler": null
+    },
+    "datum-unmoeglich": {
+      "gruen": true,
+      "felder": {
+        "heilmittel": true,
+        "diagnosegruppe": true,
+        "verordnete_einheiten": true,
+        "frequenz": true,
+        "ausstellungsdatum": true,
+        "dringlicher_bedarf": true,
+        "hausbesuch": true
+      },
+      "fehler": null
+    },
+    "datum-zwei-daten": {
+      "gruen": true,
+      "felder": {
+        "heilmittel": true,
+        "diagnosegruppe": true,
+        "verordnete_einheiten": true,
+        "frequenz": true,
+        "ausstellungsdatum": true,
+        "dringlicher_bedarf": true,
+        "hausbesuch": true
+      },
+      "fehler": null
+    },
+    "diagnosegruppe-ex-bindestrich": {
+      "gruen": true,
+      "felder": {
+        "heilmittel": true,
+        "diagnosegruppe": true,
+        "verordnete_einheiten": true,
+        "frequenz": true,
+        "ausstellungsdatum": true,
+        "dringlicher_bedarf": true,
+        "hausbesuch": true
+      },
+      "fehler": null
+    },
+    "diagnosegruppe-fehlt": {
+      "gruen": true,
+      "felder": {
+        "heilmittel": true,
+        "diagnosegruppe": true,
+        "verordnete_einheiten": true,
+        "frequenz": true,
+        "ausstellungsdatum": true,
+        "dringlicher_bedarf": true,
+        "hausbesuch": true
+      },
+      "fehler": null
+    },
+    "diagnosegruppe-icd-statt-gruppe": {
+      "gruen": true,
+      "felder": {
+        "heilmittel": true,
+        "diagnosegruppe": true,
+        "verordnete_einheiten": true,
+        "frequenz": true,
+        "ausstellungsdatum": true,
+        "dringlicher_bedarf": true,
+        "hausbesuch": true
+      },
+      "fehler": null
+    },
+    "diagnosegruppe-kleingeschrieben": {
+      "gruen": true,
+      "felder": {
+        "heilmittel": true,
+        "diagnosegruppe": true,
+        "verordnete_einheiten": true,
+        "frequenz": true,
+        "ausstellungsdatum": true,
+        "dringlicher_bedarf": true,
+        "hausbesuch": true
+      },
+      "fehler": null
+    },
+    "diagnosegruppe-unbekannt": {
+      "gruen": true,
+      "felder": {
+        "heilmittel": true,
+        "diagnosegruppe": true,
+        "verordnete_einheiten": true,
+        "frequenz": true,
+        "ausstellungsdatum": true,
+        "dringlicher_bedarf": true,
+        "hausbesuch": true
+      },
+      "fehler": null
+    },
+    "diagnosegruppe-ws2": {
+      "gruen": true,
+      "felder": {
+        "heilmittel": true,
+        "diagnosegruppe": true,
+        "verordnete_einheiten": true,
+        "frequenz": true,
+        "ausstellungsdatum": true,
+        "dringlicher_bedarf": true,
+        "hausbesuch": true
+      },
+      "fehler": null
+    },
+    "dringlich-ausdrücklich": {
+      "gruen": true,
+      "felder": {
+        "heilmittel": true,
+        "diagnosegruppe": true,
+        "verordnete_einheiten": true,
+        "frequenz": true,
+        "ausstellungsdatum": true,
+        "dringlicher_bedarf": true,
+        "hausbesuch": true
+      },
+      "fehler": null
+    },
+    "dringlich-nicht-genannt": {
+      "gruen": true,
+      "felder": {
+        "heilmittel": true,
+        "diagnosegruppe": true,
+        "verordnete_einheiten": true,
+        "frequenz": true,
+        "ausstellungsdatum": true,
+        "dringlicher_bedarf": true,
+        "hausbesuch": true
+      },
+      "fehler": null
+    },
+    "dringlich-verneint": {
+      "gruen": true,
+      "felder": {
+        "heilmittel": true,
+        "diagnosegruppe": true,
+        "verordnete_einheiten": true,
+        "frequenz": true,
+        "ausstellungsdatum": true,
+        "dringlicher_bedarf": true,
+        "hausbesuch": true
+      },
+      "fehler": null
+    },
+    "frequenz-alle-zwei-wochen": {
+      "gruen": true,
+      "felder": {
+        "heilmittel": true,
+        "diagnosegruppe": true,
+        "verordnete_einheiten": true,
+        "frequenz": true,
+        "ausstellungsdatum": true,
+        "dringlicher_bedarf": true,
+        "hausbesuch": true
+      },
+      "fehler": null
+    },
+    "frequenz-bis": {
+      "gruen": true,
+      "felder": {
+        "heilmittel": true,
+        "diagnosegruppe": true,
+        "verordnete_einheiten": true,
+        "frequenz": true,
+        "ausstellungsdatum": true,
+        "dringlicher_bedarf": true,
+        "hausbesuch": true
+      },
+      "fehler": null
+    },
+    "frequenz-fehlt": {
+      "gruen": true,
+      "felder": {
+        "heilmittel": true,
+        "diagnosegruppe": true,
+        "verordnete_einheiten": true,
+        "frequenz": true,
+        "ausstellungsdatum": true,
+        "dringlicher_bedarf": true,
+        "hausbesuch": true
+      },
+      "fehler": null
+    },
+    "frequenz-mindestens": {
+      "gruen": true,
+      "felder": {
+        "heilmittel": true,
+        "diagnosegruppe": true,
+        "verordnete_einheiten": true,
+        "frequenz": true,
+        "ausstellungsdatum": true,
+        "dringlicher_bedarf": true,
+        "hausbesuch": true
+      },
+      "fehler": null
+    },
+    "frequenz-spanne-01": {
+      "gruen": true,
+      "felder": {
+        "heilmittel": true,
+        "diagnosegruppe": true,
+        "verordnete_einheiten": true,
+        "frequenz": true,
+        "ausstellungsdatum": true,
+        "dringlicher_bedarf": true,
+        "hausbesuch": true
+      },
+      "fehler": null
+    },
+    "frequenz-taeglich": {
+      "gruen": true,
+      "felder": {
+        "heilmittel": true,
+        "diagnosegruppe": true,
+        "verordnete_einheiten": true,
+        "frequenz": true,
+        "ausstellungsdatum": true,
+        "dringlicher_bedarf": true,
+        "hausbesuch": true
+      },
+      "fehler": null
+    },
+    "frequenz-woertlich": {
+      "gruen": true,
+      "felder": {
+        "heilmittel": true,
+        "diagnosegruppe": true,
+        "verordnete_einheiten": true,
+        "frequenz": true,
+        "ausstellungsdatum": true,
+        "dringlicher_bedarf": true,
+        "hausbesuch": true
+      },
+      "fehler": null
+    },
+    "hausbesuch-ja": {
+      "gruen": true,
+      "felder": {
+        "heilmittel": true,
+        "diagnosegruppe": true,
+        "verordnete_einheiten": true,
+        "frequenz": true,
+        "ausstellungsdatum": true,
+        "dringlicher_bedarf": true,
+        "hausbesuch": true
+      },
+      "fehler": null
+    },
+    "hausbesuch-nein": {
+      "gruen": true,
+      "felder": {
+        "heilmittel": true,
+        "diagnosegruppe": true,
+        "verordnete_einheiten": true,
+        "frequenz": true,
+        "ausstellungsdatum": true,
+        "dringlicher_bedarf": true,
+        "hausbesuch": true
+      },
+      "fehler": null
+    },
+    "heilmittel-bewegungsbad": {
+      "gruen": true,
+      "felder": {
+        "heilmittel": true,
+        "diagnosegruppe": true,
+        "verordnete_einheiten": true,
+        "frequenz": true,
+        "ausstellungsdatum": true,
+        "dringlicher_bedarf": true,
+        "hausbesuch": true
+      },
+      "fehler": null
+    },
+    "heilmittel-ergo-hirnleistung": {
+      "gruen": true,
+      "felder": {
+        "heilmittel": true,
+        "diagnosegruppe": true,
+        "verordnete_einheiten": true,
+        "frequenz": true,
+        "ausstellungsdatum": true,
+        "dringlicher_bedarf": true,
+        "hausbesuch": true
+      },
+      "fehler": null
+    },
+    "heilmittel-ergo-psychisch": {
+      "gruen": true,
+      "felder": {
+        "heilmittel": true,
+        "diagnosegruppe": true,
+        "verordnete_einheiten": true,
+        "frequenz": true,
+        "ausstellungsdatum": true,
+        "dringlicher_bedarf": true,
+        "hausbesuch": true
+      },
+      "fehler": null
+    },
+    "heilmittel-ergo-sensomotorisch": {
+      "gruen": true,
+      "felder": {
+        "heilmittel": true,
+        "diagnosegruppe": true,
+        "verordnete_einheiten": true,
+        "frequenz": true,
+        "ausstellungsdatum": true,
+        "dringlicher_bedarf": true,
+        "hausbesuch": true
+      },
+      "fehler": null
+    },
+    "heilmittel-kg-gruppe": {
+      "gruen": true,
+      "felder": {
+        "heilmittel": true,
+        "diagnosegruppe": true,
+        "verordnete_einheiten": true,
+        "frequenz": true,
+        "ausstellungsdatum": true,
+        "dringlicher_bedarf": true,
+        "hausbesuch": true
+      },
+      "fehler": null
+    },
+    "heilmittel-kg-ohne-zusatz": {
+      "gruen": true,
+      "felder": {
+        "heilmittel": true,
+        "diagnosegruppe": true,
+        "verordnete_einheiten": true,
+        "frequenz": true,
+        "ausstellungsdatum": true,
+        "dringlicher_bedarf": true,
+        "hausbesuch": true
+      },
+      "fehler": null
+    },
+    "heilmittel-kg-zns-erw": {
+      "gruen": true,
+      "felder": {
+        "heilmittel": true,
+        "diagnosegruppe": true,
+        "verordnete_einheiten": true,
+        "frequenz": true,
+        "ausstellungsdatum": true,
+        "dringlicher_bedarf": true,
+        "hausbesuch": true
+      },
+      "fehler": null
+    },
+    "heilmittel-kg-zns-kind": {
+      "gruen": true,
+      "felder": {
+        "heilmittel": true,
+        "diagnosegruppe": true,
+        "verordnete_einheiten": true,
+        "frequenz": true,
+        "ausstellungsdatum": true,
+        "dringlicher_bedarf": true,
+        "hausbesuch": true
+      },
+      "fehler": null
+    },
+    "heilmittel-kg-zns-ohne-alter": {
+      "gruen": true,
+      "felder": {
+        "heilmittel": true,
+        "diagnosegruppe": true,
+        "verordnete_einheiten": true,
+        "frequenz": true,
+        "ausstellungsdatum": true,
+        "dringlicher_bedarf": true,
+        "hausbesuch": true
+      },
+      "fehler": null
+    },
+    "heilmittel-kgg": {
+      "gruen": true,
+      "felder": {
+        "heilmittel": true,
+        "diagnosegruppe": true,
+        "verordnete_einheiten": true,
+        "frequenz": true,
+        "ausstellungsdatum": true,
+        "dringlicher_bedarf": true,
+        "hausbesuch": true
+      },
+      "fehler": null
+    },
+    "heilmittel-massage": {
+      "gruen": true,
+      "felder": {
+        "heilmittel": true,
+        "diagnosegruppe": true,
+        "verordnete_einheiten": true,
+        "frequenz": true,
+        "ausstellungsdatum": true,
+        "dringlicher_bedarf": true,
+        "hausbesuch": true
+      },
+      "fehler": null
+    },
+    "heilmittel-mld-30": {
+      "gruen": true,
+      "felder": {
+        "heilmittel": true,
+        "diagnosegruppe": true,
+        "verordnete_einheiten": true,
+        "frequenz": true,
+        "ausstellungsdatum": true,
+        "dringlicher_bedarf": true,
+        "hausbesuch": true
+      },
+      "fehler": null
+    },
+    "heilmittel-mld-45": {
+      "gruen": true,
+      "felder": {
+        "heilmittel": true,
+        "diagnosegruppe": true,
+        "verordnete_einheiten": true,
+        "frequenz": true,
+        "ausstellungsdatum": true,
+        "dringlicher_bedarf": true,
+        "hausbesuch": true
+      },
+      "fehler": null
+    },
+    "heilmittel-mld-60": {
+      "gruen": true,
+      "felder": {
+        "heilmittel": true,
+        "diagnosegruppe": true,
+        "verordnete_einheiten": true,
+        "frequenz": true,
+        "ausstellungsdatum": true,
+        "dringlicher_bedarf": true,
+        "hausbesuch": true
+      },
+      "fehler": null
+    },
+    "heilmittel-mld-ohne-umfang": {
+      "gruen": true,
+      "felder": {
+        "heilmittel": true,
+        "diagnosegruppe": true,
+        "verordnete_einheiten": true,
+        "frequenz": true,
+        "ausstellungsdatum": true,
+        "dringlicher_bedarf": true,
+        "hausbesuch": true
+      },
+      "fehler": null
+    },
+    "heilmittel-unbekannt": {
+      "gruen": true,
+      "felder": {
+        "heilmittel": true,
+        "diagnosegruppe": true,
+        "verordnete_einheiten": true,
+        "frequenz": true,
+        "ausstellungsdatum": true,
+        "dringlicher_bedarf": true,
+        "hausbesuch": true
+      },
+      "fehler": null
+    },
+    "heilmittel-warmpackung": {
+      "gruen": true,
+      "felder": {
+        "heilmittel": true,
+        "diagnosegruppe": true,
+        "verordnete_einheiten": true,
+        "frequenz": true,
+        "ausstellungsdatum": true,
+        "dringlicher_bedarf": true,
+        "hausbesuch": true
+      },
+      "fehler": null
+    },
+    "heilmittel-zwei-genannt": {
+      "gruen": true,
+      "felder": {
+        "heilmittel": true,
+        "diagnosegruppe": true,
+        "verordnete_einheiten": true,
+        "frequenz": true,
+        "ausstellungsdatum": true,
+        "dringlicher_bedarf": true,
+        "hausbesuch": true
+      },
+      "fehler": null
+    },
+    "mehrzeilig-angekreuzt": {
+      "gruen": true,
+      "felder": {
+        "heilmittel": true,
+        "diagnosegruppe": true,
+        "verordnete_einheiten": true,
+        "frequenz": true,
+        "ausstellungsdatum": true,
+        "dringlicher_bedarf": true,
+        "hausbesuch": true
+      },
+      "fehler": null
+    },
+    "mehrzeilig-formular": {
+      "gruen": true,
+      "felder": {
+        "heilmittel": true,
+        "diagnosegruppe": true,
+        "verordnete_einheiten": true,
+        "frequenz": true,
+        "ausstellungsdatum": true,
+        "dringlicher_bedarf": true,
+        "hausbesuch": true
+      },
+      "fehler": null
+    },
+    "menge-einheiten-wort": {
+      "gruen": true,
+      "felder": {
+        "heilmittel": true,
+        "diagnosegruppe": true,
+        "verordnete_einheiten": true,
+        "frequenz": true,
+        "ausstellungsdatum": true,
+        "dringlicher_bedarf": true,
+        "hausbesuch": true
+      },
+      "fehler": null
+    },
+    "menge-fehlt": {
+      "gruen": true,
+      "felder": {
+        "heilmittel": true,
+        "diagnosegruppe": true,
+        "verordnete_einheiten": true,
+        "frequenz": true,
+        "ausstellungsdatum": true,
+        "dringlicher_bedarf": true,
+        "hausbesuch": true
+      },
+      "fehler": null
+    },
+    "menge-frequenz-verwechselbar": {
+      "gruen": true,
+      "felder": {
+        "heilmittel": true,
+        "diagnosegruppe": true,
+        "verordnete_einheiten": true,
+        "frequenz": true,
+        "ausstellungsdatum": true,
+        "dringlicher_bedarf": true,
+        "hausbesuch": true
+      },
+      "fehler": null
+    },
+    "menge-mit-mal-zeichen": {
+      "gruen": true,
+      "felder": {
+        "heilmittel": true,
+        "diagnosegruppe": true,
+        "verordnete_einheiten": true,
+        "frequenz": true,
+        "ausstellungsdatum": true,
+        "dringlicher_bedarf": true,
+        "hausbesuch": true
+      },
+      "fehler": null
+    },
+    "menge-widerspruch": {
+      "gruen": true,
+      "felder": {
+        "heilmittel": true,
+        "diagnosegruppe": true,
+        "verordnete_einheiten": true,
+        "frequenz": true,
+        "ausstellungsdatum": true,
+        "dringlicher_bedarf": true,
+        "hausbesuch": true
+      },
+      "fehler": null
+    },
+    "normal-ergo-01": {
+      "gruen": true,
+      "felder": {
+        "heilmittel": true,
+        "diagnosegruppe": true,
+        "verordnete_einheiten": true,
+        "frequenz": true,
+        "ausstellungsdatum": true,
+        "dringlicher_bedarf": true,
+        "hausbesuch": true
+      },
+      "fehler": null
+    },
+    "normal-kg-01": {
+      "gruen": true,
+      "felder": {
+        "heilmittel": true,
+        "diagnosegruppe": true,
+        "verordnete_einheiten": true,
+        "frequenz": true,
+        "ausstellungsdatum": true,
+        "dringlicher_bedarf": true,
+        "hausbesuch": true
+      },
+      "fehler": null
+    },
+    "normal-mit-patient-01": {
+      "gruen": true,
+      "felder": {
+        "heilmittel": true,
+        "diagnosegruppe": true,
+        "verordnete_einheiten": true,
+        "frequenz": true,
+        "ausstellungsdatum": true,
+        "dringlicher_bedarf": true,
+        "hausbesuch": true
+      },
+      "fehler": null
+    },
+    "normal-mt-01": {
+      "gruen": true,
+      "felder": {
+        "heilmittel": true,
+        "diagnosegruppe": true,
+        "verordnete_einheiten": true,
+        "frequenz": true,
+        "ausstellungsdatum": true,
+        "dringlicher_bedarf": true,
+        "hausbesuch": true
+      },
+      "fehler": null
+    },
+    "rauschen-leer": {
+      "gruen": true,
+      "felder": {
+        "heilmittel": true,
+        "diagnosegruppe": true,
+        "verordnete_einheiten": true,
+        "frequenz": true,
+        "ausstellungsdatum": true,
+        "dringlicher_bedarf": true,
+        "hausbesuch": true
+      },
+      "fehler": null
+    },
+    "unleserlich-01": {
+      "gruen": false,
+      "felder": {
+        "heilmittel": true,
+        "diagnosegruppe": false,
+        "verordnete_einheiten": true,
+        "frequenz": true,
+        "ausstellungsdatum": true,
+        "dringlicher_bedarf": true,
+        "hausbesuch": true
+      },
+      "fehler": null
+    }
+  }
+}

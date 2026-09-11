@@ -1521,6 +1521,41 @@ ein Beispiel im Playground, das zufällig klappt.
 
 ---
 
+## 2026-09-11 — Zweiter Eval-Lauf: 53 von 55, und ein stummes Gate
+
+**Was der Lauf gezeigt hat.** Nach vier ergänzten Regeln: Heilmittel von 89
+auf 100 Prozent, kein Feld unter 98. Die Lymphdrainage-Zuordnung, KGG, ZNS,
+das Ankreuzfeld, der Widerspruch bei der Menge, „mindestens 2x“ — alle
+grün. Und `normal-kg-01`, der Normalfall, auch; was das Modell beim ersten
+Mal gesagt hatte, weiß ich nicht mehr, aber jetzt stünde es im Bericht.
+
+**Die vorhergesagte Regression.** `heilmittel-zwei-genannt` war in Lauf #30
+grün und ist jetzt rot: Menge 6 statt leer. Der Auslöser ist meine neue
+Regel 3, „die Zahl mit x ist die Menge“. Nur: Der Text sagt „je 6x“, und
+das ist eindeutig 6. Die Regression lag in der Erwartung, nicht im Modell
+— die erste Fassung des Falls war zu streng. Geändert, mit dem Grund im
+`warum`. Das Heilmittel bleibt bei zwei Nennungen nicht extrahierbar.
+
+**Das stumme Gate.** Der Bericht hat diese Regression nicht gemeldet. Kein
+Abschnitt „neu gescheitert“, keine „vorher“-Werte. Grund: `.gitignore`
+aus Stufe 0 ignorierte `evals/ergebnisse/*.json`. Die Basislinie lag auf
+meinem Rechner, nie im Repo, und die CI verglich gegen nichts — ohne ein
+Wort. Ich hatte im Commit geschrieben „die Basislinie liegt unter
+evals/ergebnisse“ und nicht mit `git ls-files` nachgesehen. Das ist der
+Fehler aus dem Regel-Check vom ersten Tag in neuem Gewand: ein Gate, das
+bei fehlender Grundlage grün ist. Zwei Korrekturen: der Ignore-Eintrag ist
+weg, und der Runner schreibt „KEINE BASISLINIE“ in die erste Zeile, wenn
+ihm der Vergleich fehlt — mit Test.
+
+**Was ich stehen lasse.** `unleserlich-01`: Das Modell liest „W$“ als WS.
+Ein Mensch auch. Der Fall bleibt rot, weil er genau das prüft, und weil
+eine Verordnung mit geratener Diagnosegruppe im Kalender eine falsche
+Frist ist. Zwei von 55 rot, beide begründet — das ist der Stand.
+
+**Zeitschätzung:** eine halbe Stunde, davon zwei Drittel für das Gate.
+
+---
+
 ## Vorlage für weitere Einträge
 
 ```

@@ -149,6 +149,11 @@ def regressionen(neu: Lauf, alt: dict[str, Any] | None) -> list[str]:
 
 def bericht(lauf: Lauf, faelle: list[Fall], alt: dict[str, Any] | None) -> str:
     zeilen = [f"Eval gegen {lauf.provider}, {len(faelle)} Fälle", ""]
+    if alt is None:
+        # Ohne Basislinie gibt es keine Regressionen - und das muss dastehen,
+        # sonst sieht ein Lauf ohne Vergleich aus wie einer ohne Befund.
+        zeilen.append("  KEINE BASISLINIE - Regressionen können nicht erkannt werden.")
+        zeilen.append("")
     for f, g in lauf.genauigkeit().items():
         vorher = alt["genauigkeit"].get(f) if alt else None
         delta = "" if vorher is None else f"  (vorher {vorher:.1%})"

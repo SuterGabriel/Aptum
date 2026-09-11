@@ -29,8 +29,6 @@ venv/
 playwright-report/
 test-results/
 coverage/
-evals/ergebnisse/*.json
-!evals/ergebnisse/.gitkeep
 
 # Geheimnisse - hier landet nie ein Schlüssel
 .env

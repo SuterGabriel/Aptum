@@ -81,6 +81,13 @@ def test_regression_ist_ein_fall_der_vorher_gruen_war() -> None:
     assert run.regressionen(vorher, jetzt.als_dict()) == []
 
 
+def test_ohne_basislinie_sagt_der_bericht_das_laut() -> None:
+    faelle = run.lade_faelle(FAELLE)[:1]
+    lauf = run.fuehre_aus(faelle, AufgezeichneterProvider({}))
+    assert "KEINE BASISLINIE" in run.bericht(lauf, faelle, None)
+    assert "KEINE BASISLINIE" not in run.bericht(lauf, faelle, lauf.als_dict())
+
+
 def test_ein_kaputter_fall_beendet_die_suite_nicht() -> None:
     faelle = run.lade_faelle(FAELLE)[:2]
     lauf = run.fuehre_aus(faelle, AufgezeichneterProvider({}))

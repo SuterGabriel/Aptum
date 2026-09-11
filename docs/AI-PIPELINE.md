@@ -69,6 +69,12 @@ genannt hatte. Das ist die Aussage, für die man feldweise misst. Die
 Basislinie liegt unter `evals/ergebnisse/anthropic.json`; jede
 Prompt-Änderung wird dagegen verglichen.
 
+Zweiter Lauf nach vier ergänzten Prompt-Regeln: 53 von 55, Heilmittel 100 %,
+kein Feld unter 98 %. Ein Fall wurde dabei rot, der vorher grün war — und
+die Regression stand nicht im Bericht, weil die Basislinie durch einen
+Ignore-Eintrag nie im Repo lag. Der Runner sagt es jetzt laut, wenn ihm die
+Basislinie fehlt.
+
 ## Was es noch nicht gibt
 
 - **Den MCP-Server** mit den Werkzeugen suchen, prüfen, buchen gegen die

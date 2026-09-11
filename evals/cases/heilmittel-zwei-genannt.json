@@ -4,7 +4,7 @@
   "erwartet": {
     "heilmittel": null,
     "diagnosegruppe": "WS",
-    "verordnete_einheiten": null,
+    "verordnete_einheiten": 6,
     "frequenz": {
       "min_pro_woche": 2,
       "max_pro_woche": 2
@@ -13,5 +13,5 @@
     "dringlicher_bedarf": null,
     "hausbesuch": null
   },
-  "warum": "Zwei Heilmittel auf einer Zeile. Das Schema kennt eins; nicht extrahierbar plus Hinweis."
+  "warum": "Zwei Heilmittel auf einer Zeile. Das Schema kennt eins: Heilmittel nicht extrahierbar plus Hinweis. Die Menge ist mit 'je 6x' eindeutig - die erste Fassung dieses Falls erwartete auch sie leer, das war zu streng."
 }
