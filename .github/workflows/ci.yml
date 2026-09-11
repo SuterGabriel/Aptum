@@ -252,8 +252,13 @@ jobs:
       TAG: ${{ github.sha }}
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      # Das Token kommt über env in den Schritt, nicht als Text im Skript -
+      # sonst steht es expandiert im Prozessaufruf und in jedem Debug-Log.
       - name: Bei der Registry anmelden
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BENUTZER: ${{ github.actor }}
+        run: echo "$TOKEN" | docker login ghcr.io -u "$BENUTZER" --password-stdin
       - name: Bilder bauen und veröffentlichen
         run: |
           docker compose build
