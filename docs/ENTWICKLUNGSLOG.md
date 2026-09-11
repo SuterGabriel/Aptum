@@ -1621,6 +1621,26 @@ das Modul keine Abdeckung. Und ein e2e-Test las die fokussierte Zelle vor
 dem Render-Zyklus; lokal schnell genug, auf dem Runner eine Zelle Versatz.
 Der Test wartet jetzt, bis sich der Fokus bewegt hat.
 
+**Zweite Runde, und warum „akzeptieren“ doch die falsche Antwort war.** Nach
+dem ersten Durchgang blieben neun Funde, davon sieben sicherheitsrelevant —
+genug, um das Quality Gate rot zu halten (`new_security_rating` 3). Sechsmal
+`uv run` ohne `--no-build`: Das Flag gibt es, das Projekt liegt als Lock vor,
+gebaut werden muss zur Laufzeit nichts — also behoben, nicht abgelehnt. Und
+der Pfad aus dem CLI-Argument in `evals/run.py`, den ich eine Stunde vorher
+noch als „Skript für Menschen, kein Dienst“ akzeptieren wollte: Beim
+Hinschauen ist die Einschränkung richtiges Verhalten, nicht Sicherheitstheater.
+Der Runner liest Fälle aus dem Repo und schreibt Ergebnisse dorthin; ein Pfad
+nach `C:\Windows` ist in jedem Fall ein Fehler. Acht Zeilen, ein Test, und die
+Ausnahme ist nicht nötig. Die Lehre: „Das gilt hier nicht“ ist bequem, und
+beim zweiten Lesen stimmt es oft nicht.
+
+**Was noch offen ist.** Zwei reguläre Ausdrücke mit mehrdeutiger Rückkehr,
+beide entschärft, aber erst der nächste Lauf zeigt, ob Sonar zufrieden ist.
+Und die Abdeckung fehlte in allen bisherigen Analysen — nicht wegen falscher
+Pfade, sondern weil die automatische Analyse noch lief und der CI-Job gar
+nicht durchkam. Ein Werkzeug, das zwei Wege anbietet und einen davon still
+gewinnen lässt.
+
 **Zeitschätzung:** anderthalb Stunden. Von Hand ein Tag, und die Hälfte der
 Funde würde mit „won't fix“ weggeklickt.
 

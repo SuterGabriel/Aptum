@@ -163,6 +163,28 @@ mvn spotless:check test                          # Format, Tests, ArchUnit, Test
 mvn spotless:apply                               # formatieren
 ```
 
+## Was SonarCloud am ersten Tag fand
+
+45 Funde, keiner im Java-, Angular- oder Python-Code — alle in
+`.github/workflows/ci.yml` und in `scripts/`, also in den Werkzeugen, die die
+eigenen Gates bauen. Die Gates prüften den Code; niemand prüfte die Gates.
+
+Behoben: Actions auf Commit-SHAs gepinnt, mit der Hauptversion als Kommentar
+dahinter (ein Tag kann verschoben werden, ein Commit nicht) und Dependabot,
+damit die Pins nicht veralten; `npm ci --ignore-scripts`, `npx --no`,
+`uv sync --no-build`, `uv run --no-build`; `[[` statt `[` in den
+Bash-Skripten; `Number.parseInt`; sieben reguläre Ausdrücke mit mehrdeutiger
+Rückkehr entschärft. Nach jeder Änderung die Gegenprobe: dieselben 31
+Kontrastpaare, 51 Verweise, 65 Regeln, 22 Fälle der Regel-Check-Suite.
+
+Auch der Pfad aus einem CLI-Argument in `evals/run.py` ist behoben statt als
+Ausnahme markiert: Der Runner darf das Repo nicht verlassen. Das ist
+richtiges Verhalten, nicht nur eine Antwort auf einen Fund.
+
+Sonar ersetzt kein eigenes Gate — es liest keine Prosa, kennt keine
+Fundstelle und prüft keinen Kontrast. Es ist die zweite Meinung, und die
+erste hat sie sofort gebraucht.
+
 ## Was die Pipeline nicht abfängt
 
 Der ehrliche Teil. Jeder Punkt ist entweder schon passiert oder eine Änderung

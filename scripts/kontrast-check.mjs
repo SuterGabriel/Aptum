@@ -61,7 +61,10 @@ try {
 // Farbtoken sammeln. Nur Werte, die eine Hex-Farbe sind — Muster, Abstände
 // und Schriftgrößen sind ebenfalls Token, aber hier nicht zu prüfen.
 const farben = new Map();
-for (const treffer of quelle.matchAll(/(--[\w-]+):\s*(#[0-9a-fA-F]{3,6});/g)) {
+// Sechs oder drei Stellen, nichts dazwischen: `{3,6}` lässt der Maschine die
+// Wahl und damit das Rückwärtslaufen - und vier- oder fünfstellige Werte
+// gäbe es ohnehin nicht.
+for (const treffer of quelle.matchAll(/(--[\w-]+):\s*(#(?:[0-9a-fA-F]{6}|[0-9a-fA-F]{3}));/g)) {
   const rgb = hexZuRgb(treffer[2]);
   if (rgb) farben.set(treffer[1], { hex: treffer[2].toLowerCase(), rgb });
 }

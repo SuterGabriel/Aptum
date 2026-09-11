@@ -81,6 +81,12 @@ def test_regression_ist_ein_fall_der_vorher_gruen_war() -> None:
     assert run.regressionen(vorher, jetzt.als_dict()) == []
 
 
+def test_ein_pfad_ausserhalb_des_repos_wird_abgelehnt(tmp_path: Path) -> None:
+    with pytest.raises(ValueError, match="außerhalb"):
+        run.im_repo(tmp_path)
+    assert run.im_repo(FAELLE) == FAELLE.resolve()
+
+
 def test_ohne_basislinie_sagt_der_bericht_das_laut() -> None:
     faelle = run.lade_faelle(FAELLE)[:1]
     lauf = run.fuehre_aus(faelle, AufgezeichneterProvider({}))

@@ -176,13 +176,13 @@ jobs:
           cache-dependency-glob: services/ai-assist/uv.lock
       - run: uv sync --frozen --no-build
       - name: Format
-        run: uv run --frozen ruff format --check .
+        run: uv run --frozen --no-build ruff format --check .
       - name: Lint
-        run: uv run --frozen ruff check .
+        run: uv run --frozen --no-build ruff check .
       - name: Typen
-        run: uv run --frozen mypy
+        run: uv run --frozen --no-build mypy
       - name: Tests mit Abdeckung
-        run: uv run --frozen pytest -q --cov=ai_assist --cov-report=xml
+        run: uv run --frozen --no-build pytest -q --cov=ai_assist --cov-report=xml
       - name: Abdeckung für Sonar sichern
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
         with:
@@ -285,12 +285,12 @@ jobs:
         if: steps.schluessel.outputs.da == 'true'
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: uv run --frozen python ../../evals/run.py --provider anthropic --nicht-speichern | tee -a "$GITHUB_STEP_SUMMARY"
+        run: uv run --frozen --no-build python ../../evals/run.py --provider anthropic --nicht-speichern | tee -a "$GITHUB_STEP_SUMMARY"
       - name: Eval gegen OpenAI, wenn ein Schlüssel da ist
         if: steps.schluessel.outputs.da == 'true' && env.OPENAI_API_KEY != ''
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: uv run --frozen python ../../evals/run.py --provider openai --nicht-speichern | tee -a "$GITHUB_STEP_SUMMARY"
+        run: uv run --frozen --no-build python ../../evals/run.py --provider openai --nicht-speichern | tee -a "$GITHUB_STEP_SUMMARY"
 
   e2e:
     name: Ende-zu-Ende mit axe

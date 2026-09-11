@@ -29,6 +29,7 @@ from ai_assist.provider import AufgezeichneterProvider, Provider
 from ai_assist.schema import VerordnungVorschlag
 
 HIER = Path(__file__).parent
+STAMM = HIER.parent
 FAELLE = HIER / "cases"
 ERGEBNISSE = HIER / "ergebnisse"
 
@@ -202,6 +203,19 @@ def provider_aus(name: str) -> Provider:
     return aus_umgebung()
 
 
+def im_repo(pfad: Path) -> Path:
+    """Ein Pfad aus der Kommandozeile darf das Repo nicht verlassen.
+
+    Der Runner liest Fälle aus dem Repo und schreibt Ergebnisse dorthin.
+    Alles andere ist ein Tippfehler oder ein Aufruf, den niemand wollte -
+    und wer ihn automatisiert erzeugt, soll ihn nicht nutzen können.
+    """
+    aufgeloest = pfad.resolve()
+    if not aufgeloest.is_relative_to(STAMM):
+        raise ValueError(f"Pfad liegt außerhalb des Repos: {aufgeloest}")
+    return aufgeloest
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
@@ -216,16 +230,17 @@ def main(argv: list[str] | None = None) -> int:
     )
     args = parser.parse_args(argv)
 
-    faelle = lade_faelle(args.faelle)
+    faelle = lade_faelle(im_repo(args.faelle))
     provider = provider_aus(args.provider)
-    ziel = args.ergebnisse / (provider.name.split(":")[0] + ".json")
+    ergebnisse = im_repo(args.ergebnisse)
+    ziel = ergebnisse / (provider.name.split(":")[0] + ".json")
     alt = json.loads(ziel.read_text(encoding="utf-8")) if ziel.exists() else None
 
     lauf = fuehre_aus(faelle, provider)
     print(bericht(lauf, faelle, alt))
 
     if not args.nicht_speichern:
-        args.ergebnisse.mkdir(parents=True, exist_ok=True)
+        ergebnisse.mkdir(parents=True, exist_ok=True)
         ziel.write_text(
             json.dumps(lauf.als_dict(), ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
         )

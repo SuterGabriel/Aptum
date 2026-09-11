@@ -75,7 +75,9 @@ for (const pfad of dateien) {
   }
 
   ohneCode(inhalt).forEach((zeile, index) => {
-    for (const treffer of zeile.matchAll(/\[[^\]]*\]\(([^)]+)\)/g)) {
+    // `[` in der Klasse ausgeschlossen: Ohne das kann eine Zeile mit vielen
+    // offenen Klammern mehrfach von vorn durchlaufen werden.
+    for (const treffer of zeile.matchAll(/\[[^[\]]*\]\(([^)]+)\)/g)) {
       const ziel = treffer[1].trim();
 
       // Nach außen zeigende Verweise kann dieses Skript nicht prüfen, ohne
