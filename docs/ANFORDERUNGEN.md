@@ -53,7 +53,7 @@ Projekt-ID 3038770 · Projekt-Nr. a1WSZ0000088BoH2AU · Start 09.09.2026 ·
 | SA4 | Weiterentwicklung von Kalender- und Verfügbarkeitsfunktionen | in Arbeit | Slot-Suche über vier Dimensionen in `services/scheduling/domain/src/main/java/de/aptum/scheduling/domain/suche/`; Wochenansicht in `services/scheduling/domain/src/main/java/de/aptum/scheduling/domain/kalender/Wochenansicht.java`, Endpunkt `services/scheduling/infrastructure/src/main/java/de/aptum/scheduling/infrastructure/rest/KalenderController.java`; Grid in `frontend/src/app/kalender/` |
 | SA5 | Berücksichtigung fachlicher und regulatorischer Anforderungen der Branche | belegt | `.claude/skills/heilmittel-domain/regeln.md` — jede Regel mit Wert, Fundstelle und Beleg-Status |
 | SA6 | Entwicklung von Java-Backends und REST-APIs | belegt | REST in `services/scheduling/infrastructure/src/main/java/de/aptum/scheduling/infrastructure/rest/`, OpenAPI erzeugt und gegen die laufende Anwendung geprüft: `docs/api/openapi.json` |
-| SA7 | Umsetzung und Optimierung von Microservices | offen | drei Services, bewusst wenige |
+| SA7 | Umsetzung und Optimierung von Microservices | in Arbeit | Zwei Dienste in zwei Sprachen, jeder einzeln als Container lieferbar, verbunden nur über den OpenAPI-Vertrag (`docs/api/`); ein dritter (`services/billing/`) ist geplant, nicht begonnen |
 | SA8 | Analyse und Umsetzung fachlicher Anforderungen aus dem Praxisumfeld | belegt | `docs/PRODUKT.md` |
 | SA9 | Erstellung technischer Konzepte und Architekturentscheidungen | belegt | `docs/adr/`, `DECISIONS.md` |
 | SA10 | Code Reviews und Sicherstellung von Entwicklungsstandards | belegt | SonarCloud mit Quality Gate als Merge-Bedingung (Job `sonar`, `sonar-project.properties`), Abdeckung 85,5 Prozent aus JaCoCo, Karma und pytest-cov; dazu `.claude/agents/arch-reviewer.md`, `.claude/agents/a11y-auditor.md`, Guardrails in `.github/workflows/ci.yml` |
@@ -72,7 +72,7 @@ Verlängerung möglich · 80–100 % · AI-native Healthcare SaaS
 | C1 | Mehrjährige Senior-Erfahrung als Full-Stack Engineer mit modernen Webanwendungen | teilweise belegbar | Portfolio + dieses Projekt |
 | C2 | Tiefe in mindestens einem Frontend-Stack (React oder Angular) | belegt | Angular 20 in `frontend/`: Terminsuche mit kanonischem Suchflow, selbst gebautes Kalender-Grid mit Roving Tabindex (ADR-003) |
 | C3 | Tiefe in einem Backend-Stack (Java/Spring Boot oder Python) | belegt | Beides: Java 21 und Spring Boot 3.5 in `services/scheduling/`, Python 3.12 mit FastAPI, Pydantic und mypy strict in `services/ai-assist/` |
-| C4 | Solide Kenntnisse der relevanten Cloud- und DevOps-Praktiken (u. a. Kubernetes, Helm, ArgoCD, Terraform) | offen | `infra/` |
+| C4 | Solide Kenntnisse der relevanten Cloud- und DevOps-Praktiken (u. a. Kubernetes, Helm, ArgoCD, Terraform) | in Arbeit | Drei Dienste als mehrstufige Container ohne Root (`services/scheduling/Dockerfile`, `services/ai-assist/Dockerfile`, `frontend/Dockerfile`), `compose.yml` mit Healthchecks und Startbedingungen; Helm, kind in der CI, Terraform und ArgoCD folgen in Stufe 4 |
 | C5 | Nachweisbarer, effektiver Einsatz von KI in der Softwareentwicklung | belegt | `docs/ENTWICKLUNGSLOG.md` — je Schritt, was delegiert wurde, was die Gates abgefangen haben und was nicht funktionierte; `.claude/` versioniert; `docs/PIPELINE.md` |
 | C6 | Abgeschlossenes Studium der Informatik, Software Engineering oder vergleichbarer technischer Fachrichtung | zu klären | nicht durch das Repo belegbar — siehe `docs/OFFENE-PUNKTE.md` |
 | C7 | Ausgeprägte Problemlösungskompetenz, Innovationsfreude und Proaktivität mit Bezug zum Gesundheitswesen | in Arbeit | `.claude/skills/heilmittel-domain/regeln.md` — Fristen, Unterbrechung, Frequenz, Mengen und Qualifikation je mit Fundstelle und Beleg-Status (`BELEGT`, `BELEGT als Nichtfund`, `UNSICHER`); `scripts/beleg-check.sh` hält das Mapping ehrlich |
@@ -90,7 +90,7 @@ Verlängerung möglich · 80–100 % · AI-native Healthcare SaaS
 
 | # | Aufgabe (wörtlich) | Status | Abbildung im Projekt |
 |---|---|---|---|
-| CA1 | Design, Entwicklung und Betrieb moderner Webanwendungen über Frontend, Backend und DevOps | offen | Gesamtprojekt |
+| CA1 | Design, Entwicklung und Betrieb moderner Webanwendungen über Frontend, Backend und DevOps | in Arbeit | Frontend, zwei Backends und Datenbank laufen mit `docker compose up` als ein Stapel hinter nginx (`compose.yml`, `frontend/nginx.conf`); Betrieb im Cluster folgt |
 | CA2 | Integration KI-nativer Funktionen und agentischer Erfahrungen, LLMs, Retrieval, Tool-Use, strukturierte Workflows | in Arbeit | Verordnungserfassung aus Freitext in `services/ai-assist/src/ai_assist/erfassung.py`: Pseudonymisierung, Tool-Use, Schema, nicht extrahierbar statt geraten; Eval-Suite in `evals/`; MCP-Server als Tool-Use-Schnittstelle in `services/ai-assist/src/ai_assist/mcp_server.py`; die Seite `frontend/src/app/erfassung/` zeigt Vorschlag, Lücken und Bestätigung durch einen Menschen |
 | CA3 | Konzeption und Betrieb cloud-nativer Services, Zuverlässigkeit, Sicherheit, Entwicklerproduktivität | offen | `infra/`, Observability mit Tenant-ID |
 | CA4 | Mitgestaltung gemeinsam genutzter Agenten, Skills, Pipelines und Harnesses im Team | belegt | `.claude/skills/`, `.claude/agents/`, `.claude/commands/`, `.claude/hooks/` — versioniert im Repo, nicht global |

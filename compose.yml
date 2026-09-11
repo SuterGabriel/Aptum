@@ -1,0 +1,68 @@
+# Aptum, vollständig, mit einem Befehl:
+#
+#   docker compose up --build
+#
+# Danach: http://localhost:8000 - Frontend, Scheduling-Dienst und AI-Dienst
+# hinter einem nginx, Postgres mit Row Level Security dahinter. Ohne Schlüssel
+# antwortet der AI-Dienst aus der Aufzeichnung; mit einem Schlüssel:
+#
+#   ANTHROPIC_API_KEY=sk-ant-... AI_ASSIST_PROVIDER=anthropic docker compose up
+#
+# Die Startreihenfolge ist keine Hoffnung, sondern eine Bedingung: Jeder Dienst
+# wartet, bis der, den er braucht, gesund gemeldet hat.
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: aptum
+      POSTGRES_PASSWORD: aptum
+      POSTGRES_DB: aptum
+    volumes:
+      # Legt die Anwendungsrolle an, bevor Flyway läuft (ADR-002).
+      - ./deploy/postgres:/docker-entrypoint-initdb.d:ro
+      - postgres-daten:/var/lib/postgresql/data
+    ports:
+      - "55432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U aptum -d aptum"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  scheduling:
+    build: ./services/scheduling
+    environment:
+      # Flyway migriert als Eigentümerin, die Anwendung läuft als aptum_app.
+      APTUM_DB_URL: jdbc:postgresql://postgres:5432/aptum
+      APTUM_DB_ADMIN_USER: aptum
+      APTUM_DB_ADMIN_PASSWORD: aptum
+      APTUM_DB_USER: aptum_app
+      APTUM_DB_PASSWORD: aptum
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  ai-assist:
+    build: ./services/ai-assist
+    environment:
+      AI_ASSIST_PROVIDER: ${AI_ASSIST_PROVIDER:-aufzeichnung}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+    ports:
+      - "8090:8090"
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "8000:80"
+    depends_on:
+      scheduling:
+        condition: service_healthy
+      ai-assist:
+        condition: service_healthy
+
+volumes:
+  postgres-daten:

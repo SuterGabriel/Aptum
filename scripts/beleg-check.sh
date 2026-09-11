@@ -195,6 +195,15 @@ pruefe "Seite zeigt den Vorschlag" datei frontend/src/app/erfassung/verordnung-e
 pruefe "Der Mensch bestätigt, die Domäne prüft" enthaelt frontend/e2e/erfassung.spec.ts "Verordnung anlegen"
 pruefe "AI-Schnittstelle ist erzeugt" datei docs/api/ai-assist-openapi.json
 pruefe "AI-Dokument wird gegen die Anwendung geprüft" datei services/ai-assist/tests/test_openapi.py
+
+echo
+echo "Stufe 4 — der Betrieb"
+pruefe "Scheduling als Container" datei services/scheduling/Dockerfile
+pruefe "AI-Dienst als Container" datei services/ai-assist/Dockerfile
+pruefe "Frontend als Container mit Reverse Proxy" datei frontend/nginx.conf
+pruefe "Ein Befehl für alles" datei compose.yml
+pruefe "Kein Root im Container" enthaelt services/scheduling/Dockerfile "USER aptum"
+pruefe "Anwendungsrolle vor Flyway" datei deploy/postgres/01-rolle.sql
 pruefe "Prüfung ohne Buchung im Backend" enthaelt services/scheduling/infrastructure/src/main/java/de/aptum/scheduling/infrastructure/rest/TerminController.java "/pruefung"
 pruefe "Wochenansicht nimmt die Grenzen aus Termin" enthaelt services/scheduling/domain/src/main/java/de/aptum/scheduling/domain/kalender/Wochenansicht.java "belegtRaum"
 pruefe "stumme Lücke 1 ist Fixture" datei scripts/fixtures/regel-check/domain/NachbarBorgt.java

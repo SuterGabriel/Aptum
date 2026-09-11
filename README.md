@@ -91,24 +91,31 @@ der eigenen Maschine. Wie sie zugeschnitten sind und was sie *nicht* abfangen, s
 
 ## Starten
 
-Das Backend läuft gegen ein Postgres. Der kürzeste Weg ist ein Container:
+Ein Befehl, vier Container:
 
 ```bash
-docker run -d --name aptum-db -p 55432:5432   -e POSTGRES_USER=aptum -e POSTGRES_PASSWORD=aptum -e POSTGRES_DB=aptum postgres:16-alpine
-docker exec aptum-db psql -U aptum -d aptum -c "create role aptum_app login password 'aptum';"
-
-cd services/scheduling && mvn -q package -DskipTests
-APTUM_DB_URL=jdbc:postgresql://localhost:55432/aptum APTUM_DB_ADMIN_USER=aptum APTUM_DB_ADMIN_PASSWORD=aptum   java -jar infrastructure/target/scheduling-infrastructure-*.jar
+docker compose up --build
 ```
 
-Die Anwendung verbindet sich als `aptum_app` — eine Rolle ohne Rechte an den
-Tabellen, sonst griffe Row Level Security nicht (ADR-002). Flyway migriert als
-`aptum`. Wer die Rolle über einen Volume-Mount anlegen will: Unter Git Bash auf
-Windows wird der Pfad umgeschrieben und der Mount schweigt; `docker exec` ist
-der verlässliche Weg.
+Danach läuft alles unter [http://localhost:8000](http://localhost:8000):
+das Frontend, dahinter der Scheduling-Dienst (Java) und der AI-Dienst (Python),
+darunter ein Postgres mit Row Level Security. nginx liefert die Anwendung aus
+und reicht `/api` an die beiden Dienste weiter. Ohne Schlüssel antwortet der
+AI-Dienst aus einer Aufzeichnung; mit Schlüssel:
 
-Dann, mit dem Mandanten in der Kopfzeile — ein Platzhalter, siehe
-[OFFENE-PUNKTE.md](docs/OFFENE-PUNKTE.md), Punkt 8:
+```bash
+ANTHROPIC_API_KEY=sk-ant-... AI_ASSIST_PROVIDER=anthropic docker compose up
+```
+
+Die Startreihenfolge ist eine Bedingung, keine Hoffnung: Jeder Dienst wartet,
+bis der, den er braucht, gesund gemeldet hat. Die Anwendungsrolle `aptum_app`
+legt `deploy/postgres/01-rolle.sql` beim ersten Start an — eine Rolle ohne
+Rechte an den Tabellen, sonst griffe Row Level Security nicht (ADR-002).
+Flyway migriert als `aptum`. Kein Prozess läuft als Root.
+
+Die Schnittstelle ist auch direkt erreichbar, mit dem Mandanten in der
+Kopfzeile — ein Platzhalter, siehe [OFFENE-PUNKTE.md](docs/OFFENE-PUNKTE.md),
+Punkt 8:
 
 ```bash
 H='-H Content-Type:application/json -H X-Mandant:praxis-a'
@@ -122,11 +129,12 @@ curl -H X-Mandant:praxis-a 'localhost:8080/kalender/woche?tag=2026-03-04'
 ```
 
 Die Suche antwortet mit Vorschlägen und der Zählung der Ausschlüsse je Regel.
-Die Woche liefert je Therapeutin ihre Blöcke — Behandlung, Rüstzeit, Nachruhe,
-Abwesenheit, gesperrt — mit denselben Grenzen, die die Suche als belegt rechnet.
 Die zweite Buchung desselben Termins antwortet mit `409` und nennt die
 verletzten Regeln; dieselbe Anfrage mit `X-Mandant: praxis-b` antwortet mit
 `404`, weil die Verordnung für diesen Mandanten nicht existiert.
+
+Für die Entwicklung ohne Container: `mvn` im Scheduling-Dienst, `uv run` im
+AI-Dienst, `npm start` im Frontend — die READMEs der Verzeichnisse sagen wie.
 
 ## Wegweiser
 
@@ -150,7 +158,7 @@ verletzten Regeln; dieselbe Anfrage mit `X-Mandant: praxis-b` antwortet mit
 | 1 | Domänenkern in reinem Java, dann Spring, Multi-Tenancy, Angular-Suchflow | **abgeschlossen** — Domänenkern mit Slot-Suche, Spring Boot in drei Modulen, RLS gegen echtes Postgres, REST mit OpenAPI, Terminsuche in Angular |
 | 2 | Kalender-Grid, Tabelle, WCAG, End-to-End-Tests | **in Arbeit** — Kalender-Grid, Buchungsdialog mit Regelprüfung, Playwright mit axe als CI-Job; Verordnungsübersicht und Tabelle offen |
 | 3 | AI-Layer, MCP-Server, Evals, Provider-Vergleich | **in Arbeit** — Verordnungserfassung aus Freitext in `services/ai-assist/` (Python), Pseudonymisierung vor dem Aufruf, zwei Provider, Eval-Suite mit 55 Fällen in `evals/`, MCP-Server mit vier Werkzeugen, Seite „Verordnung erfassen“; Provider-Vergleich offen |
-| 4 | Terraform, Helm, ArgoCD, Observability | offen |
+| 4 | Container, Helm, ArgoCD, Terraform, Observability | **in Arbeit** — drei Dienste als Container, `compose.yml` fährt alles mit einem Befehl hoch, nginx als Reverse Proxy; Helm mit `kind` in der CI, Terraform und ArgoCD folgen |
 | 5 | Demo, ADRs vervollständigen, Mapping | offen |
 
 ## Daten

@@ -1732,6 +1732,41 @@ Parameter — weil es bequemer ist.
 
 ---
 
+## 2026-09-12 — Stufe 4, Schritt 1: ein Befehl für alles
+
+**Was delegiert wurde:** Container für alle drei Dienste und ein
+`compose.yml`, das den ganzen Stapel hochfährt. Auslöser war der Blick auf
+die Anforderungen: C4 — Kubernetes, Helm, ArgoCD, Terraform — ist der
+einzige Must-have, der bei null stand.
+
+**Was gut lief.** Alle drei Bilder haben beim ersten Versuch gebaut, und die
+Rauchprobe durch nginx ging in einem Durchgang: Seite, SPA-Fallback für
+`/kalender`, beide Dienste über `/api`, Prozesse als `aptum` statt Root.
+Das liegt nicht an Glück, sondern daran, dass die Vorarbeit schon da war —
+das `/api`-Präfix vom Vortag ist in `nginx.conf` dieselbe Regel wie im
+Dev-Proxy, die Rolle `aptum_app` ist dasselbe Skript wie im Testcontainer,
+und die Healthchecks fragen dieselben Endpunkte, die die CI schon abfragt.
+
+**Die Entscheidung dahinter.** „Starten“ im README war eine halbe Seite:
+Container für Postgres, Rolle per `docker exec`, Maven, Jar mit vier
+Umgebungsvariablen, dann noch zwei Dienste — und ein Hinweis, dass ein
+Volume-Mount unter Git Bash schweigt. Wer ein Portfolio-Projekt nicht in
+einer Minute starten kann, liest es nicht weiter. Jetzt ist es ein Befehl,
+und die Startreihenfolge ist eine Bedingung im Compose, keine Hoffnung.
+
+**Was ehrlich bleibt.** Container sind der kleinste Teil von C4. Helm, ein
+Cluster in der CI, Terraform und ArgoCD kommen als Nächstes — und zwar so,
+dass die Pipeline bei jedem Push damit deployt. Ein Chart im Repo ist eine
+Behauptung; ein Chart, mit dem die CI einen Cluster hochfährt und einen
+Rauchtest fährt, ist ein Beleg, der brechen kann. Und selbst dann steht C4
+nicht auf „belegt“, sondern auf „teilweise belegbar“, wie S5: Ein
+Portfolio-Projekt ersetzt nicht, einen Cluster betrieben zu haben.
+
+**Zeitschätzung:** eine Stunde. Von Hand ein halber Tag — und die Rolle würde
+im Dockerfile des Backends angelegt, wo sie nicht hingehört.
+
+---
+
 ## Vorlage für weitere Einträge
 
 ```

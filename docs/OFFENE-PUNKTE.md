@@ -29,8 +29,15 @@ Glaubwürdigkeit, die es belegen soll.
 
 ## 3. Kubernetes-Kette
 
-ArgoCD, Helm und Terraform kommen erst in Stufe 4. Bis dahin ist der Punkt in
-der Mapping-Tabelle ehrlich offen.
+Stufe 4 hat begonnen: Die drei Dienste laufen als Container, `compose.yml`
+fährt den ganzen Stapel mit einem Befehl hoch. Helm, ein `kind`-Cluster in der
+CI, Terraform und ArgoCD folgen — und zwar so, dass die CI bei jedem Push
+damit deployt, nicht als Dateien, die im Repo liegen und nie angewendet
+werden. Ein Chart, das niemand anwendet, ist eine Behauptung.
+
+Was ein Portfolio-Projekt trotzdem nicht ersetzt: zwei Jahre einen Cluster
+betrieben zu haben. Der Punkt bleibt deshalb auch am Ende „teilweise
+belegbar“, wie S5.
 
 **Formulierung nach außen:** "Bei Kubernetes und ArgoCD komme ich aus der
 CI-Ecke und baue das gerade an einem Healthcare-Projekt auf."
