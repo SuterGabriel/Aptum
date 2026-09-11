@@ -188,6 +188,9 @@ pruefe "Eval-Fälle: der Widerspruch" datei evals/cases/menge-widerspruch.json
 pruefe "CI hat den Job evals" enthaelt .github/workflows/ci.yml "  evals:"
 pruefe "SonarCloud ist konfiguriert" datei sonar-project.properties
 pruefe "CI hat den Job sonar" enthaelt .github/workflows/ci.yml "  sonar:"
+pruefe "MCP-Server existiert" datei services/ai-assist/src/ai_assist/mcp_server.py
+pruefe "MCP-Werkzeug bucht über dieselbe Schnittstelle" enthaelt services/ai-assist/src/ai_assist/mcp_server.py "/termine/pruefung"
+pruefe "MCP-Server ist getestet" datei services/ai-assist/tests/test_mcp_server.py
 pruefe "Prüfung ohne Buchung im Backend" enthaelt services/scheduling/infrastructure/src/main/java/de/aptum/scheduling/infrastructure/rest/TerminController.java "/pruefung"
 pruefe "Wochenansicht nimmt die Grenzen aus Termin" enthaelt services/scheduling/domain/src/main/java/de/aptum/scheduling/domain/kalender/Wochenansicht.java "belegtRaum"
 pruefe "stumme Lücke 1 ist Fixture" datei scripts/fixtures/regel-check/domain/NachbarBorgt.java

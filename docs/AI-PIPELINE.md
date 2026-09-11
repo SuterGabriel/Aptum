@@ -75,10 +75,30 @@ die Regression stand nicht im Bericht, weil die Basislinie durch einen
 Ignore-Eintrag nie im Repo lag. Der Runner sagt es jetzt laut, wenn ihm die
 Basislinie fehlt.
 
+## Der MCP-Server
+
+`services/ai-assist/src/ai_assist/mcp_server.py` — vier Werkzeuge auf der
+REST-Schnittstelle: `termine_suchen`, `termin_pruefen`, `termin_buchen`,
+`woche_anzeigen`. Ein Sprachmodell kann damit eine Praxis bedienen, ohne dass
+es einen zweiten Weg in die Domäne gäbe: Es ist dieselbe Schnittstelle, also
+dasselbe Regelwerk.
+
+Drei Einschränkungen kommen an dieser Grenze dazu:
+
+| Einschränkung | Warum |
+|---|---|
+| Der Mandant ist kein Parameter, sondern kommt aus der Umgebung | Ein Modell soll die Praxis nicht wählen können. Ein Test prüft, dass das Wort in keinem Werkzeugschema steht. |
+| Die Übersteuerung verlangt zehn Zeichen Begründung, als `minLength` im Schema | Das Modell sieht die Bedingung, bevor es aufruft — und die Begründung kommt von einem Menschen (ADR-009). |
+| Fehler werden als `ToolError` geworfen | Nur dann liest das Modell den Grund. Jede andere Ausnahme erreicht es als „Error executing tool". |
+
+Gegenprobe gegen das laufende Backend: suchen (1170 Slots geprüft, 462 wegen
+der Therapeutin ausgeschlossen, 236 wegen der Raumausstattung), prüfen (11
+Regeln, FREI), buchen, denselben Slot noch einmal buchen — BLOCKIERT mit
+beiden verletzten Regeln samt Uhrzeiten einschließlich Rüstzeit —, mit
+Begründung übersteuern, und eine Begründung „ok" wird vom Schema abgelehnt.
+
 ## Was es noch nicht gibt
 
-- **Den MCP-Server** mit den Werkzeugen suchen, prüfen, buchen gegen die
-  REST-API. Folgt als nächster Schritt.
 - **Die Seite „Verordnung erfassen"** im Frontend: Freitext → Vorschlag mit
   Unsicherheiten → Mensch bestätigt → Domäne prüft.
 - **Retrieval.** Der Regelkatalog (`regeln.md`) wäre der naheliegende Korpus,

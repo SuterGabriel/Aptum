@@ -83,7 +83,7 @@ Verlängerung möglich · 80–100 % · AI-native Healthcare SaaS
 |---|---|---|---|
 | C8 | Praxiserfahrung mit KI-Coding-Agenten sowie Aufbau von Agenten, Skills und Workflows | belegt | `.claude/skills/`, `.claude/commands/`, `.claude/agents/`, `.claude/hooks/prosa-nach-schreiben.mjs` als PostToolUse-Hook in `.claude/settings.json`; die Hooks haben im Log dokumentiert mehrfach den Agenten selbst korrigiert |
 | C9 | Erfahrung mit AI-Pipelines, Harnesses und Context Engineering | in Arbeit | Pipeline in `services/ai-assist/src/ai_assist/erfassung.py`; Eval-Suite mit 55 begründeten Fällen in `evals/cases/`, feldweise Messung und Regressionsvergleich in `evals/run.py`, CI-Job `evals`; Beschreibung in `docs/AI-PIPELINE.md` |
-| C10 | Kenntnisse in LLM-Tooling (Azure OpenAI, Anthropic SDK, MCP) | in Arbeit | Provider-Interface mit Anthropic SDK (Tool-Use als Structured Output) und OpenAI-kompatiblem Provider für Azure in `services/ai-assist/src/ai_assist/provider/`; MCP-Server folgt |
+| C10 | Kenntnisse in LLM-Tooling (Azure OpenAI, Anthropic SDK, MCP) | belegt | Provider-Interface mit Anthropic SDK (Tool-Use als Structured Output) und OpenAI-kompatiblem Provider für Azure in `services/ai-assist/src/ai_assist/provider/`; MCP-Server mit vier Werkzeugen in `services/ai-assist/src/ai_assist/mcp_server.py` |
 | C11 | Verständnis von Product-Management-Prozessen | belegt | `docs/PRODUKT.md` |
 
 ### B.3 Aufgaben aus der Ausschreibung
@@ -91,7 +91,7 @@ Verlängerung möglich · 80–100 % · AI-native Healthcare SaaS
 | # | Aufgabe (wörtlich) | Status | Abbildung im Projekt |
 |---|---|---|---|
 | CA1 | Design, Entwicklung und Betrieb moderner Webanwendungen über Frontend, Backend und DevOps | offen | Gesamtprojekt |
-| CA2 | Integration KI-nativer Funktionen und agentischer Erfahrungen, LLMs, Retrieval, Tool-Use, strukturierte Workflows | in Arbeit | Verordnungserfassung aus Freitext in `services/ai-assist/src/ai_assist/erfassung.py`: Pseudonymisierung, Tool-Use, Schema, nicht extrahierbar statt geraten; Evals und MCP folgen |
+| CA2 | Integration KI-nativer Funktionen und agentischer Erfahrungen, LLMs, Retrieval, Tool-Use, strukturierte Workflows | in Arbeit | Verordnungserfassung aus Freitext in `services/ai-assist/src/ai_assist/erfassung.py`: Pseudonymisierung, Tool-Use, Schema, nicht extrahierbar statt geraten; Eval-Suite in `evals/`; MCP-Server als Tool-Use-Schnittstelle in `services/ai-assist/src/ai_assist/mcp_server.py` |
 | CA3 | Konzeption und Betrieb cloud-nativer Services, Zuverlässigkeit, Sicherheit, Entwicklerproduktivität | offen | `infra/`, Observability mit Tenant-ID |
 | CA4 | Mitgestaltung gemeinsam genutzter Agenten, Skills, Pipelines und Harnesses im Team | belegt | `.claude/skills/`, `.claude/agents/`, `.claude/commands/`, `.claude/hooks/` — versioniert im Repo, nicht global |
 | CA5 | Zusammenarbeit mit Product Management, UX, Architekten | in Arbeit | `docs/PRODUKT.md`, `docs/adr/`, `docs/mockups/` |

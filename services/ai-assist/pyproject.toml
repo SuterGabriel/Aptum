@@ -7,15 +7,22 @@ dependencies = [
   "anthropic>=0.40",
   "fastapi>=0.115",
   "httpx>=0.27",
+  "mcp[cli]>=1.2",
   "openai>=1.50",
   "pydantic>=2.9",
   "uvicorn>=0.30",
 ]
 
+[project.scripts]
+# So startet ein MCP-Client den Server: uv run aptum-mcp
+aptum-mcp = "ai_assist.mcp_server:main"
+
 [dependency-groups]
 dev = [
+  "anyio>=4.15.1",
   "mypy>=1.11",
   "pytest>=8.3",
+  "pytest-anyio>=0.0.0",
   "pytest-cov>=7.1.0",
   "ruff>=0.6",
 ]
@@ -42,5 +49,7 @@ packages = ["ai_assist"]
 mypy_path = "src"
 
 [tool.pytest.ini_options]
+# Die MCP-Werkzeuge sind async; anyio fuehrt sie aus, asyncio als Backend.
+anyio_mode = "auto"
 testpaths = ["tests"]
 pythonpath = ["src"]

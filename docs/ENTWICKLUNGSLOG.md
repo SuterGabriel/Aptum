@@ -1688,6 +1688,50 @@ Funde würde mit „won't fix“ weggeklickt.
 
 ---
 
+## 2026-09-11 — Stufe 3, Schritt 3: der MCP-Server
+
+**Was delegiert wurde:** Aptum als Werkzeug für ein Sprachmodell. Vier
+Werkzeuge auf der REST-Schnittstelle, neun Tests, dazu eine Rauchprobe gegen
+das laufende Backend. 39 Python-Tests.
+
+**Die Entwurfsfrage war nicht, was der Server kann, sondern was er nicht
+kann.** Regel 3 braucht hier keine zweite Durchsetzung: Wer über
+`termin_buchen` bucht, ruft `POST /termine` auf, und dort prüft dieselbe
+Domäne wie bei einer Buchung von Hand. Das ist der ganze Punkt — ein
+Regelwerk, kein zweiter Weg hinein. Was der Server hinzufügt, sind drei
+Einschränkungen an der Grenze:
+
+Der **Mandant ist kein Parameter**. Er kommt aus der Umgebung. Ein Modell
+kann nicht sagen „buche in praxis-b“, weil es die Praxis nicht benennen
+kann. Ein Test prüft, dass das Wort in keinem der vier Werkzeugschemata
+vorkommt — nicht im Code, im Schema, denn das ist, was das Modell sieht.
+
+Die **Übersteuerung verlangt zehn Zeichen Begründung**, und zwar als
+`minLength` im Schema statt als Prüfung im Rumpf. Der Unterschied ist
+praktisch: Das Modell liest die Bedingung, bevor es aufruft. Die Rauchprobe
+mit `begruendung: "ok"` kam gar nicht bis zum Dienst — die Schema-Prüfung
+lehnte ab, mit lesbarer Meldung.
+
+**Fehler müssen `ToolError` sein.** Das habe ich erst beim Testen gemerkt:
+Eine beliebige Ausnahme aus einem Werkzeug erreicht das Modell als „Error
+executing tool woche_anzeigen“ — der Grund bleibt im Serverlog. Wer will,
+dass ein Modell weiterarbeiten kann, muss ihm sagen, was los war. Jetzt
+steht „Der Scheduling-Dienst antwortete 503“ in der Antwort, und ein Test
+hält die Unterscheidung fest.
+
+**Die Rauchprobe, die überzeugt hat.** Gegen das echte Backend: suchen
+(1170 Slots geprüft, 462 wegen der Therapeutin ausgeschlossen, 236 wegen
+der Raumausstattung, 6 wegen des Raums), prüfen (11 Regeln, FREI), buchen,
+denselben Slot noch einmal — BLOCKIERT, mit beiden verletzten Regeln und
+den Uhrzeiten einschließlich Rüstzeit: „T. Alpha hat von 14:10 bis 14:45
+bereits Krankengymnastik“. Dann übersteuern mit Begründung: `UEBERSTEUERT`,
+mit Kennung. Das ist Regel 3 in einem Durchlauf, von außen sichtbar.
+
+**Zeitschätzung:** eine Stunde. Von Hand ein Tag, und der Mandant wäre ein
+Parameter — weil es bequemer ist.
+
+---
+
 ## Vorlage für weitere Einträge
 
 ```

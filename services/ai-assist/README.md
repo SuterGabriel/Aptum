@@ -39,6 +39,46 @@ curl -H 'Content-Type: application/json' -H 'X-Mandant: praxis-a' \
 `aufzeichnung`; für OpenAI/Azure `OPENAI_API_KEY` und bei Azure zusätzlich
 `AI_ASSIST_OPENAI_BASE_URL`. Schlüssel stehen nie im Repo.
 
+## Der MCP-Server
+
+Vier Werkzeuge auf der REST-Schnittstelle des Scheduling-Dienstes, damit ein
+Sprachmodell die Praxis bedienen kann: `termine_suchen`, `termin_pruefen`,
+`termin_buchen`, `woche_anzeigen`.
+
+```bash
+APTUM_SCHEDULING_URL=http://localhost:8080 APTUM_MANDANT=praxis-a uv run aptum-mcp
+```
+
+Für einen Client (etwa Claude Desktop) in dessen Konfiguration:
+
+```json
+{
+  "mcpServers": {
+    "aptum": {
+      "command": "uv",
+      "args": ["run", "--project", "C:/Aptum/services/ai-assist", "aptum-mcp"],
+      "env": {
+        "APTUM_SCHEDULING_URL": "http://localhost:8080",
+        "APTUM_MANDANT": "praxis-a"
+      }
+    }
+  }
+}
+```
+
+**Kein zweiter Weg in die Domäne.** Was hier gebucht wird, läuft durch dasselbe
+Regelwerk wie eine Buchung von Hand — weil es dieselbe Schnittstelle ist. Der
+Server fügt drei Einschränkungen an der Grenze hinzu:
+
+- **Der Mandant ist kein Parameter.** Er kommt aus der Umgebung; ein Modell
+  kann die Praxis nicht wählen. Ein Test prüft, dass das Wort in keinem
+  Werkzeugschema vorkommt.
+- **Die Übersteuerung braucht eine Begründung** von mindestens zehn Zeichen —
+  als `minLength` im Schema, damit das Modell die Bedingung sieht, bevor es
+  aufruft (ADR-009).
+- **Fehler sind lesbar.** Ein `ToolError` trägt seine Meldung zum Modell; jede
+  andere Ausnahme käme dort als „Error executing tool" an.
+
 ## Was bewusst schmal ist
 
 Die Pseudonymisierung erkennt vier Arten von Angaben mit regulären
