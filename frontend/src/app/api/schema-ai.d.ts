@@ -21,7 +21,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/erfassung": {
+    "/erfassung": {
         parameters: {
             query?: never;
             header?: never;
