@@ -183,6 +183,13 @@ Auch der Pfad aus einem CLI-Argument in `evals/run.py` ist behoben statt als
 Ausnahme markiert: Der Runner darf das Repo nicht verlassen. Das ist
 richtiges Verhalten, nicht nur eine Antwort auf einen Fund.
 
+Stand nach einem Tag: Quality Gate grün, Abdeckung 85,5 Prozent über alle
+drei Stacks, 100 Prozent auf neuem Code, drei offene Funde. Alle drei sind
+derselbe Fehlalarm: `java:S8696` verlangt `.equals()` bei einem Vergleich
+zweier `DayOfWeek`. Das ist ein Enum, dort ist `==` richtig — Sonar hat
+dafür eine eigene Regel, die genau das fordert. Sie sind als False Positive
+markiert.
+
 Sonar ersetzt kein eigenes Gate — es liest keine Prosa, kennt keine
 Fundstelle und prüft keinen Kontrast. Es ist die zweite Meinung, und die
 erste hat sie sofort gebraucht.

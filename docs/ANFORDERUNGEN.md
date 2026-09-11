@@ -56,7 +56,7 @@ Projekt-ID 3038770 · Projekt-Nr. a1WSZ0000088BoH2AU · Start 09.09.2026 ·
 | SA7 | Umsetzung und Optimierung von Microservices | offen | drei Services, bewusst wenige |
 | SA8 | Analyse und Umsetzung fachlicher Anforderungen aus dem Praxisumfeld | belegt | `docs/PRODUKT.md` |
 | SA9 | Erstellung technischer Konzepte und Architekturentscheidungen | belegt | `docs/adr/`, `DECISIONS.md` |
-| SA10 | Code Reviews und Sicherstellung von Entwicklungsstandards | belegt | SonarCloud mit Quality Gate als Merge-Bedingung (Job `sonar`, `sonar-project.properties`); dazu `.claude/agents/arch-reviewer.md`, `.claude/agents/a11y-auditor.md`, Guardrails in `.github/workflows/ci.yml` |
+| SA10 | Code Reviews und Sicherstellung von Entwicklungsstandards | belegt | SonarCloud mit Quality Gate als Merge-Bedingung (Job `sonar`, `sonar-project.properties`), Abdeckung 85,5 Prozent aus JaCoCo, Karma und pytest-cov; dazu `.claude/agents/arch-reviewer.md`, `.claude/agents/a11y-auditor.md`, Guardrails in `.github/workflows/ci.yml` |
 
 ---
 

@@ -1676,6 +1676,13 @@ Paaren halten die Anforderung nicht ein“ ist der Beweis, dass es lebt. Ohne
 diese Gewohnheit wäre ein totes Gate durchgerutscht, und tote Gates sind
 schlimmer als fehlende.
 
+**Am Ende des Tages.** Quality Gate grün, Abdeckung 85,5 Prozent über drei
+Sprachen, 100 Prozent auf dem neuen Code, drei offene Funde — alle drei
+derselbe Enum-Fehlalarm. Von 45 Funden sind 42 behoben und null mit
+„gilt hier nicht“ weggeklickt. Zweimal wollte ich genau das tun, und
+zweimal war die Ausrede beim zweiten Hinsehen falsch: der Pfad im
+Eval-Runner und die angeblich untestbaren Provider.
+
 **Zeitschätzung:** anderthalb Stunden. Von Hand ein Tag, und die Hälfte der
 Funde würde mit „won't fix“ weggeklickt.
 
