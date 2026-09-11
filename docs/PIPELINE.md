@@ -78,7 +78,7 @@ Ergebnisses, nicht nur Werkzeug.
 
 ## Stufe 3: GitHub Actions
 
-`.github/workflows/ci.yml`, sechs Jobs, jeder ein Gate:
+`.github/workflows/ci.yml`, zehn Jobs, jeder ein Gate:
 
 | Job | Prüft |
 |---|---|
@@ -93,11 +93,13 @@ Ergebnisses, nicht nur Werkzeug.
 | `evals` | Die Eval-Suite gegen das Modell, feldweise — nur bei Änderung an Prompt, Schema, Provider oder Fällen, oder von Hand; ohne Schlüssel sichtbar übersprungen, nie stumm grün; bricht nur, wenn ein Fall neu scheitert |
 | `e2e` | Backend und Frontend zusammen im echten Chromium: über die API buchen, den Termin im Grid finden, mit der Tastatur hindurchfahren, axe über jede Seite — erst nach `backend` und `frontend` |
 
-Was noch fehlt — der Dependency-Scan — steht als
-auskommentiertes Gerüst in der Datei, nicht als leere Jobs: Ein Job, der
-nichts prüft und trotzdem grün meldet, ist schlimmer als kein Job.
+Abhängigkeiten hält `.github/dependabot.yml` aktuell — wöchentlich, gebündelt
+über Actions, npm, Maven und uv; jeder Vorschlag geht durch dieselben zehn
+Jobs. Was fehlt, ist ein Scan auf bekannte Schwachstellen (SCA): SonarCloud
+bietet ihn nur im kostenpflichtigen Plan an, und ein Job, der nichts prüft und
+trotzdem grün meldet, wäre schlimmer als kein Job.
 
-## Die fünf Gates im Einzelnen
+## Die fünf Skript-Gates im Einzelnen
 
 Alle fünf existieren aus demselben Grund: Dieses Repo behauptet an mehreren
 Stellen etwas über die eigene Arbeitsweise, und eine Behauptung, die niemand
