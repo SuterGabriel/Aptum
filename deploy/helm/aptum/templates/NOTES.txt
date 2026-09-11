@@ -1,0 +1,23 @@
+Aptum ist installiert: Release {{ .Release.Name }} in {{ .Release.Namespace }}.
+
+Prüfen, ob die Kette steht (ein Pod im Cluster fragt Frontend, beide Dienste
+und die Datenbank durch den Reverse Proxy):
+
+  helm test {{ .Release.Name }} -n {{ .Release.Namespace }}
+
+{{- if eq .Values.frontend.service.typ "NodePort" }}
+
+Das Frontend liegt auf NodePort {{ .Values.frontend.service.nodePort }}. Mit
+der kind-Konfiguration aus deploy/kind/cluster.yaml ist das
+http://localhost:8000.
+{{- else }}
+
+Das Frontend ist ein ClusterIP-Service; ein Ingress davor macht es erreichbar.
+{{- end }}
+
+Der AI-Dienst läuft mit Provider "{{ .Values.aiAssist.provider }}".
+{{- if not .Values.aiAssist.schluesselSecret }}
+Ohne Schlüssel antwortet er aus der Aufzeichnung. Für ein echtes Modell:
+ein Secret mit ANTHROPIC_API_KEY anlegen und aiAssist.schluesselSecret
+darauf zeigen lassen, aiAssist.provider auf anthropic.
+{{- end }}

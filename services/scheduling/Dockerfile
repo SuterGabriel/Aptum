@@ -28,9 +28,10 @@ FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 
 # Kein Root im Container. Die Anwendung braucht keine Rechte am System,
-# also bekommt sie keine.
-RUN addgroup -S aptum && adduser -S -G aptum aptum
-USER aptum
+# also bekommt sie keine. Die ID ist numerisch, nicht nur ein Name: Kubernetes
+# prüft runAsNonRoot gegen die Zahl - einen Namen kann es nicht auflösen.
+RUN addgroup -S -g 10001 aptum && adduser -S -u 10001 -G aptum aptum
+USER 10001
 
 COPY --from=bau /bau/infrastructure/target/scheduling-infrastructure-*.jar app.jar
 

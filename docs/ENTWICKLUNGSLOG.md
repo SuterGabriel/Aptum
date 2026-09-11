@@ -1767,6 +1767,57 @@ im Dockerfile des Backends angelegt, wo sie nicht hingehört.
 
 ---
 
+## 2026-09-12 — Stufe 4, Schritt 2: Helm, und ein Chart, das angewendet wird
+
+**Was delegiert wurde:** Ein Helm-Chart für den ganzen Stapel und ein
+CI-Job, der es bei jedem Push in einen `kind`-Cluster installiert und mit
+`helm test` prüft. Lokal zuerst, mit denselben Befehlen.
+
+**Die Entwurfsentscheidung.** Ein Chart, das im Repo liegt und nie angewendet
+wird, belegt nichts — es ist YAML, das syntaktisch stimmt. Deshalb ist der
+Rauchtest ein Helm-Test-Hook: ein Pod *im Cluster*, der das Frontend fragt
+und durch dessen nginx beide Dienste und Postgres erreicht. Er prüft die
+Seite, den SPA-Fallback, die Woche, legt eine Verordnung an (hier prüft die
+Domäne) und lässt einen Freitext erfassen. Grün heißt: Die Services finden
+sich, der Reverse Proxy schneidet `/api` richtig ab, die Rollen stimmen. Das
+ist mehr als „alle Pods Running“ — das sagt nur, dass nichts abgestürzt ist.
+
+**Zwei Dinge, die vorher fehlten und im Cluster sofort auffielen.** Erstens:
+Das Backend hatte keine getrennten Probes — `health/liveness` und
+`health/readiness` antworteten 404. In compose reicht *ein* Healthcheck; ein
+Orchestrator braucht zwei Fragen, weil er zwei verschiedene Dinge tut:
+neu starten oder aus dem Verkehr nehmen. Ein Dienst, der beim Start auf
+Flyway wartet, darf nicht neu gestartet werden — er lebt, er ist nur noch
+nicht bereit. Jetzt sind beide da, plus eine Startprobe, die der
+Livenessprobe Zeit lässt.
+
+Zweitens, und das ist die Sorte Fehler, die man nur mit einem echten Cluster
+findet: Beide Dienste blieben in `CreateContainerConfigError`. Grund:
+`runAsNonRoot: true` im Chart, aber die Dockerfiles setzten `USER aptum` —
+einen *Namen*. kubelet kann einen Namen nicht auflösen und weigert sich,
+den Container überhaupt zu starten: „image has non-numeric user (aptum),
+cannot verify user is non-root“. Unter compose lief dasselbe Bild
+anstandslos. Jetzt tragen beide Bilder die ID 10001, und das Chart sagt sie
+noch einmal. Eine Zeile Unterschied, und ohne den Cluster in der CI wäre sie
+erst beim ersten echten Deployment aufgefallen.
+
+**Was gut lief.** Die Service-Namen `scheduling`, `ai-assist`, `postgres`
+sind dieselben wie in compose — `nginx.conf` und die Datenbank-URL passen
+ohne Änderung. Das Init-Skript für die Rolle ist als ConfigMap dasselbe wie
+im Testcontainer und in compose: eine Quelle, drei Orte. Und `helm lint`
+hatte nichts zu sagen außer „icon is recommended“.
+
+**Was ehrlich bleibt.** kind ist kein Betrieb. Es ist ein Cluster zum
+Wegwerfen, und genau dafür ist er richtig: Er beweist, dass das Chart
+funktioniert, nicht, dass jemand einen Cluster betreiben kann. Terraform und
+ArgoCD folgen, und dann steht C4 auf „teilweise belegbar“ — nicht höher.
+
+**Zeitschätzung:** zwei Stunden, davon eine halbe für die numerische ID.
+Von Hand ein Tag, und der Fehler mit dem Benutzernamen wäre ein Nachmittag
+in der Fehlersuche.
+
+---
+
 ## Vorlage für weitere Einträge
 
 ```

@@ -1,0 +1,71 @@
+# Der Scheduling-Dienst. Zwei Probes, zwei Fragen: liveness startet neu,
+# readiness nimmt aus dem Verkehr. Beim Start wartet er auf Flyway und
+# Postgres - readiness sagt "noch nicht", liveness sagt "aber ich lebe".
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scheduling
+  labels: {{- include "aptum.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.scheduling.replicas }}
+  selector:
+    matchLabels: {{- include "aptum.selektor" (dict "Release" .Release "komponente" "scheduling") | nindent 6 }}
+  template:
+    metadata:
+      labels: {{- include "aptum.selektor" (dict "Release" .Release "komponente" "scheduling") | nindent 8 }}
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        # Dieselbe ID wie im Dockerfile. Ohne Zahl kann kubelet runAsNonRoot
+        # nicht prüfen und startet den Container gar nicht erst.
+        runAsUser: 10001
+        runAsGroup: 10001
+      containers:
+        - name: scheduling
+          image: {{ include "aptum.bild" (dict "Values" .Values "komponente" "scheduling") }}
+          imagePullPolicy: {{ .Values.bilder.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.scheduling.port }}
+          env:
+            - name: APTUM_DB_URL
+              value: jdbc:postgresql://postgres:5432/{{ .Values.postgres.datenbank }}
+            - name: APTUM_DB_ADMIN_USER
+              valueFrom: { secretKeyRef: { name: postgres, key: admin-benutzer } }
+            - name: APTUM_DB_ADMIN_PASSWORD
+              valueFrom: { secretKeyRef: { name: postgres, key: admin-passwort } }
+            - name: APTUM_DB_USER
+              valueFrom: { secretKeyRef: { name: postgres, key: anwendung-benutzer } }
+            - name: APTUM_DB_PASSWORD
+              valueFrom: { secretKeyRef: { name: postgres, key: anwendung-passwort } }
+          startupProbe:
+            # Eine JVM mit Flyway braucht ihre Zeit. Solange die Startprobe
+            # läuft, ist die Livenessprobe stumm - sonst würde der Dienst
+            # beim Migrieren neu gestartet.
+            httpGet: { path: /actuator/health/liveness, port: http }
+            periodSeconds: 5
+            failureThreshold: 24
+          livenessProbe:
+            httpGet: { path: /actuator/health/liveness, port: http }
+            periodSeconds: 10
+          readinessProbe:
+            httpGet: { path: /actuator/health/readiness, port: http }
+            periodSeconds: 5
+          resources: {{- toYaml .Values.scheduling.ressourcen | nindent 12 }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
+            capabilities: { drop: [ALL] }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  # Der Name steht in frontend/nginx.conf. Nicht ändern, ohne dort zu ändern.
+  name: scheduling
+  labels: {{- include "aptum.labels" . | nindent 4 }}
+spec:
+  selector: {{- include "aptum.selektor" (dict "Release" .Release "komponente" "scheduling") | nindent 4 }}
+  ports:
+    - name: http
+      port: {{ .Values.scheduling.port }}
+      targetPort: http

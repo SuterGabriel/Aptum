@@ -232,6 +232,52 @@ jobs:
         with:
           args: -Dsonar.qualitygate.wait=true
 
+  cluster:
+    name: Helm-Chart in kind
+    runs-on: ubuntu-latest
+    needs: [backend, frontend, ai-assist]
+    # Ein Chart, das im Repo liegt und nie angewendet wird, ist eine
+    # Behauptung. Dieses wird bei jedem Push angewendet: drei Bilder bauen,
+    # in einen kind-Cluster laden, installieren, und dann fragt ein Pod im
+    # Cluster durch den Reverse Proxy alle drei Dienste und die Datenbank.
+    # kind ist kein Betrieb - es beweist das Chart, nicht den Betrieb.
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - name: Bilder bauen
+        run: docker compose build
+      - uses: azure/setup-helm@1a275c3b69536ee54be43f2070a358922e12c8d4 # v4
+      - name: Chart prüfen
+        run: helm lint deploy/helm/aptum
+      - uses: helm/kind-action@ef37e7f390d99f746eb8b610417061a60e82a6cc # v1
+        with:
+          cluster_name: aptum
+          config: deploy/kind/cluster.yaml
+      - name: Bilder in den Cluster laden
+        run: |
+          for i in scheduling ai-assist frontend; do
+            kind load docker-image aptum-$i:latest --name aptum
+          done
+      - name: Installieren und auf Bereitschaft warten
+        run: helm install aptum deploy/helm/aptum --wait --timeout 5m
+      # Der Rauchtest läuft als Pod im Cluster: Seite, SPA-Fallback, Woche
+      # über /api, eine Verordnung durch die Domäne, ein Freitext durch den
+      # AI-Dienst. Grün heißt, das Chart funktioniert - nicht nur, dass es
+      # syntaktisch stimmt.
+      - name: helm test
+        run: helm test aptum --logs --timeout 3m
+      - name: Von außen erreichbar
+        run: |
+          curl -sf -H 'Accept: text/html' localhost:8000/ | grep -q '<app-root'
+          curl -sf -H 'X-Mandant: praxis-a' 'localhost:8000/api/kalender/woche?tag=2026-03-02' | grep -q '"spalten"'
+      - name: Zustand des Clusters sichern
+        if: failure()
+        run: |
+          kubectl get all -o wide
+          kubectl describe pods
+          for c in scheduling ai-assist frontend postgres; do
+            echo "=== $c ==="; kubectl logs -l app.kubernetes.io/component=$c --tail=100 || true
+          done
+
   evals:
     name: Evals gegen das Modell
     runs-on: ubuntu-latest

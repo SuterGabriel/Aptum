@@ -1,0 +1,63 @@
+# Der AI-Dienst. Der Schlüssel kommt, wenn überhaupt, aus einem Secret, das
+# jemand außerhalb dieses Charts anlegt - ein Chart, das Schlüssel in seinen
+# Values trägt, hat sie im Repo.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-assist
+  labels: {{- include "aptum.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.aiAssist.replicas }}
+  selector:
+    matchLabels: {{- include "aptum.selektor" (dict "Release" .Release "komponente" "ai-assist") | nindent 6 }}
+  template:
+    metadata:
+      labels: {{- include "aptum.selektor" (dict "Release" .Release "komponente" "ai-assist") | nindent 8 }}
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        # Dieselbe ID wie im Dockerfile. Ohne Zahl kann kubelet runAsNonRoot
+        # nicht prüfen und startet den Container gar nicht erst.
+        runAsUser: 10001
+        runAsGroup: 10001
+      containers:
+        - name: ai-assist
+          image: {{ include "aptum.bild" (dict "Values" .Values "komponente" "ai-assist") }}
+          imagePullPolicy: {{ .Values.bilder.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.aiAssist.port }}
+          env:
+            - name: AI_ASSIST_PROVIDER
+              value: {{ .Values.aiAssist.provider | quote }}
+            {{- if .Values.aiAssist.schluesselSecret }}
+            - name: ANTHROPIC_API_KEY
+              valueFrom:
+                secretKeyRef: { name: {{ .Values.aiAssist.schluesselSecret }}, key: ANTHROPIC_API_KEY, optional: true }
+            - name: OPENAI_API_KEY
+              valueFrom:
+                secretKeyRef: { name: {{ .Values.aiAssist.schluesselSecret }}, key: OPENAI_API_KEY, optional: true }
+            {{- end }}
+          livenessProbe:
+            httpGet: { path: /health, port: http }
+            periodSeconds: 10
+          readinessProbe:
+            httpGet: { path: /health, port: http }
+            periodSeconds: 5
+          resources: {{- toYaml .Values.aiAssist.ressourcen | nindent 12 }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities: { drop: [ALL] }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  # Der Name steht in frontend/nginx.conf.
+  name: ai-assist
+  labels: {{- include "aptum.labels" . | nindent 4 }}
+spec:
+  selector: {{- include "aptum.selektor" (dict "Release" .Release "komponente" "ai-assist") | nindent 4 }}
+  ports:
+    - name: http
+      port: {{ .Values.aiAssist.port }}
+      targetPort: http

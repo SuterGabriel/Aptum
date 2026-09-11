@@ -1,0 +1,14 @@
+# Ein Cluster zum Wegwerfen - lokal und in der CI derselbe.
+#
+# kind startet Kubernetes in einem Docker-Container. Der Port 30080 des
+# Knotens liegt auf 8000 des Rechners, damit der Rauchtest das Frontend
+# genauso erreicht wie mit compose: http://localhost:8000.
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+name: aptum
+nodes:
+  - role: control-plane
+    extraPortMappings:
+      - containerPort: 30080
+        hostPort: 8000
+        protocol: TCP

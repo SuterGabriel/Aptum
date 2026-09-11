@@ -16,9 +16,10 @@ COPY src ./src
 COPY demo-aufzeichnung.json ./
 RUN uv sync --frozen --no-dev --no-editable
 
-# Kein Root im Container.
-RUN useradd --system --no-create-home aptum && chown -R aptum:aptum /app
-USER aptum
+# Kein Root im Container, mit numerischer ID - Kubernetes prüft runAsNonRoot
+# gegen die Zahl, einen Namen kann es nicht auflösen.
+RUN useradd --system --no-create-home --uid 10001 aptum && chown -R aptum:aptum /app
+USER 10001
 
 EXPOSE 8090
 

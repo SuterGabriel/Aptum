@@ -1,0 +1,62 @@
+# Aptum als Helm-Release.
+#
+# Die Dienstnamen (scheduling, ai-assist, postgres) sind keine Kosmetik: Die
+# nginx-Konfiguration des Frontends und die Datenbank-URL des Backends kennen
+# sie. Wer sie ändert, ändert dort mit. Deshalb tragen die Services hier
+# ihren Komponentennamen und nicht den Release-Namen.
+
+bilder:
+  # Für kind werden die Bilder lokal gebaut und geladen; deshalb "Never".
+  # Gegen eine Registry: registry setzen und pullPolicy auf IfNotPresent.
+  registry: ""
+  tag: latest
+  pullPolicy: Never
+
+postgres:
+  bild: postgres:16-alpine
+  datenbank: aptum
+  # Eigentümerin, unter der Flyway migriert - und eine Anwendungsrolle ohne
+  # Rechte an den Tabellen, unter der der Dienst läuft (ADR-002).
+  admin:
+    benutzer: aptum
+    passwort: aptum
+  anwendung:
+    benutzer: aptum_app
+    passwort: aptum
+  persistenz:
+    # In kind und in der CI reicht ein flüchtiges Volume. Im Betrieb: true,
+    # und eine StorageClass, die es wert ist.
+    aktiv: false
+    groesse: 1Gi
+  ressourcen:
+    requests: { cpu: 100m, memory: 128Mi }
+    limits: { memory: 256Mi }
+
+scheduling:
+  replicas: 1
+  port: 8080
+  ressourcen:
+    requests: { cpu: 250m, memory: 384Mi }
+    limits: { memory: 768Mi }
+
+aiAssist:
+  replicas: 1
+  port: 8090
+  # Ohne Schlüssel antwortet der Dienst aus der Aufzeichnung. Mit Schlüssel:
+  # provider auf anthropic und ein Secret mit ANTHROPIC_API_KEY benennen.
+  provider: aufzeichnung
+  schluesselSecret: ""
+  ressourcen:
+    requests: { cpu: 100m, memory: 128Mi }
+    limits: { memory: 384Mi }
+
+frontend:
+  replicas: 1
+  service:
+    # NodePort, damit kind den Port nach außen reichen kann. Im Betrieb:
+    # ClusterIP und ein Ingress davor.
+    typ: NodePort
+    nodePort: 30080
+  ressourcen:
+    requests: { cpu: 50m, memory: 32Mi }
+    limits: { memory: 64Mi }

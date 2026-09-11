@@ -136,6 +136,21 @@ verletzten Regeln; dieselbe Anfrage mit `X-Mandant: praxis-b` antwortet mit
 Für die Entwicklung ohne Container: `mvn` im Scheduling-Dienst, `uv run` im
 AI-Dienst, `npm start` im Frontend — die READMEs der Verzeichnisse sagen wie.
 
+Dasselbe in Kubernetes, lokal mit `kind`:
+
+```bash
+docker compose build
+kind create cluster --config deploy/kind/cluster.yaml
+for i in scheduling ai-assist frontend; do kind load docker-image aptum-$i:latest --name aptum; done
+helm install aptum deploy/helm/aptum --wait
+helm test aptum --logs
+```
+
+Das ist der Ablauf, den die CI im Job `cluster` bei jedem Push fährt. Der
+Rauchtest läuft als Pod im Cluster und fragt durch den Reverse Proxy alle
+drei Dienste — grün heißt, das Chart funktioniert, nicht nur, dass es
+syntaktisch stimmt.
+
 ## Wegweiser
 
 | Datei | Inhalt |
@@ -158,7 +173,7 @@ AI-Dienst, `npm start` im Frontend — die READMEs der Verzeichnisse sagen wie.
 | 1 | Domänenkern in reinem Java, dann Spring, Multi-Tenancy, Angular-Suchflow | **abgeschlossen** — Domänenkern mit Slot-Suche, Spring Boot in drei Modulen, RLS gegen echtes Postgres, REST mit OpenAPI, Terminsuche in Angular |
 | 2 | Kalender-Grid, Tabelle, WCAG, End-to-End-Tests | **in Arbeit** — Kalender-Grid, Buchungsdialog mit Regelprüfung, Playwright mit axe als CI-Job; Verordnungsübersicht und Tabelle offen |
 | 3 | AI-Layer, MCP-Server, Evals, Provider-Vergleich | **in Arbeit** — Verordnungserfassung aus Freitext in `services/ai-assist/` (Python), Pseudonymisierung vor dem Aufruf, zwei Provider, Eval-Suite mit 55 Fällen in `evals/`, MCP-Server mit vier Werkzeugen, Seite „Verordnung erfassen“; Provider-Vergleich offen |
-| 4 | Container, Helm, ArgoCD, Terraform, Observability | **in Arbeit** — drei Dienste als Container, `compose.yml` fährt alles mit einem Befehl hoch, nginx als Reverse Proxy; Helm mit `kind` in der CI, Terraform und ArgoCD folgen |
+| 4 | Container, Helm, ArgoCD, Terraform, Observability | **in Arbeit** — drei Dienste als Container, `compose.yml` fährt alles mit einem Befehl hoch; Helm-Chart in `deploy/helm/aptum/`, das die CI bei jedem Push in einen `kind`-Cluster installiert und mit `helm test` prüft; Terraform und ArgoCD folgen |
 | 5 | Demo, ADRs vervollständigen, Mapping | offen |
 
 ## Daten

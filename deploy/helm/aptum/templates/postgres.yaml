@@ -1,0 +1,106 @@
+# Postgres mit den beiden Rollen aus ADR-002. Das Init-Skript ist dasselbe
+# wie im Testcontainer und in compose - eine Quelle, drei Orte.
+apiVersion: v1
+kind: Secret
+metadata:
+  name: postgres
+  labels: {{- include "aptum.labels" . | nindent 4 }}
+type: Opaque
+stringData:
+  admin-benutzer: {{ .Values.postgres.admin.benutzer | quote }}
+  admin-passwort: {{ .Values.postgres.admin.passwort | quote }}
+  anwendung-benutzer: {{ .Values.postgres.anwendung.benutzer | quote }}
+  anwendung-passwort: {{ .Values.postgres.anwendung.passwort | quote }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-init
+  labels: {{- include "aptum.labels" . | nindent 4 }}
+data:
+  01-rolle.sql: |
+    -- Läuft einmal beim ersten Start, vor Flyway. Die Anwendungsrolle ist
+    -- weder Superuser noch Eigentümerin - nur so greift Row Level Security.
+    create role {{ .Values.postgres.anwendung.benutzer }} login password '{{ .Values.postgres.anwendung.passwort }}';
+---
+{{- if .Values.postgres.persistenz.aktiv }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-daten
+  labels: {{- include "aptum.labels" . | nindent 4 }}
+spec:
+  accessModes: [ReadWriteOnce]
+  resources:
+    requests:
+      storage: {{ .Values.postgres.persistenz.groesse }}
+---
+{{- end }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+  labels: {{- include "aptum.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  strategy:
+    # Zwei Postgres auf demselben Volume wären eines zu viel.
+    type: Recreate
+  selector:
+    matchLabels: {{- include "aptum.selektor" (dict "Release" .Release "komponente" "postgres") | nindent 6 }}
+  template:
+    metadata:
+      labels: {{- include "aptum.selektor" (dict "Release" .Release "komponente" "postgres") | nindent 8 }}
+    spec:
+      containers:
+        - name: postgres
+          image: {{ .Values.postgres.bild }}
+          ports:
+            - name: postgres
+              containerPort: 5432
+          env:
+            - name: POSTGRES_DB
+              value: {{ .Values.postgres.datenbank | quote }}
+            - name: POSTGRES_USER
+              valueFrom: { secretKeyRef: { name: postgres, key: admin-benutzer } }
+            - name: POSTGRES_PASSWORD
+              valueFrom: { secretKeyRef: { name: postgres, key: admin-passwort } }
+          readinessProbe:
+            exec:
+              command: ["pg_isready", "-U", {{ .Values.postgres.admin.benutzer | quote }}, "-d", {{ .Values.postgres.datenbank | quote }}]
+            periodSeconds: 5
+          livenessProbe:
+            exec:
+              command: ["pg_isready", "-U", {{ .Values.postgres.admin.benutzer | quote }}]
+            initialDelaySeconds: 20
+            periodSeconds: 10
+          resources: {{- toYaml .Values.postgres.ressourcen | nindent 12 }}
+          volumeMounts:
+            - name: init
+              mountPath: /docker-entrypoint-initdb.d
+              readOnly: true
+            - name: daten
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: init
+          configMap:
+            name: postgres-init
+        - name: daten
+          {{- if .Values.postgres.persistenz.aktiv }}
+          persistentVolumeClaim:
+            claimName: postgres-daten
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  labels: {{- include "aptum.labels" . | nindent 4 }}
+spec:
+  selector: {{- include "aptum.selektor" (dict "Release" .Release "komponente" "postgres") | nindent 4 }}
+  ports:
+    - name: postgres
+      port: 5432
+      targetPort: postgres

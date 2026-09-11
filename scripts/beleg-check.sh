@@ -202,8 +202,13 @@ pruefe "Scheduling als Container" datei services/scheduling/Dockerfile
 pruefe "AI-Dienst als Container" datei services/ai-assist/Dockerfile
 pruefe "Frontend als Container mit Reverse Proxy" datei frontend/nginx.conf
 pruefe "Ein Befehl für alles" datei compose.yml
-pruefe "Kein Root im Container" enthaelt services/scheduling/Dockerfile "USER aptum"
+pruefe "Kein Root im Container, numerisch" enthaelt services/scheduling/Dockerfile "USER 10001"
 pruefe "Anwendungsrolle vor Flyway" datei deploy/postgres/01-rolle.sql
+pruefe "Helm-Chart existiert" datei deploy/helm/aptum/Chart.yaml
+pruefe "Chart hat einen Rauchtest, der die Kette prüft" enthaelt deploy/helm/aptum/templates/tests/rauchtest.yaml "helm.sh/hook"
+pruefe "Liveness und Readiness getrennt" enthaelt deploy/helm/aptum/templates/scheduling.yaml "health/readiness"
+pruefe "Chart wird in der CI angewendet" enthaelt .github/workflows/ci.yml "helm test"
+pruefe "kind-Cluster ist konfiguriert" datei deploy/kind/cluster.yaml
 pruefe "Prüfung ohne Buchung im Backend" enthaelt services/scheduling/infrastructure/src/main/java/de/aptum/scheduling/infrastructure/rest/TerminController.java "/pruefung"
 pruefe "Wochenansicht nimmt die Grenzen aus Termin" enthaelt services/scheduling/domain/src/main/java/de/aptum/scheduling/domain/kalender/Wochenansicht.java "belegtRaum"
 pruefe "stumme Lücke 1 ist Fixture" datei scripts/fixtures/regel-check/domain/NachbarBorgt.java

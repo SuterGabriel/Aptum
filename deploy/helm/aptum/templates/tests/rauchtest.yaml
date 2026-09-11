@@ -1,0 +1,40 @@
+# Der Rauchtest, den Helm selbst ausführt: helm test <release>.
+#
+# Ein Pod im Cluster fragt das Frontend - und durch dessen nginx beide
+# Dienste - so, wie ein Browser es täte. Grün heißt: Die drei Services
+# finden sich, der Reverse Proxy schneidet /api richtig ab, Postgres
+# antwortet, und eine Verordnung lässt sich anlegen. Rot heißt: Das Chart
+# ist kaputt, auch wenn jeder Pod für sich "Running" meldet.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: {{ .Release.Name }}-rauchtest
+  labels: {{- include "aptum.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+spec:
+  restartPolicy: Never
+  containers:
+    - name: rauchtest
+      image: curlimages/curl:8.11.1
+      command: ["/bin/sh", "-ec"]
+      args:
+        - |
+          F=http://frontend
+          echo "Seite"
+          curl -sf -H 'Accept: text/html' $F/ | grep -q '<app-root' || { echo "keine Anwendung"; exit 1; }
+          echo "SPA-Fallback"
+          curl -sf -H 'Accept: text/html' $F/kalender | grep -q '<app-root' || { echo "kein Fallback"; exit 1; }
+          echo "Scheduling ueber /api"
+          curl -sf -H 'X-Mandant: praxis-a' "$F/api/kalender/woche?tag=2026-03-02" | grep -q '"spalten"' || { echo "Woche fehlt"; exit 1; }
+          echo "Verordnung anlegen - hier prueft die Domaene"
+          code=$(curl -s -o /tmp/v.json -w '%{http_code}' -H 'Content-Type: application/json' -H 'X-Mandant: praxis-a' \
+            -d '{"ausstellungsdatum":"2026-02-27","dringlicherBedarf":false,"diagnosegruppe":"WS","verordneteEinheiten":6,"frequenzMin":1,"frequenzMax":3}' \
+            $F/api/verordnungen)
+          [ "$code" = "201" ] || { echo "Verordnung: $code"; cat /tmp/v.json; exit 1; }
+          echo "AI-Dienst ueber /api"
+          curl -sf -H 'Content-Type: application/json' -H 'X-Mandant: praxis-a' \
+            -d '{"text":"KG 6x, 2x wöchentlich, Diagnosegruppe WS, ausgestellt am 27.02.2026"}' \
+            $F/api/erfassung | grep -q '"KG_EINZEL"' || { echo "Erfassung fehlt"; exit 1; }
+          echo "alles da"

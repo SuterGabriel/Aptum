@@ -31,3 +31,10 @@ management:
       # Nur "UP" oder "DOWN" nach außen. Details nennen Komponenten und
       # Verbindungen, und das gehört nicht in eine unauthentifizierte Antwort.
       show-details: never
+      # Zwei Fragen, zwei Antworten: "lebt der Prozess?" (liveness) und
+      # "kann er Anfragen annehmen?" (readiness). Ein Orchestrator startet
+      # bei der ersten neu und nimmt bei der zweiten aus dem Verkehr - das
+      # darf nicht dieselbe Antwort sein, sonst wird ein Dienst, der nur
+      # auf die Datenbank wartet, in einer Schleife neu gestartet.
+      probes:
+        enabled: true

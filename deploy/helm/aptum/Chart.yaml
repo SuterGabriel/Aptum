@@ -1,0 +1,14 @@
+apiVersion: v2
+name: aptum
+description: >-
+  Terminplanung und Verordnungsverwaltung für Physio- und Ergotherapiepraxen.
+  Drei Dienste und ein Postgres mit Row Level Security, als ein Release.
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
+keywords:
+  - heilmittel
+  - terminplanung
+  - multi-tenancy
+sources:
+  - https://github.com/SuterGabriel/Aptum
