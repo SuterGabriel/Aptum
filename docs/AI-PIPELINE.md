@@ -97,10 +97,28 @@ Regeln, FREI), buchen, denselben Slot noch einmal buchen — BLOCKIERT mit
 beiden verletzten Regeln samt Uhrzeiten einschließlich Rüstzeit —, mit
 Begründung übersteuern, und eine Begründung „ok" wird vom Schema abgelehnt.
 
+## Die Seite „Verordnung erfassen“
+
+`frontend/src/app/erfassung/` — hier wird die Regel sichtbar. Freitext
+einfügen, das Modell liest ihn in Felder und sagt, was es *nicht* lesen
+konnte; diese Felder bleiben leer und sind markiert, mit Farbe **und** Wort.
+Ein Mensch ergänzt und bestätigt, und erst dann geht die Verordnung an
+`POST /verordnungen`, wo die Domäne prüft. Lehnt sie ab, steht die Ablehnung
+als Alert da, nicht als Erfolg.
+
+Zwei Angaben liest das Modell, die nicht zur Verordnung gehören: das
+Heilmittel (das wird bei der Terminsuche gewählt) und der Hausbesuch (den
+führt die Domäne nicht). Beide werden gezeigt, aber nicht als Lücke
+gezählt — sonst fordert die Seite dazu auf, etwas zu ergänzen, wofür es
+kein Feld gibt. Die Seite nennt außerdem, welches Modell geantwortet hat
+und wie viele Angaben vor dem Aufruf ersetzt wurden: Die Pseudonymisierung
+ist damit nicht nur ein Schritt im Code, sondern eine Zahl auf dem Schirm.
+
+Der Ende-zu-Ende-Test fährt die ganze Kette mit aufgezeichneten Antworten
+(`services/ai-assist/demo-aufzeichnung.json`) — ohne Schlüssel, ohne Netz.
+
 ## Was es noch nicht gibt
 
-- **Die Seite „Verordnung erfassen"** im Frontend: Freitext → Vorschlag mit
-  Unsicherheiten → Mensch bestätigt → Domäne prüft.
 - **Retrieval.** Der Regelkatalog (`regeln.md`) wäre der naheliegende Korpus,
   etwa um dem Modell die Fundstelle zu einer Frist zu geben. Nicht gebaut,
   weil die Domäne die Fristen kennt und das Modell sie nicht braucht.

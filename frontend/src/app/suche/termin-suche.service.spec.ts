@@ -39,7 +39,7 @@ describe('TerminSucheService', () => {
     anfragen.next(suche('abc'));
     tick(300);
 
-    const offen = http.match('/termine/suche');
+    const offen = http.match('/api/termine/suche');
     expect(offen.length).toBe(1);
     expect(offen[0].request.body.verordnung).toBe('abc');
     offen[0].flush({ vorschlaege: [] });
@@ -66,29 +66,29 @@ describe('TerminSucheService', () => {
     anfragen.next(suche('kaputt'));
     tick(300);
     http
-      .expectOne('/termine/suche')
+      .expectOne('/api/termine/suche')
       .flush({ fehler: 'Unbekannte Verordnung' }, { status: 400, statusText: 'Bad Request' });
     expect(letzter()).toEqual({ status: 'fehler', meldung: 'Unbekannte Verordnung' });
 
     anfragen.next(suche('heil'));
     tick(300);
-    http.expectOne('/termine/suche').flush({ vorschlaege: [{}] });
+    http.expectOne('/api/termine/suche').flush({ vorschlaege: [{}] });
     expect(letzter().status).toBe('fertig');
   }));
 
   it('wiederholt bei 503 mit Abstand, aber nicht bei 400', fakeAsync(() => {
     anfragen.next(suche('wackelig'));
     tick(300);
-    http.expectOne('/termine/suche').flush(null, { status: 503, statusText: 'Unavailable' });
+    http.expectOne('/api/termine/suche').flush(null, { status: 503, statusText: 'Unavailable' });
     tick(500);
-    http.expectOne('/termine/suche').flush({ vorschlaege: [] });
+    http.expectOne('/api/termine/suche').flush({ vorschlaege: [] });
     expect(letzter().status).toBe('fertig');
 
     anfragen.next(suche('falsch'));
     tick(300);
-    http.expectOne('/termine/suche').flush(null, { status: 400, statusText: 'Bad Request' });
+    http.expectOne('/api/termine/suche').flush(null, { status: 400, statusText: 'Bad Request' });
     tick(2000);
-    http.expectNone('/termine/suche');
+    http.expectNone('/api/termine/suche');
     expect(letzter().status).toBe('fehler');
   }));
 
@@ -96,7 +96,7 @@ describe('TerminSucheService', () => {
     anfragen.next(suche('x'));
     tick(300);
     expect(letzter().status).toBe('laedt');
-    http.expectOne('/termine/suche').flush({ vorschlaege: [] });
+    http.expectOne('/api/termine/suche').flush({ vorschlaege: [] });
     expect(letzter().status).toBe('fertig');
   }));
 });

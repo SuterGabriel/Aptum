@@ -12,7 +12,9 @@
     "format": "prettier --write \"src/**/*.{ts,html,css}\"",
     "format:check": "prettier --check \"src/**/*.{ts,html,css}\"",
     "e2e": "playwright test",
-    "api:types": "openapi-typescript ../docs/api/openapi.json -o src/app/api/schema.d.ts"
+    "api:types": "npm run api:types:scheduling && npm run api:types:ai",
+    "api:types:scheduling": "openapi-typescript ../docs/api/openapi.json -o src/app/api/schema.d.ts",
+    "api:types:ai": "openapi-typescript ../docs/api/ai-assist-openapi.json -o src/app/api/schema-ai.d.ts"
   },
   "prettier": {
     "singleQuote": true,

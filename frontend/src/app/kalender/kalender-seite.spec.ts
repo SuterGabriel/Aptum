@@ -32,7 +32,7 @@ describe('KalenderSeite', () => {
 
   function wocheLiefern(): void {
     http
-      .expectOne((r) => r.url === '/kalender/woche' && r.params.get('tag') === '2026-03-02')
+      .expectOne((r) => r.url === '/api/kalender/woche' && r.params.get('tag') === '2026-03-02')
       .flush({
         montag: '2026-03-02',
         tagesbeginn: '08:00',

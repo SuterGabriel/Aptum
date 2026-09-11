@@ -1,14 +1,30 @@
 {
-  "/termine": {
+  "/api/termine": {
     "target": "http://localhost:8080",
+    "pathRewrite": {
+      "^/api": ""
+    },
     "secure": false
   },
-  "/verordnungen": {
+  "/api/verordnungen": {
     "target": "http://localhost:8080",
+    "pathRewrite": {
+      "^/api": ""
+    },
     "secure": false
   },
-  "/kalender/woche": {
+  "/api/kalender": {
     "target": "http://localhost:8080",
+    "pathRewrite": {
+      "^/api": ""
+    },
+    "secure": false
+  },
+  "/api/erfassung": {
+    "target": "http://localhost:8090",
+    "pathRewrite": {
+      "^/api": ""
+    },
     "secure": false
   }
 }

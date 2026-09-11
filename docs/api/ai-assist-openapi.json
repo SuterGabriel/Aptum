@@ -1,0 +1,343 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Aptum AI-Assist",
+    "description": "Schlägt vor, entscheidet nicht. Liest den Freitext einer Heilmittelverordnung in Felder; ob daraus eine Verordnung wird, entscheidet der Scheduling-Dienst.",
+    "version": "0.1"
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "summary": "Health",
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "type": "object",
+                  "title": "Response Health Health Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/erfassung": {
+      "post": {
+        "summary": "Erfassung",
+        "operationId": "erfassung_erfassung_post",
+        "parameters": [
+          {
+            "name": "X-Mandant",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "X-Mandant"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Freitext"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erfassung"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Erfassung": {
+        "properties": {
+          "vorschlag": {
+            "$ref": "#/components/schemas/VerordnungVorschlag"
+          },
+          "pseudonymisiert": {
+            "type": "integer",
+            "title": "Pseudonymisiert",
+            "description": "Wie viele Angaben vor dem Aufruf ersetzt wurden."
+          },
+          "provider": {
+            "type": "string",
+            "title": "Provider"
+          }
+        },
+        "type": "object",
+        "required": [
+          "vorschlag",
+          "pseudonymisiert",
+          "provider"
+        ],
+        "title": "Erfassung",
+        "description": "Die Antwort des Dienstes: der Vorschlag und was auf dem Weg dorthin geschah."
+      },
+      "Freitext": {
+        "properties": {
+          "text": {
+            "type": "string",
+            "maxLength": 4000,
+            "minLength": 1,
+            "title": "Text"
+          }
+        },
+        "type": "object",
+        "required": [
+          "text"
+        ],
+        "title": "Freitext"
+      },
+      "Frequenz": {
+        "properties": {
+          "min_pro_woche": {
+            "type": "integer",
+            "maximum": 7.0,
+            "minimum": 1.0,
+            "title": "Min Pro Woche"
+          },
+          "max_pro_woche": {
+            "type": "integer",
+            "maximum": 7.0,
+            "minimum": 1.0,
+            "title": "Max Pro Woche"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "min_pro_woche",
+          "max_pro_woche"
+        ],
+        "title": "Frequenz",
+        "description": "Behandlungen je Woche als Spanne. Eine feste Zahl ist eine Spanne mit min gleich max."
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "VerordnungVorschlag": {
+        "properties": {
+          "heilmittel": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "KG_EINZEL",
+                  "KG_GRUPPE",
+                  "MANUELLE_THERAPIE",
+                  "KLASSISCHE_MASSAGE",
+                  "MLD_TEILBEHANDLUNG",
+                  "MLD_GROSSBEHANDLUNG",
+                  "MLD_GANZBEHANDLUNG",
+                  "KG_ZNS_ERWACHSENE",
+                  "KG_ZNS_KINDER",
+                  "KG_GERAET",
+                  "KG_BEWEGUNGSBAD",
+                  "WARMPACKUNG",
+                  "ERGO_MOTORISCH_FUNKTIONELL",
+                  "ERGO_SENSOMOTORISCH",
+                  "ERGO_HIRNLEISTUNGSTRAINING",
+                  "ERGO_PSYCHISCH_FUNKTIONELL",
+                  "ERGO_BERATUNG_UMFELD"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Heilmittel"
+          },
+          "diagnosegruppe": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "WS",
+                  "EX",
+                  "CS",
+                  "AT",
+                  "GE",
+                  "SO",
+                  "LY",
+                  "ZN",
+                  "PN"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Diagnosegruppe"
+          },
+          "verordnete_einheiten": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 99.0,
+                "minimum": 1.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Verordnete Einheiten"
+          },
+          "frequenz": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Frequenz"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "ausstellungsdatum": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ausstellungsdatum"
+          },
+          "dringlicher_bedarf": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dringlicher Bedarf"
+          },
+          "hausbesuch": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hausbesuch"
+          },
+          "nicht_extrahierbar": {
+            "items": {
+              "type": "string",
+              "enum": [
+                "heilmittel",
+                "diagnosegruppe",
+                "verordnete_einheiten",
+                "frequenz",
+                "ausstellungsdatum",
+                "dringlicher_bedarf",
+                "hausbesuch"
+              ]
+            },
+            "type": "array",
+            "title": "Nicht Extrahierbar",
+            "description": "Felder, die im Text fehlen oder sich widersprechen. Nie raten."
+          },
+          "hinweise": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Hinweise",
+            "description": "Was am Text auffällt: Widersprüche, Unleserliches, Ungewöhnliches."
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "VerordnungVorschlag",
+        "description": "Die strukturierte Verordnung, wie das Modell sie aus dem Freitext liest."
+      }
+    }
+  }
+}

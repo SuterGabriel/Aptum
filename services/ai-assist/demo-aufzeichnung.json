@@ -1,0 +1,41 @@
+{
+  "zweck": "Aufgezeichnete Modellantworten fuer die Demo und den Ende-zu-Ende-Test. Damit laeuft die ganze Kette - Freitext, Vorschlag, Bestaetigung, Verordnung - ohne Schluessel und ohne Netz. Die Schluessel sind die pseudonymisierten Texte, denn genau die sieht das Modell. Was hier steht, hat ein echtes Modell einmal geantwortet; die Qualitaet misst der Eval, nicht diese Datei.",
+  "faelle": [
+    {
+      "eingabe": "KG 6x, 2x wöchentlich, Diagnosegruppe WS, ausgestellt am 27.02.2026",
+      "antwort": {
+        "heilmittel": "KG_EINZEL",
+        "diagnosegruppe": "WS",
+        "verordnete_einheiten": 6,
+        "frequenz": {
+          "min_pro_woche": 2,
+          "max_pro_woche": 2
+        },
+        "ausstellungsdatum": "2026-02-27",
+        "dringlicher_bedarf": false,
+        "hausbesuch": false
+      }
+    },
+    {
+      "eingabe": "Patient: [PATIENT-1], geb. [GEBURTSDATUM-1]. MLD 6x, 2x/Woche, M54.5, 27.02.2026",
+      "antwort": {
+        "verordnete_einheiten": 6,
+        "frequenz": {
+          "min_pro_woche": 2,
+          "max_pro_woche": 2
+        },
+        "ausstellungsdatum": "2026-02-27",
+        "nicht_extrahierbar": [
+          "heilmittel",
+          "diagnosegruppe",
+          "dringlicher_bedarf",
+          "hausbesuch"
+        ],
+        "hinweise": [
+          "MLD ohne Dauer: Teil-, Gross- und Ganzbehandlung sind verschiedene Leistungen.",
+          "M54.5 ist ein ICD-Code, keine Diagnosegruppe - die Ableitung waere eine fachliche Entscheidung."
+        ]
+      }
+    }
+  ]
+}

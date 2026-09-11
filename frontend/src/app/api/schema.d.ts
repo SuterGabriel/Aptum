@@ -4,7 +4,7 @@
  */
 
 export interface paths {
-    "/verordnungen": {
+    "/api/verordnungen": {
         parameters: {
             query?: never;
             header?: never;
@@ -20,7 +20,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/termine": {
+    "/api/termine": {
         parameters: {
             query?: never;
             header?: never;
@@ -36,7 +36,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/termine/suche": {
+    "/api/termine/suche": {
         parameters: {
             query?: never;
             header?: never;
@@ -52,7 +52,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/termine/pruefung": {
+    "/api/termine/pruefung": {
         parameters: {
             query?: never;
             header?: never;
@@ -68,7 +68,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/kalender/woche": {
+    "/api/kalender/woche": {
         parameters: {
             query?: never;
             header?: never;

@@ -1,2 +1,2 @@
 src/styles/tokens.css
-src/app/api/schema.d.ts
+src/app/api/*.d.ts

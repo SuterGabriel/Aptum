@@ -1,0 +1,167 @@
+<div class="erfassung">
+  <section class="eingabe" aria-labelledby="titel">
+    <h1 id="titel">Verordnung erfassen</h1>
+    <p class="einleitung">
+      Der Text der Verordnung, abgetippt oder eingescannt. Ein Sprachmodell liest ihn in Felder und
+      sagt dazu, was es <em>nicht</em> lesen konnte. Sie ergänzen und bestätigen; geprüft wird die
+      Verordnung danach von der Fachlogik, nicht vom Modell.
+    </p>
+
+    <label for="freitext">Text der Verordnung</label>
+    <textarea
+      id="freitext"
+      rows="8"
+      [ngModel]="text()"
+      (ngModelChange)="text.set($event)"
+      placeholder="KG 6x, 2x wöchentlich, Diagnosegruppe WS, ausgestellt am 27.02.2026"
+      aria-describedby="freitext-hinweis"
+    ></textarea>
+    <p id="freitext-hinweis" class="hinweis">
+      Namen und Geburtsdaten werden ersetzt, bevor der Text den Dienst verlässt.
+    </p>
+
+    <button type="button" class="primaer" [disabled]="!text().trim()" (click)="vorschlagHolen()">
+      Vorschlag holen
+    </button>
+
+    <p class="status" aria-live="polite">{{ statusText() }}</p>
+
+    @if (zustand(); as z) {
+      @if (z.status === 'fehler') {
+        <p class="fehler" role="alert">{{ z.meldung }}</p>
+      }
+    }
+  </section>
+
+  <section class="vorschlag" aria-labelledby="vorschlag-titel">
+    <h2 id="vorschlag-titel">Vorschlag prüfen</h2>
+
+    @if (zustand(); as z) {
+      @if (z.status === 'leer') {
+        <p class="leer">Noch kein Vorschlag. Text einfügen und „Vorschlag holen“.</p>
+      }
+      @if (z.status === 'laedt') {
+        <p class="leer">Der Text wird gelesen.</p>
+      }
+      @if (z.status === 'fertig') {
+        <p class="herkunft">
+          Gelesen von <span class="zahl">{{ provider() }}</span
+          >.
+          @if (pseudonymisiert() > 0) {
+            <span class="zahl">{{ pseudonymisiert() }}</span> Angaben wurden vor dem Aufruf ersetzt.
+          } @else {
+            Der Text enthielt nichts, was ersetzt werden musste.
+          }
+        </p>
+
+        @if (hinweise().length) {
+          <ul class="hinweise" aria-label="Was dem Modell aufgefallen ist">
+            @for (h of hinweise(); track h) {
+              <li class="modellhinweis">{{ h }}</li>
+            }
+          </ul>
+        }
+
+        <button type="button" class="sekundaer" (click)="uebernehmen(z.erfassung)">
+          Vorschlag ins Formular übernehmen
+        </button>
+
+        <form [formGroup]="form" class="felder">
+          <div class="feld" [class.unsicher]="istUnsicher('ausstellungsdatum')">
+            <label for="ausstellungsdatum">Ausstellungsdatum</label>
+            <input id="ausstellungsdatum" type="date" formControlName="ausstellungsdatum" />
+            @if (istUnsicher('ausstellungsdatum')) {
+              <span class="marke">nicht gelesen</span>
+            }
+          </div>
+
+          <div class="feld" [class.unsicher]="istUnsicher('diagnosegruppe')">
+            <label for="diagnosegruppe">Diagnosegruppe</label>
+            <select id="diagnosegruppe" formControlName="diagnosegruppe">
+              <option value="">bitte wählen</option>
+              @for (g of diagnosegruppen; track g) {
+                <option [value]="g">{{ g }}</option>
+              }
+            </select>
+            @if (istUnsicher('diagnosegruppe')) {
+              <span class="marke">nicht gelesen</span>
+            }
+          </div>
+
+          <div class="feld" [class.unsicher]="istUnsicher('verordnete_einheiten')">
+            <label for="einheiten">Verordnete Einheiten</label>
+            <input id="einheiten" type="number" min="1" formControlName="verordneteEinheiten" />
+            @if (istUnsicher('verordnete_einheiten')) {
+              <span class="marke">nicht gelesen</span>
+            }
+          </div>
+
+          <div class="feld paar" [class.unsicher]="istUnsicher('frequenz')">
+            <span class="gruppenlabel" id="frequenz-label">Frequenz je Woche</span>
+            <div class="zwei" role="group" aria-labelledby="frequenz-label">
+              <span>
+                <label for="frequenzMin">von</label>
+                <input
+                  id="frequenzMin"
+                  type="number"
+                  min="1"
+                  max="7"
+                  formControlName="frequenzMin"
+                />
+              </span>
+              <span>
+                <label for="frequenzMax">bis</label>
+                <input
+                  id="frequenzMax"
+                  type="number"
+                  min="1"
+                  max="7"
+                  formControlName="frequenzMax"
+                />
+              </span>
+            </div>
+            @if (istUnsicher('frequenz')) {
+              <span class="marke">nicht gelesen</span>
+            }
+          </div>
+
+          <div class="feld kasten">
+            <label for="dringlich">
+              <input id="dringlich" type="checkbox" formControlName="dringlicherBedarf" />
+              Dringlicher Behandlungsbedarf
+            </label>
+            @if (istUnsicher('dringlicher_bedarf')) {
+              <span class="marke">nicht gelesen, als „nein“ angenommen</span>
+            }
+          </div>
+        </form>
+
+        <p class="abseits">
+          Zwei gelesene Angaben gehören nicht zur Verordnung:
+          <strong>Heilmittel</strong> ({{ heilmittelVorschlag() || 'nicht gelesen' }}) wird bei der
+          Terminsuche gewählt, <strong>Hausbesuch</strong> führt das Modell noch nicht.
+        </p>
+
+        <div class="aktionen">
+          <button type="button" class="primaer" [disabled]="form.invalid" (click)="anlegen()">
+            Verordnung anlegen
+          </button>
+        </div>
+
+        @if (anlageFehler()) {
+          <p class="fehler" role="alert">{{ anlageFehler() }}</p>
+        }
+        @if (angelegt()) {
+          <div class="angelegt" role="status">
+            <p>
+              Angelegt. Kennung <span class="zahl kennung">{{ angelegt() }}</span>
+            </p>
+            <button type="button" class="sekundaer" (click)="zurSuche()">
+              Termine dafür suchen
+            </button>
+          </div>
+        }
+      }
+    }
+  </section>
+</div>

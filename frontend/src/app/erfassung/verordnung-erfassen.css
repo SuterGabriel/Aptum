@@ -1,0 +1,202 @@
+.erfassung {
+  display: grid;
+  grid-template-columns: minmax(20rem, 26rem) minmax(0, 1fr);
+  gap: var(--abstand-6);
+  align-items: start;
+}
+
+@media (max-width: 60rem) {
+  .erfassung {
+    grid-template-columns: 1fr;
+  }
+}
+
+h1 {
+  font-size: var(--schrift-xl);
+  margin: 0 0 var(--abstand-2);
+}
+
+h2 {
+  font-size: var(--schrift-l);
+  margin: 0 0 var(--abstand-3);
+}
+
+.einleitung,
+.hinweis,
+.leer,
+.abseits,
+.herkunft {
+  color: var(--text-secondary);
+  font-size: var(--schrift-s);
+  margin: 0 0 var(--abstand-3);
+}
+
+label,
+.gruppenlabel {
+  display: block;
+  font-size: var(--schrift-s);
+  font-weight: var(--gewicht-mittel);
+  margin: 0 0 var(--abstand-1);
+}
+
+textarea,
+input[type='date'],
+input[type='number'],
+select {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: var(--hitflaeche-min);
+  padding: var(--abstand-2) var(--abstand-3);
+  border: var(--rand-duenn) solid var(--border-strong);
+  border-radius: var(--radius-klein);
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  font: inherit;
+}
+
+textarea {
+  min-height: 10rem;
+  resize: vertical;
+}
+
+button {
+  min-height: var(--hitflaeche-min);
+  padding: var(--abstand-2) var(--abstand-4);
+  border-radius: var(--radius-klein);
+  font: inherit;
+  font-weight: var(--gewicht-mittel);
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.primaer {
+  background: var(--accent);
+  color: var(--accent-text);
+  border: var(--rand-duenn) solid var(--accent-strong);
+}
+
+.sekundaer {
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  border: var(--rand-duenn) solid var(--border-strong);
+}
+
+.status {
+  min-height: 1.5em;
+  margin: var(--abstand-3) 0 0;
+  color: var(--text-muted);
+  font-size: var(--schrift-s);
+}
+
+/* ---- Der Vorschlag ---------------------------------------------------- */
+
+.vorschlag {
+  background: var(--surface-raised);
+  border: var(--rand-duenn) solid var(--border-subtle);
+  border-radius: var(--radius-gross);
+  padding: var(--abstand-4) var(--abstand-5);
+}
+
+.hinweise {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--abstand-3);
+  display: grid;
+  gap: var(--abstand-1);
+}
+
+.modellhinweis {
+  font-size: var(--schrift-s);
+  color: var(--regel-warnung-text);
+  background: var(--regel-warnung-bg);
+  border-left: var(--rand-dick) solid var(--regel-warnung-border);
+  padding: var(--abstand-1) var(--abstand-2);
+  border-radius: var(--radius-klein);
+}
+
+.felder {
+  display: grid;
+  gap: var(--abstand-3);
+  margin: var(--abstand-4) 0;
+}
+
+.feld {
+  position: relative;
+  padding: var(--abstand-2) var(--abstand-3);
+  border-radius: var(--radius-klein);
+  border-left: var(--rand-dick) solid transparent;
+}
+
+/* Nicht gelesen: Farbe plus Wort, nie Farbe allein. */
+.feld.unsicher {
+  background: var(--regel-warnung-bg);
+  border-left-color: var(--regel-warnung-border);
+}
+
+.marke {
+  display: inline-block;
+  margin-top: var(--abstand-1);
+  font-size: var(--schrift-xs);
+  font-weight: var(--gewicht-fett);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--regel-warnung-text);
+}
+
+.zwei {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--abstand-3);
+}
+
+.kasten label {
+  display: flex;
+  align-items: center;
+  gap: var(--abstand-2);
+  font-weight: var(--gewicht-normal);
+  min-height: var(--hitflaeche-min);
+}
+
+.kasten input[type='checkbox'] {
+  width: auto;
+  min-height: 0;
+}
+
+.abseits {
+  padding: var(--abstand-2) var(--abstand-3);
+  background: var(--surface-sunken);
+  border-radius: var(--radius-klein);
+}
+
+.aktionen {
+  display: flex;
+  gap: var(--abstand-2);
+  justify-content: flex-end;
+}
+
+.angelegt {
+  margin-top: var(--abstand-3);
+  padding: var(--abstand-3) var(--abstand-4);
+  background: var(--regel-erfuellt-bg);
+  color: var(--regel-erfuellt-text);
+  border-left: var(--rand-dick) solid var(--regel-erfuellt-border);
+  border-radius: var(--radius-klein);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--abstand-3);
+}
+
+.angelegt p {
+  margin: 0;
+}
+
+.kennung {
+  font-size: var(--schrift-s);
+  word-break: break-all;
+}

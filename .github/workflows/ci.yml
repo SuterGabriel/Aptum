@@ -328,6 +328,23 @@ jobs:
           nohup java -jar services/scheduling/infrastructure/target/scheduling-infrastructure-*.jar > backend.log 2>&1 &
           for i in $(seq 1 60); do curl -sf localhost:8080/actuator/health && exit 0; sleep 1; done
           echo "Backend nicht gestartet"; cat backend.log; exit 1
+      # Der AI-Dienst mit aufgezeichneten Antworten: kein Schlüssel, kein Netz,
+      # kein Zufall. Die Seite "Verordnung erfassen" ist damit vollständig
+      # testbar - geprüft wird die Kette, nicht das Modell.
+      - uses: astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78 # v7
+        with:
+          enable-cache: true
+          cache-dependency-glob: services/ai-assist/uv.lock
+      - name: AI-Dienst starten
+        working-directory: services/ai-assist
+        env:
+          AI_ASSIST_PROVIDER: aufzeichnung
+          AI_ASSIST_AUFZEICHNUNG: demo-aufzeichnung.json
+        run: |
+          uv sync --frozen --no-build
+          nohup uv run --frozen --no-build uvicorn ai_assist.api:app --port 8090 > ai.log 2>&1 &
+          for i in $(seq 1 40); do curl -sf localhost:8090/health && exit 0; sleep 1; done
+          echo "AI-Dienst nicht gestartet"; cat ai.log; exit 1
       - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
         with:
           node-version: '24'
@@ -351,6 +368,7 @@ jobs:
             frontend/playwright-report/
             frontend/test-results/
             backend.log
+            services/ai-assist/ai.log
           retention-days: 7
 
   # --- Noch offen --------------------------------------------------------

@@ -191,6 +191,10 @@ pruefe "CI hat den Job sonar" enthaelt .github/workflows/ci.yml "  sonar:"
 pruefe "MCP-Server existiert" datei services/ai-assist/src/ai_assist/mcp_server.py
 pruefe "MCP-Werkzeug bucht über dieselbe Schnittstelle" enthaelt services/ai-assist/src/ai_assist/mcp_server.py "/termine/pruefung"
 pruefe "MCP-Server ist getestet" datei services/ai-assist/tests/test_mcp_server.py
+pruefe "Seite zeigt den Vorschlag" datei frontend/src/app/erfassung/verordnung-erfassen.ts
+pruefe "Der Mensch bestätigt, die Domäne prüft" enthaelt frontend/e2e/erfassung.spec.ts "Verordnung anlegen"
+pruefe "AI-Schnittstelle ist erzeugt" datei docs/api/ai-assist-openapi.json
+pruefe "AI-Dokument wird gegen die Anwendung geprüft" datei services/ai-assist/tests/test_openapi.py
 pruefe "Prüfung ohne Buchung im Backend" enthaelt services/scheduling/infrastructure/src/main/java/de/aptum/scheduling/infrastructure/rest/TerminController.java "/pruefung"
 pruefe "Wochenansicht nimmt die Grenzen aus Termin" enthaelt services/scheduling/domain/src/main/java/de/aptum/scheduling/domain/kalender/Wochenansicht.java "belegtRaum"
 pruefe "stumme Lücke 1 ist Fixture" datei scripts/fixtures/regel-check/domain/NachbarBorgt.java

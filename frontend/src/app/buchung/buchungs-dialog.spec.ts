@@ -59,7 +59,7 @@ describe('BuchungsDialog', () => {
 
   const dialog = (): HTMLElement => document.querySelector('[role="dialog"]')!;
   const pruefungLiefern = (antwort: Buchungsantwort) => {
-    http.expectOne('/termine/pruefung').flush(antwort);
+    http.expectOne('/api/termine/pruefung').flush(antwort);
     TestBed.tick();
   };
 
@@ -87,7 +87,7 @@ describe('BuchungsDialog', () => {
     buchen.click();
     TestBed.tick();
 
-    const anfrage = http.expectOne('/termine');
+    const anfrage = http.expectOne('/api/termine');
     expect(anfrage.request.body.uebersteuerung).toBeUndefined();
     anfrage.flush({ ...FREI, termin: 'abc' }, { status: 201, statusText: 'Created' });
     TestBed.tick();
@@ -108,7 +108,7 @@ describe('BuchungsDialog', () => {
 
     trotzdem.click();
     TestBed.tick();
-    const anfrage = http.expectOne('/termine');
+    const anfrage = http.expectOne('/api/termine');
     expect(anfrage.request.body.uebersteuerung.begruendung).toBe('Absprache mit der Praxisleitung');
     anfrage.flush(
       { ausgang: 'UEBERSTEUERT', regeln: BLOCKIERT.regeln, termin: 'xyz' },
@@ -122,7 +122,7 @@ describe('BuchungsDialog', () => {
     pruefungLiefern(FREI);
     dialog().querySelector<HTMLButtonElement>('button.primaer')!.click();
     TestBed.tick();
-    http.expectOne('/termine').flush(BLOCKIERT, { status: 409, statusText: 'Conflict' });
+    http.expectOne('/api/termine').flush(BLOCKIERT, { status: 409, statusText: 'Conflict' });
     TestBed.tick();
     expect(dialog().querySelector('#begruendung')).not.toBeNull();
     expect(dialog().querySelector('[role="alert"]')).toBeNull();

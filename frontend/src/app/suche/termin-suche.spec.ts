@@ -57,13 +57,13 @@ describe('TerminSuche', () => {
   it('sucht nicht, solange die Kennung ungültig ist', fakeAsync(() => {
     fixture.componentInstance.form.controls.verordnung.setValue('keine-uuid');
     tick(300);
-    http.expectNone('/termine/suche');
+    http.expectNone('/api/termine/suche');
     expect().nothing();
   }));
 
   it('zeigt Vorschläge und die ausgeschlossenen mit Begründung', fakeAsync(() => {
     kennungEintragen();
-    http.expectOne('/termine/suche').flush(EIN_VORSCHLAG);
+    http.expectOne('/api/termine/suche').flush(EIN_VORSCHLAG);
     fixture.detectChanges();
 
     const text = html().querySelector('.ergebnis')?.textContent ?? '';
@@ -80,7 +80,7 @@ describe('TerminSuche', () => {
   it('meldet einen Fehler als Alert, nicht still', fakeAsync(() => {
     kennungEintragen();
     http
-      .expectOne('/termine/suche')
+      .expectOne('/api/termine/suche')
       .flush({ fehler: 'Unbekannte Verordnung' }, { status: 400, statusText: 'Bad Request' });
     fixture.detectChanges();
     expect(html().querySelector('[role="alert"]')?.textContent).toContain('Unbekannte Verordnung');
@@ -94,7 +94,7 @@ describe('TerminSuche', () => {
 
     fixture.componentInstance.form.controls.verordnung.setValue(VERORDNUNG);
     await new Promise((weiter) => setTimeout(weiter, 350));
-    http.expectOne('/termine/suche').flush(EIN_VORSCHLAG);
+    http.expectOne('/api/termine/suche').flush(EIN_VORSCHLAG);
     fixture.detectChanges();
     const voll = await axe.run(html());
     expect(voll.violations).toEqual([]);

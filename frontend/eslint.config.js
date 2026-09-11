@@ -7,7 +7,7 @@ module.exports = tseslint.config(
   {
     // Erzeugt, nicht geschrieben (npm run api:types). Stil-Regeln greifen
     // hier nicht; was drin steht, prüft die CI gegen das OpenAPI-Dokument.
-    ignores: ['src/app/api/schema.d.ts'],
+    ignores: ['src/app/api/*.d.ts'],
   },
   {
     files: ['**/*.ts'],

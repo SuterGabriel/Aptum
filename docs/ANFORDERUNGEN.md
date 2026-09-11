@@ -91,7 +91,7 @@ Verlängerung möglich · 80–100 % · AI-native Healthcare SaaS
 | # | Aufgabe (wörtlich) | Status | Abbildung im Projekt |
 |---|---|---|---|
 | CA1 | Design, Entwicklung und Betrieb moderner Webanwendungen über Frontend, Backend und DevOps | offen | Gesamtprojekt |
-| CA2 | Integration KI-nativer Funktionen und agentischer Erfahrungen, LLMs, Retrieval, Tool-Use, strukturierte Workflows | in Arbeit | Verordnungserfassung aus Freitext in `services/ai-assist/src/ai_assist/erfassung.py`: Pseudonymisierung, Tool-Use, Schema, nicht extrahierbar statt geraten; Eval-Suite in `evals/`; MCP-Server als Tool-Use-Schnittstelle in `services/ai-assist/src/ai_assist/mcp_server.py` |
+| CA2 | Integration KI-nativer Funktionen und agentischer Erfahrungen, LLMs, Retrieval, Tool-Use, strukturierte Workflows | in Arbeit | Verordnungserfassung aus Freitext in `services/ai-assist/src/ai_assist/erfassung.py`: Pseudonymisierung, Tool-Use, Schema, nicht extrahierbar statt geraten; Eval-Suite in `evals/`; MCP-Server als Tool-Use-Schnittstelle in `services/ai-assist/src/ai_assist/mcp_server.py`; die Seite `frontend/src/app/erfassung/` zeigt Vorschlag, Lücken und Bestätigung durch einen Menschen |
 | CA3 | Konzeption und Betrieb cloud-nativer Services, Zuverlässigkeit, Sicherheit, Entwicklerproduktivität | offen | `infra/`, Observability mit Tenant-ID |
 | CA4 | Mitgestaltung gemeinsam genutzter Agenten, Skills, Pipelines und Harnesses im Team | belegt | `.claude/skills/`, `.claude/agents/`, `.claude/commands/`, `.claude/hooks/` — versioniert im Repo, nicht global |
 | CA5 | Zusammenarbeit mit Product Management, UX, Architekten | in Arbeit | `docs/PRODUKT.md`, `docs/adr/`, `docs/mockups/` |
