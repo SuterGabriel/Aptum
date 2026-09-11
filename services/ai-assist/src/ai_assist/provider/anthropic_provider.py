@@ -10,7 +10,7 @@ from ai_assist.provider.basis import (
     WERKZEUG_SCHEMA,
     ProviderFehler,
 )
-from ai_assist.schema import VerordnungVorschlag
+from ai_assist.schema import VerordnungVorschlag, vorschlag_aus
 
 
 class AnthropicProvider:
@@ -46,5 +46,5 @@ class AnthropicProvider:
         for block in antwort.content:
             if block.type == "tool_use" and block.name == WERKZEUG_NAME:
                 eingabe: Any = block.input
-                return VerordnungVorschlag.model_validate(eingabe)
+                return vorschlag_aus(eingabe)
         raise ProviderFehler("Anthropic hat nicht über das Werkzeug geantwortet")

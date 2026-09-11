@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Any
 
 from ai_assist.provider.basis import ProviderFehler
-from ai_assist.schema import VerordnungVorschlag
+from ai_assist.schema import VerordnungVorschlag, vorschlag_aus
 
 
 class AufgezeichneterProvider:
@@ -34,4 +34,4 @@ class AufgezeichneterProvider:
     def extrahiere(self, text: str) -> VerordnungVorschlag:
         if text not in self._antworten:
             raise ProviderFehler(f"Keine Aufzeichnung für diesen Text: {text[:60]!r}")
-        return VerordnungVorschlag.model_validate(self._antworten[text])
+        return vorschlag_aus(self._antworten[text])

@@ -10,7 +10,7 @@ from ai_assist.provider.basis import (
     WERKZEUG_SCHEMA,
     ProviderFehler,
 )
-from ai_assist.schema import VerordnungVorschlag
+from ai_assist.schema import VerordnungVorschlag, vorschlag_aus
 
 
 class OpenAIProvider:
@@ -51,5 +51,5 @@ class OpenAIProvider:
         aufrufe = antwort.choices[0].message.tool_calls or []
         for aufruf in aufrufe:
             if aufruf.type == "function" and aufruf.function.name == WERKZEUG_NAME:
-                return VerordnungVorschlag.model_validate(json.loads(aufruf.function.arguments))
+                return vorschlag_aus(json.loads(aufruf.function.arguments))
         raise ProviderFehler("OpenAI hat nicht über das Werkzeug geantwortet")

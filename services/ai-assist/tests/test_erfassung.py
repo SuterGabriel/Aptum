@@ -52,6 +52,15 @@ def test_platzhalter_in_hinweisen_werden_zurueckgesetzt() -> None:
     assert e.vorschlag.hinweise == ["Angabe zu Testfall Alpha unklar"]
 
 
+def test_ein_erfundenes_feld_kippt_nicht_den_vorschlag() -> None:
+    # Im zweiten Eval-Lauf lieferte das Modell "verordnungsdatum_hinweis": "n/a",
+    # und der Fall starb an extra_forbidden - alle sieben Felder rot, obwohl
+    # sie stimmten. Das Feld fliegt raus und wird benannt.
+    e = erfasse(TEXT, provider({"heilmittel": "KG_EINZEL", "verordnungsdatum_hinweis": "n/a"}))
+    assert e.vorschlag.heilmittel == "KG_EINZEL"
+    assert "Modell lieferte ein unbekanntes Feld: verordnungsdatum_hinweis" in e.vorschlag.hinweise
+
+
 def test_unbekanntes_heilmittel_scheitert_am_schema() -> None:
     from pydantic import ValidationError
 

@@ -8,7 +8,7 @@ werden.
 """
 
 from datetime import date
-from typing import Literal
+from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -74,6 +74,24 @@ class VerordnungVorschlag(BaseModel):
         default_factory=list,
         description="Was am Text auffällt: Widersprüche, Unleserliches, Ungewöhnliches.",
     )
+
+
+def vorschlag_aus(eingabe: dict[str, Any]) -> VerordnungVorschlag:
+    """Baut den Vorschlag aus der Werkzeug-Eingabe des Modells.
+
+    Modelle erfinden gelegentlich ein Feld, das im Schema nicht steht
+    ("verordnungsdatum_hinweis": "n/a" ist im Eval passiert). Das Schema
+    verbietet Unbekanntes, damit nichts still durchrutscht - aber ein
+    erfundenes Feld darf nicht den ganzen Vorschlag kippen, wenn die sieben
+    echten Felder stimmen. Also: raus damit, und als Hinweis benennen.
+    """
+    bekannt = set(VerordnungVorschlag.model_fields)
+    fremd = sorted(k for k in eingabe if k not in bekannt)
+    bereinigt = {k: v for k, v in eingabe.items() if k in bekannt}
+    vorschlag = VerordnungVorschlag.model_validate(bereinigt)
+    for k in fremd:
+        vorschlag.hinweise.append(f"Modell lieferte ein unbekanntes Feld: {k}")
+    return vorschlag
 
 
 class Erfassung(BaseModel):

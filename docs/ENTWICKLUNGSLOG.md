@@ -1556,6 +1556,33 @@ Frist ist. Zwei von 55 rot, beide begründet — das ist der Stand.
 
 ---
 
+## 2026-09-11 — Dritter Eval-Lauf: das Gate greift, und das Modell erfindet ein Feld
+
+**Was der Lauf gezeigt hat.** Zum ersten Mal mit Basislinie im Repo: Der
+Bericht zeigt „(vorher 100,0 %)“ hinter den Feldern, und am Ende steht
+„NEU GESCHEITERT: heilmittel-kg-ohne-zusatz“. Der Job ist rot. Genau das
+war die Zusage — nach dem stummen Lauf davor ist das die Gegenprobe, die
+ich brauchte.
+
+**Der Fall selbst.** Das Modell hat ein Feld erfunden:
+`verordnungsdatum_hinweis: "n/a"`. Das Schema verbietet Unbekanntes
+(`extra="forbid"`), Pydantic wirft, und der ganze Fall stirbt — alle sieben
+Felder rot, obwohl die Extraktion nach dem Bericht vermutlich gestimmt
+hätte. Nicht der Prompt war das Problem, sondern die Pipeline: Ein
+erfundenes Feld ist ein Hinweis, kein Totalausfall. Jetzt baut eine
+Funktion den Vorschlag aus der rohen Werkzeug-Eingabe, wirft Unbekanntes
+heraus und nennt es in `hinweise`. Das Schema bleibt streng — der
+Unterschied ist, wer die Strenge abfängt.
+
+Nebenbei: Das ist der Grund, warum die Suite absichtlich denselben Text
+zweimal sieht. Beim zweiten Lauf war dieser Fall grün; beim dritten hat
+das Modell anders geantwortet. Ohne die Suite hätte das erst eine Praxis
+gemerkt.
+
+**Zeitschätzung:** zwanzig Minuten.
+
+---
+
 ## Vorlage für weitere Einträge
 
 ```
