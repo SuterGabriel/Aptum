@@ -4,17 +4,107 @@
   display: grid;
   grid-template-columns: minmax(20rem, 26rem) minmax(0, 1fr);
   gap: var(--abstand-6);
-  align-items: start;
+  align-items: stretch;
 }
 
-/* Der Vorschlag wächst mit den Feldern; er scrollt in seinem Kasten. */
-.eingabe,
+/* Links: Das Textfeld nimmt, was zwischen Kopf und Knöpfen übrig bleibt. */
+.eingabe {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.eingabe textarea {
+  flex: 1 1 auto;
+  min-height: 8rem;
+}
+
+.eingabe-aktionen {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--abstand-2);
+  margin-top: var(--abstand-3);
+}
+
+.leise {
+  background: transparent;
+  color: var(--text-secondary);
+  border: var(--rand-duenn) solid var(--border-subtle);
+}
+
+.leise:hover {
+  border-color: var(--border-strong);
+  color: var(--text-primary);
+}
+
+/* Rechts: Der Kasten füllt die Höhe; der Vorschlag scrollt darin. */
 .vorschlag {
   position: relative;
-  max-height: 100%;
+  min-height: 0;
   overflow: auto;
   scrollbar-width: thin;
   scrollbar-color: var(--border-strong) transparent;
+  display: flex;
+  flex-direction: column;
+}
+
+.vorschlag > button {
+  align-self: flex-start;
+}
+
+/* Leer ist nicht leer: Der Kasten sagt, was gleich passiert - in der
+   Reihenfolge, in der es passiert. */
+.leerstand {
+  flex: 1 1 auto;
+  display: grid;
+  align-content: center;
+  gap: var(--abstand-3);
+  width: min(100%, 38rem);
+  margin: 0 auto;
+}
+
+.leerstand .leer {
+  font-size: var(--schrift-m);
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.schritte {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: schritt;
+  display: grid;
+  gap: var(--abstand-2);
+  color: var(--text-secondary);
+  font-size: var(--schrift-s);
+}
+
+.schritte li {
+  counter-increment: schritt;
+  display: grid;
+  grid-template-columns: 1.5rem minmax(0, 1fr);
+  gap: var(--abstand-2);
+  align-items: baseline;
+}
+
+.schritte li::before {
+  content: counter(schritt);
+  display: inline-grid;
+  place-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background: var(--surface-sunken);
+  border: var(--rand-duenn) solid var(--border-strong);
+  color: var(--text-primary);
+  font-family: var(--schrift-zahl);
+  font-size: var(--schrift-xs);
+}
+
+.schritte b {
+  color: var(--text-primary);
+  font-weight: var(--gewicht-mittel);
 }
 
 @media (max-width: 60rem) {
@@ -22,10 +112,14 @@
     grid-template-columns: 1fr;
     height: auto;
   }
-  .eingabe,
+  .eingabe textarea {
+    flex: none;
+  }
   .vorschlag {
-    max-height: none;
     overflow: visible;
+  }
+  .leerstand {
+    height: auto;
   }
 }
 
@@ -136,10 +230,22 @@ button:disabled {
   border-radius: var(--radius-klein);
 }
 
+/* Zwei Felder je Zeile, damit das Formular ohne Scrollen sichtbar bleibt. */
 .felder {
   display: grid;
-  gap: var(--abstand-3);
-  margin: var(--abstand-4) 0;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--abstand-2) var(--abstand-3);
+  margin: var(--abstand-3) 0;
+}
+
+.feld.kasten {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 72rem) {
+  .felder {
+    grid-template-columns: 1fr;
+  }
 }
 
 .feld {

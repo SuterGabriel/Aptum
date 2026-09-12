@@ -2,11 +2,13 @@
   height: 100%;
   min-height: 0;
   display: grid;
-  grid-template-columns: minmax(18rem, 22rem) minmax(0, 1fr);
+  grid-template-columns: minmax(20rem, 26rem) minmax(0, 1fr);
   gap: var(--abstand-6);
 }
 
-/* Beide Spalten scrollen für sich; die Seite nie. */
+/* Beide Spalten scrollen für sich; die Seite nie. Die Kriterien sind ein
+   Gitter aus zwei Spalten: Die zwei Dimensionen ohne Eingabe teilen sich
+   eine Zeile, alles andere spannt über beide. */
 .kriterien {
   position: relative;
   overflow: auto;
@@ -14,6 +16,32 @@
   padding-right: var(--abstand-2);
   scrollbar-width: thin;
   scrollbar-color: var(--border-strong) transparent;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: var(--abstand-2);
+  align-content: start;
+}
+
+.kriterien > * {
+  grid-column: 1 / -1;
+  min-width: 0;
+}
+
+.kriterien > fieldset.notiz {
+  grid-column: auto;
+}
+
+/* Auf niedrigen Fenstern zählt jede Zeile: Die Einleitung weicht, die
+   Kriterien bleiben ohne Scrollen sichtbar. */
+@media (max-height: 840px) {
+  .kriterien .einleitung,
+  .kriterien .hinweis,
+  .kriterien .abgeleitet {
+    display: none;
+  }
+  .kriterien fieldset.notiz {
+    padding-bottom: 0;
+  }
 }
 
 .ergebnis {
@@ -46,7 +74,7 @@
 
 h1 {
   font-size: var(--schrift-xl);
-  margin: 0 0 var(--abstand-2);
+  margin: 0 0 var(--abstand-1);
 }
 
 h2 {
@@ -65,7 +93,11 @@ h3 {
 .leer {
   color: var(--text-secondary);
   font-size: var(--schrift-s);
-  margin: 0 0 var(--abstand-3);
+  margin: 0 0 var(--abstand-2);
+}
+
+.hinweis {
+  margin-top: var(--abstand-1);
 }
 
 /* ---- Die vier Dimensionen ------------------------------------------- */
@@ -74,8 +106,8 @@ fieldset {
   border: var(--rand-duenn) solid var(--border-subtle);
   border-radius: var(--radius-gross);
   background: var(--surface-raised);
-  padding: var(--abstand-2) var(--abstand-4) var(--abstand-3);
-  margin: 0 0 var(--abstand-3);
+  padding: 0 var(--abstand-4) var(--abstand-3);
+  margin: 0 0 var(--abstand-2);
 }
 
 /* Die zwei Dimensionen ohne Eingabe sind Notizen, keine Formulare: flacher. */
@@ -113,7 +145,7 @@ label {
   display: block;
   font-size: var(--schrift-s);
   font-weight: var(--gewicht-mittel);
-  margin: var(--abstand-3) 0 var(--abstand-1);
+  margin: var(--abstand-2) 0 var(--abstand-1);
 }
 
 input[type='text'],
@@ -147,12 +179,14 @@ input[aria-invalid='true'] {
   gap: var(--abstand-3);
 }
 
+/* Sechs Tage in einer Zeile: Hitfläche 44 Pixel bleibt, die Luft dazwischen nicht. */
 .tage {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--abstand-2);
-  padding: var(--abstand-2) var(--abstand-3);
-  margin: var(--abstand-3) 0 0;
+  justify-content: space-between;
+  gap: 0;
+  padding: 0 var(--abstand-2) var(--abstand-1);
+  margin: var(--abstand-2) 0 0;
   border-color: var(--border-subtle);
 }
 
@@ -162,7 +196,7 @@ input[aria-invalid='true'] {
   gap: var(--abstand-1);
   min-height: var(--hitflaeche-min);
   margin: 0;
-  padding: 0 var(--abstand-2);
+  padding: 0 var(--abstand-1);
   font-weight: var(--gewicht-normal);
 }
 
@@ -298,8 +332,8 @@ input[aria-invalid='true'] {
 .akte {
   display: grid;
   grid-template-columns: max-content 1fr;
-  gap: var(--abstand-1) var(--abstand-3);
-  margin: 0 0 var(--abstand-3);
+  gap: 2px var(--abstand-3);
+  margin: 0 0 var(--abstand-2);
   padding: var(--abstand-2) var(--abstand-3);
   border-left: var(--rand-dick) solid var(--border-strong);
   background: var(--surface-sunken);
@@ -316,6 +350,11 @@ input[aria-invalid='true'] {
 
 .akte dd {
   margin: 0;
+}
+
+.akte .trenner {
+  color: var(--text-muted);
+  margin: 0 var(--abstand-1);
 }
 
 .akte .dringlich {

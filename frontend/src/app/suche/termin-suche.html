@@ -20,8 +20,7 @@
         [attr.aria-invalid]="form.controls.verordnung.touched && form.controls.verordnung.invalid"
       />
       <p id="verordnung-hinweis" class="hinweis">
-        Die Kennung, die das Anlegen der Verordnung zurückgibt. Das Backend liest daraus
-        Restkontingent, Frequenz und Frist - hier wird nichts davon eingegeben.
+        Die Kennung aus dem Anlegen. Restkontingent, Frequenz und Frist liest das Backend selbst.
       </p>
       @if (akte(); as a) {
         <dl class="akte" aria-label="Die Verordnung hinter der Kennung">
@@ -44,11 +43,8 @@
               <span class="zahl">{{ a.posten?.erbracht }}</span> von
               <span class="zahl">{{ a.posten?.verordnet }}</span> erbracht,
               <span class="zahl">{{ a.posten?.offen }}</span> offen
+              <span class="trenner" aria-hidden="true">·</span> {{ a.frequenz }}
             </dd>
-          </div>
-          <div>
-            <dt>Frequenz</dt>
-            <dd>{{ a.frequenz }}</dd>
           </div>
           <div>
             <dt>Stand</dt>
@@ -70,17 +66,15 @@
     <fieldset class="notiz">
       <legend><span class="nummer" aria-hidden="true">2</span> Therapeut</legend>
       <p class="abgeleitet">
-        Kein Filter. Wer das Heilmittel abrechnen darf und wann Dienst hat, entscheiden die Regeln
-        <em>Qualifikation</em> und <em>Dienstplan</em>. Was dadurch wegfällt, steht rechts mit
-        Begründung.
+        Kein Filter: <em>Qualifikation</em> und <em>Dienstplan</em> entscheiden. Was wegfällt, steht
+        rechts mit Grund.
       </p>
     </fieldset>
 
     <fieldset class="notiz">
       <legend><span class="nummer" aria-hidden="true">3</span> Raum</legend>
       <p class="abgeleitet">
-        Kein Filter. Die Raumanforderung folgt aus dem Heilmittel - Gerätebereich oder Liege, mit
-        Nachruhe, wo sie vorgeschrieben ist.
+        Kein Filter: Die Anforderung folgt aus dem Heilmittel, samt Nachruhe, wo vorgeschrieben.
       </p>
     </fieldset>
 

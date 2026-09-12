@@ -2066,7 +2066,21 @@ positioniert, und ohne positionierten Vorfahren streckten sie das Dokument.
 Die Scrollbereiche sind jetzt `position: relative`. Beides hätte ein
 Screenshot nicht gezeigt; gezeigt hat es die Zahl.
 
-**Zeitschätzung:** zwei Stunden, davon eine halbe für das Outlet.
+**Nachtrag, zweite Runde.** „Auf dieser Seite muss ich immer noch
+scrollen" — die Kriterienspalte der Suche war bei 768 Pixel Fensterhöhe
+181 Pixel zu lang. Gemessen, nicht geschätzt, und dann in drei Schritten
+auf null: Therapeut und Raum teilen sich eine Zeile (die Fieldsets bleiben
+direkte Kinder des Formulars, weil ein Test genau das prüft), der
+Aktenkasten hat vier Zeilen statt fünf, und unter 840 Pixel Höhe weichen die
+erklärenden Texte — nicht die Bedienelemente. Die Erfassung hat jetzt einen
+Leerzustand, der sagt, was gleich passiert, in der Reihenfolge der Pipeline;
+das Textfeld nimmt die Höhe, die übrig ist; ein Knopf fügt das Beispiel ein,
+das die Aufzeichnung kennt. Ein Fehler dabei: In einem Gitter wird jeder
+Textknoten zum eigenen Gitterkind, und die Liste brach Wort für Wort um. Ein
+`span` um den Inhalt, und sie stand.
+
+**Zeitschätzung:** zwei Stunden, davon eine halbe für das Outlet; die zweite
+Runde eine weitere Stunde.
 
 ---
 

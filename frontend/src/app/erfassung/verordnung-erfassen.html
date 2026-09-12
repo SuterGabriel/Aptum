@@ -13,16 +13,19 @@
       rows="8"
       [ngModel]="text()"
       (ngModelChange)="text.set($event)"
-      placeholder="KG 6x, 2x wöchentlich, Diagnosegruppe WS, ausgestellt am 27.02.2026"
+      [placeholder]="beispielText"
       aria-describedby="freitext-hinweis"
     ></textarea>
     <p id="freitext-hinweis" class="hinweis">
       Namen und Geburtsdaten werden ersetzt, bevor der Text den Dienst verlässt.
     </p>
 
-    <button type="button" class="primaer" [disabled]="!text().trim()" (click)="vorschlagHolen()">
-      Vorschlag holen
-    </button>
+    <div class="eingabe-aktionen">
+      <button type="button" class="primaer" [disabled]="!text().trim()" (click)="vorschlagHolen()">
+        Vorschlag holen
+      </button>
+      <button type="button" class="leise" (click)="beispiel()">Beispiel einfügen</button>
+    </div>
 
     <p class="status" aria-live="polite">{{ statusText() }}</p>
 
@@ -38,7 +41,35 @@
 
     @if (zustand(); as z) {
       @if (z.status === 'leer') {
-        <p class="leer">Noch kein Vorschlag. Text einfügen und „Vorschlag holen“.</p>
+        <div class="leerstand">
+          <p class="leer">Noch kein Vorschlag. Text einfügen und „Vorschlag holen“.</p>
+          <ol class="schritte" aria-label="Was dann passiert">
+            <li>
+              <span
+                ><b>Pseudonymisieren.</b> Name, Geburtsdatum, Versichertennummer werden ersetzt,
+                bevor der Text den Dienst verlässt.</span
+              >
+            </li>
+            <li>
+              <span
+                ><b>Fragen.</b> Das Modell sieht nur den ersetzten Text und liest ihn in
+                Felder.</span
+              >
+            </li>
+            <li>
+              <span
+                ><b>Nachprüfen.</b> Was es nicht lesen konnte, bleibt leer und wird benannt, statt
+                geraten.</span
+              >
+            </li>
+            <li>
+              <span
+                ><b>Bestätigen.</b> Sie ergänzen, die Domäne prüft die Verordnung. Das Modell
+                entscheidet nichts.</span
+              >
+            </li>
+          </ol>
+        </div>
       }
       @if (z.status === 'laedt') {
         <p class="leer">Der Text wird gelesen.</p>

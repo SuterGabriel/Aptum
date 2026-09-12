@@ -23,6 +23,9 @@ type Zustand =
 
 const LEER: Zustand = { status: 'leer' };
 
+/** Ein Text, den die Aufzeichnung kennt - damit die Kette auch ohne Schlüssel läuft. */
+const BEISPIEL = 'KG 6x, 2x wöchentlich, Diagnosegruppe WS, ausgestellt am 27.02.2026';
+
 /**
  * Die Felder, die das Formular braucht. Das Modell liest zwei weitere -
  * Heilmittel (gehört zur Terminsuche) und Hausbesuch (führt die Domäne
@@ -65,6 +68,12 @@ export class VerordnungErfassen {
 
   /** Der Freitext. Kein Strom mit Entprellung: Ein Modellaufruf kostet Geld. */
   readonly text = signal('');
+
+  readonly beispielText = BEISPIEL;
+
+  beispiel(): void {
+    this.text.set(BEISPIEL);
+  }
 
   private readonly abschicken = new Subject<string>();
 
