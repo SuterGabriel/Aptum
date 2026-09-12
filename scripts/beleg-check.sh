@@ -228,6 +228,7 @@ pruefe "ag-grid wird lazy geladen" enthaelt frontend/src/app/app.routes.ts "load
 pruefe "Abrechnung mit axe im Browser" datei frontend/e2e/abrechnung.spec.ts
 pruefe "ADR-011 begründet den Schnitt der Abrechnung" datei docs/adr/ADR-011-abrechnung-als-lesemodell.md
 pruefe "billing ist eine Entscheidung, kein leerer Ordner" datei services/billing/README.md
+pruefe "Harmonisierung ist ein Konzept mit benannter Grenze" enthaelt docs/HARMONISIERUNG.md "Kein Erfahrungsbericht"
 pruefe "stumme Lücke 1 ist Fixture" datei scripts/fixtures/regel-check/domain/NachbarBorgt.java
 pruefe "stumme Lücke 2 ist Fixture" datei scripts/fixtures/regel-check/domain/KlassenkommentarBorgt.java
 pruefe "Wertabgleich ist Fixture" datei scripts/fixtures/regel-check/domain/FalscherWert.java

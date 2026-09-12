@@ -1978,6 +1978,31 @@ den Container.
 
 ---
 
+## 2026-09-12 — Ein Konzept für das, was ein Portfolio nicht haben kann
+
+**Anlass:** SA2, „Harmonisierung mehrerer Systeminstanzen“, stand seit Stufe 0
+auf „nicht belegbar“. Das stimmt für die Erfahrung. Es stimmt nicht für das
+Vorgehen — und die Ausschreibung fragt nach beidem.
+
+**Was entstand.** `docs/HARMONISIERUNG.md`: Ausgangslage als benannte
+Annahme, dann die Frage, die vor jeder Migration steht — Regel oder
+Einstellung? —, dann je Instanz vier Schritte mit einer Prüfung, die rot
+werden kann. Der Teil, der mir am meisten wert ist, ist der letzte: Die
+fachliche Abnahme nach dem Import läuft über dieselbe Methode wie die
+Abrechnungsübersicht von heute Nachmittag. Dass die Regeln benannte Klassen
+sind, war seit Stufe 1 ein Argument für Wartbarkeit; hier wird es zum
+Argument für Migration. Das hatte ich beim Bauen nicht im Blick, und das
+Konzept hat es sichtbar gemacht.
+
+**Die Grenze.** Abschnitt 7 sagt, was das Dokument nicht ist, und das Mapping
+stuft SA2 auf „teilweise belegbar“, nicht auf „belegt“. Die Tabelle in
+Abschnitt 6 hat eine rechte Spalte, die nur mit echten Instanzen gefüllt
+werden kann. Ein Konzept ohne diese Spalte wäre eine Behauptung.
+
+**Zeitschätzung:** eine Stunde.
+
+---
+
 ## Vorlage für weitere Einträge
 
 ```

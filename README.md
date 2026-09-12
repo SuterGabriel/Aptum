@@ -198,6 +198,7 @@ Wer nur das Chart prüfen will, ohne ArgoCD: `helm install aptum deploy/helm/apt
 | [docs/ENTWICKLUNGSLOG.md](docs/ENTWICKLUNGSLOG.md) | Beobachtungen zum KI-Einsatz, ehrlich auch da wo es nicht gut aussieht |
 | [docs/DATENSCHUTZ.md](docs/DATENSCHUTZ.md) | Regeln für Testdaten und was in einer echten Anwendung zu klären wäre |
 | [docs/BETRIEB.md](docs/BETRIEB.md) | Wie es läuft und ausgerollt wird, was ein Betrieb erfährt — und was bewusst nicht gebaut ist |
+| [docs/HARMONISIERUNG.md](docs/HARMONISIERUNG.md) | Wie aus mehreren Systeminstanzen Mandanten würden — ein Konzept, als solches gekennzeichnet |
 | [CLAUDE.md](CLAUDE.md) | Die Projektregeln auf einer Bildschirmseite |
 | [.claude/](.claude/) | Skills, Commands und Subagents, versioniert im Repo |
 
