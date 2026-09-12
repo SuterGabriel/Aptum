@@ -23,6 +23,41 @@
         Die Kennung, die das Anlegen der Verordnung zurückgibt. Das Backend liest daraus
         Restkontingent, Frequenz und Frist - hier wird nichts davon eingegeben.
       </p>
+      @if (akte(); as a) {
+        <dl class="akte" aria-label="Die Verordnung hinter der Kennung">
+          <div>
+            <dt>Ausgestellt</dt>
+            <dd>
+              <span class="zahl">{{ a.posten?.ausstellungsdatum | date: 'dd.MM.yyyy' }}</span>
+              @if (a.dringlicherBedarf) {
+                <span class="dringlich">dringlich</span>
+              }
+            </dd>
+          </div>
+          <div>
+            <dt>Diagnosegruppe</dt>
+            <dd>{{ a.posten?.diagnosegruppe }}</dd>
+          </div>
+          <div>
+            <dt>Einheiten</dt>
+            <dd>
+              <span class="zahl">{{ a.posten?.erbracht }}</span> von
+              <span class="zahl">{{ a.posten?.verordnet }}</span> erbracht,
+              <span class="zahl">{{ a.posten?.offen }}</span> offen
+            </dd>
+          </div>
+          <div>
+            <dt>Frequenz</dt>
+            <dd>{{ a.frequenz }}</dd>
+          </div>
+          <div>
+            <dt>Stand</dt>
+            <dd [class]="'stand ' + (a.posten?.status ?? '').toLowerCase()">
+              {{ stand(a) }}
+            </dd>
+          </div>
+        </dl>
+      }
 
       <label for="heilmittel">Heilmittel</label>
       <select id="heilmittel" formControlName="heilmittel">

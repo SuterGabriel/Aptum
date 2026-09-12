@@ -33,6 +33,7 @@ import {
 import { of } from 'rxjs';
 import { catchError, map, startWith } from 'rxjs/operators';
 import { Abrechnungsposten, Abrechnungsuebersicht, AptumApi } from '../api/aptum-api';
+import { STATUS_LABEL } from './status';
 
 // Nur, was die Seite braucht - nicht AllCommunityModule. Fehlt ein Modul,
 // sagt ag-grid im Entwicklungsmodus, welches; das Validierungsmodul dafür
@@ -55,13 +56,6 @@ type Ladezustand =
   | { status: 'laedt' }
   | { status: 'fertig'; uebersicht: Abrechnungsuebersicht }
   | { status: 'fehler'; meldung: string };
-
-/** Die drei Zustände aus der Domäne, für Menschen. Der Code bleibt der Schlüssel für die Klasse. */
-export const STATUS_LABEL: Record<string, string> = {
-  PRUEFFEST: 'prüffest',
-  BEANSTANDET: 'beanstandet',
-  NICHT_BEGONNEN: 'nicht begonnen',
-};
 
 const THERAPIEFORM_LABEL: Record<string, string> = {
   PHYSIOTHERAPIE: 'Physiotherapie',

@@ -226,6 +226,8 @@ pruefe "Abrechnung über HTTP mit Mandantengrenze getestet" enthaelt services/sc
 pruefe "ag-grid nur in der Abrechnung" enthaelt frontend/src/app/abrechnung/abrechnungs-uebersicht.ts "ag-grid-angular"
 pruefe "ag-grid wird lazy geladen" enthaelt frontend/src/app/app.routes.ts "loadComponent"
 pruefe "Abrechnung mit axe im Browser" datei frontend/e2e/abrechnung.spec.ts
+pruefe "Eine Verordnung ansehen, fremd ist unbekannt" enthaelt services/scheduling/infrastructure/src/test/java/de/aptum/scheduling/infrastructure/rest/RestApiTest.java "fremd ist unbekannt, nicht verboten"
+pruefe "Die Suche zeigt die Verordnung hinter der Kennung" enthaelt frontend/src/app/suche/termin-suche.html "Die Verordnung hinter der Kennung"
 pruefe "ADR-011 begründet den Schnitt der Abrechnung" datei docs/adr/ADR-011-abrechnung-als-lesemodell.md
 pruefe "billing ist eine Entscheidung, kein leerer Ordner" datei services/billing/README.md
 pruefe "Harmonisierung ist ein Konzept mit benannter Grenze" enthaelt docs/HARMONISIERUNG.md "Kein Erfahrungsbericht"

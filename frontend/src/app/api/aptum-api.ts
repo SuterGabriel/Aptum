@@ -25,6 +25,7 @@ export type VerordnungAnlage = components['schemas']['VerordnungAnlage'];
 export type VerordnungAngelegt = components['schemas']['VerordnungAngelegt'];
 export type Abrechnungsuebersicht = components['schemas']['Abrechnungsuebersicht'];
 export type Abrechnungsposten = components['schemas']['Abrechnungsposten'];
+export type Verordnungsakte = components['schemas']['Verordnungsakte'];
 
 /** Aus dem zweiten Dienst, ebenso erzeugt: docs/api/ai-assist-openapi.json. */
 export type Erfassung = aiKomponenten['schemas']['Erfassung'];
@@ -67,6 +68,11 @@ export class AptumApi {
   /** Legt die Verordnung an - hier prüft die Domäne, nicht das Modell. */
   verordnungAnlegen(anlage: VerordnungAnlage): Observable<VerordnungAngelegt> {
     return this.http.post<VerordnungAngelegt>('/api/verordnungen', anlage);
+  }
+
+  /** Der Vordruck samt Verlauf und Prüfstand; 404 für unbekannte wie für fremde Kennungen. */
+  verordnung(id: string): Observable<Verordnungsakte> {
+    return this.http.get<Verordnungsakte>(`/api/verordnungen/${id}`);
   }
 
   /** Eine Zeile je Verordnung: erbracht, offen, prüffest oder nicht - sortieren tut die Tabelle. */

@@ -13,6 +13,9 @@ test.describe('Terminsuche', () => {
 
     await expect(page.locator('.vorschlag').first()).toBeVisible();
     await expect(page.locator('[aria-live="polite"]')).toContainText(/\d+ Vorschläge gefunden/);
+    // Die Akte hinter der Kennung steht neben dem Feld: nichts erbracht, alles offen.
+    await expect(page.locator('.akte')).toContainText('0 von 6 erbracht, 6 offen');
+    await expect(page.locator('.akte')).toContainText('nicht begonnen');
     await expect(page.locator('.vorschlag').first()).toContainText(/T\. (Alpha|Beta)/);
 
     const ergebnis = await new AxeBuilder({ page }).analyze();

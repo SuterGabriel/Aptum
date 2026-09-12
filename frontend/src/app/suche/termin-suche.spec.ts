@@ -42,9 +42,30 @@ describe('TerminSuche', () => {
 
   const html = (): HTMLElement => fixture.nativeElement;
 
+  const AKTE = {
+    posten: {
+      verordnung: VERORDNUNG,
+      ausstellungsdatum: '2026-02-27',
+      diagnosegruppe: 'WS',
+      therapieform: 'PHYSIOTHERAPIE',
+      verordnet: 6,
+      erbracht: 2,
+      offen: 4,
+      status: 'PRUEFFEST',
+      begruendung: '5 Regeln geprüft, keine verletzt.',
+      regeln: [],
+    },
+    dringlicherBedarf: true,
+    frequenzMin: 1,
+    frequenzMax: 3,
+    frequenz: '1-3x wöchentlich',
+  };
+
+  /** Die Kennung löst zwei Anfragen aus: die Akte dahinter und die Suche. */
   function kennungEintragen(): void {
     fixture.componentInstance.form.controls.verordnung.setValue(VERORDNUNG);
     tick(300);
+    http.expectOne(`/api/verordnungen/${VERORDNUNG}`).flush(AKTE);
   }
 
   it('gliedert die Kriterien sichtbar nach den vier Dimensionen', () => {
@@ -77,6 +98,29 @@ describe('TerminSuche', () => {
     );
   }));
 
+  it('zeigt die Verordnung hinter der Kennung: Einheiten, Frequenz, Stand, dringlich', fakeAsync(() => {
+    kennungEintragen();
+    http.expectOne('/api/termine/suche').flush(EIN_VORSCHLAG);
+    fixture.detectChanges();
+    const akte = html().querySelector('.akte')?.textContent?.replace(/\s+/g, ' ') ?? '';
+    expect(akte).toContain('27.02.2026');
+    expect(akte).toContain('dringlich');
+    expect(akte).toContain('2 von 6 erbracht, 4 offen');
+    expect(akte).toContain('1-3x wöchentlich');
+    expect(akte).toContain('prüffest');
+  }));
+
+  it('bleibt still, wenn die Akte nicht zu laden ist - die Suche meldet', fakeAsync(() => {
+    fixture.componentInstance.form.controls.verordnung.setValue(VERORDNUNG);
+    tick(300);
+    http
+      .expectOne(`/api/verordnungen/${VERORDNUNG}`)
+      .flush({ fehler: 'unbekannt' }, { status: 404, statusText: 'Not Found' });
+    http.expectOne('/api/termine/suche').flush(EIN_VORSCHLAG);
+    fixture.detectChanges();
+    expect(html().querySelector('.akte')).toBeNull();
+  }));
+
   it('meldet einen Fehler als Alert, nicht still', fakeAsync(() => {
     kennungEintragen();
     http
@@ -94,6 +138,7 @@ describe('TerminSuche', () => {
 
     fixture.componentInstance.form.controls.verordnung.setValue(VERORDNUNG);
     await new Promise((weiter) => setTimeout(weiter, 350));
+    http.expectOne(`/api/verordnungen/${VERORDNUNG}`).flush(AKTE);
     http.expectOne('/api/termine/suche').flush(EIN_VORSCHLAG);
     fixture.detectChanges();
     const voll = await axe.run(html());

@@ -226,3 +226,43 @@ input[aria-invalid='true'] {
   margin: 0 0 var(--abstand-2);
   padding-left: var(--abstand-4);
 }
+
+/* ---- Die Verordnung hinter der Kennung ------------------------------ */
+
+.akte {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: var(--abstand-1) var(--abstand-3);
+  margin: 0 0 var(--abstand-3);
+  padding: var(--abstand-2) var(--abstand-3);
+  border-left: var(--rand-dick) solid var(--border-strong);
+  background: var(--surface-sunken);
+  font-size: var(--schrift-s);
+}
+
+.akte > div {
+  display: contents;
+}
+
+.akte dt {
+  color: var(--text-secondary);
+}
+
+.akte dd {
+  margin: 0;
+}
+
+.akte .dringlich {
+  margin-left: var(--abstand-2);
+  color: var(--regel-warnung-text);
+  font-weight: var(--gewicht-mittel);
+}
+
+.akte .stand.prueffest {
+  color: var(--regel-erfuellt-text);
+}
+
+.akte .stand.beanstandet {
+  color: var(--regel-verletzt-text);
+  font-weight: var(--gewicht-mittel);
+}

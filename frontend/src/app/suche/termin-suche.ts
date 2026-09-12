@@ -8,10 +8,18 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Subject } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { Subject, of } from 'rxjs';
+import {
+  catchError,
+  debounceTime,
+  distinctUntilChanged,
+  filter,
+  map,
+  switchMap,
+} from 'rxjs/operators';
 import { BuchungsDialog, BuchungsErgebnis, BuchungsVorhaben } from '../buchung/buchungs-dialog';
-import { Suche, Terminvorschlag, Wochentag } from '../api/aptum-api';
+import { AptumApi, Suche, Terminvorschlag, Verordnungsakte, Wochentag } from '../api/aptum-api';
+import { STATUS_LABEL } from '../abrechnung/status';
 import { WOCHENTAGE } from '../zeit';
 import { HEILMITTEL } from './heilmittel';
 import { LEER, TerminSucheService } from './termin-suche.service';
@@ -44,6 +52,7 @@ export class TerminSuche {
   private readonly fb = inject(NonNullableFormBuilder);
   private readonly suche = inject(TerminSucheService);
   private readonly dialog = inject(Dialog);
+  private readonly api = inject(AptumApi);
 
   /** Ein Tick je Buchung: Der verbrauchte Vorschlag soll aus der Liste verschwinden. */
   private readonly erneut = new Subject<void>();
@@ -87,6 +96,31 @@ export class TerminSuche {
     ),
     { initialValue: LEER },
   );
+
+  /**
+   * Die Verordnung hinter der Kennung: was verordnet ist, was erbracht, ob das
+   * prüffest ist. Wer eine Kennung eintippt, sieht so, wovon er spricht, bevor
+   * er sucht. Ein Fehler ist hier still - die Suche meldet ihn als Alert, und
+   * zweimal dieselbe Meldung wäre einmal zu viel.
+   */
+  readonly akte = toSignal(
+    this.form.controls.verordnung.valueChanges.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      switchMap((kennung) =>
+        UUID.test(kennung)
+          ? this.api.verordnung(kennung).pipe(catchError(() => of(undefined)))
+          : of(undefined),
+      ),
+    ),
+    { initialValue: undefined as Verordnungsakte | undefined },
+  );
+
+  /** Der Stand als Wort; ein unbekannter Code bleibt lesbar statt leer. */
+  stand(a: Verordnungsakte): string {
+    const code = a.posten?.status ?? '';
+    return STATUS_LABEL[code] || code;
+  }
 
   /** Öffnet den Dialog mit der Regelprüfung; gebucht wird dort, gemeldet hier. */
   buchen(v: Terminvorschlag): void {

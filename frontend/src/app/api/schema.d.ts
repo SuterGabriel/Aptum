@@ -68,6 +68,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/verordnungen/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ansehen"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/kalender/woche": {
         parameters: {
             query?: never;
@@ -178,6 +194,36 @@ export interface components {
             raum?: string;
             warnungen?: components["schemas"]["Regel"][];
         };
+        Abrechnungsposten: {
+            /** Format: uuid */
+            verordnung?: string;
+            /** Format: date */
+            ausstellungsdatum?: string;
+            diagnosegruppe?: string;
+            therapieform?: string;
+            /** Format: int32 */
+            verordnet?: number;
+            /** Format: int32 */
+            erbracht?: number;
+            /** Format: int32 */
+            offen?: number;
+            /** Format: date */
+            ersteBehandlung?: string;
+            /** Format: date */
+            letzteBehandlung?: string;
+            status?: string;
+            begruendung?: string;
+            regeln?: components["schemas"]["Regel"][];
+        };
+        Verordnungsakte: {
+            posten?: components["schemas"]["Abrechnungsposten"];
+            dringlicherBedarf?: boolean;
+            /** Format: int32 */
+            frequenzMin?: number;
+            /** Format: int32 */
+            frequenzMax?: number;
+            frequenz?: string;
+        };
         Belegung: {
             art?: string;
             /** Format: date-time */
@@ -201,27 +247,6 @@ export interface components {
             /** Format: int32 */
             nachruheMinuten?: number;
             spalten?: components["schemas"]["Spalte"][];
-        };
-        Abrechnungsposten: {
-            /** Format: uuid */
-            verordnung?: string;
-            /** Format: date */
-            ausstellungsdatum?: string;
-            diagnosegruppe?: string;
-            therapieform?: string;
-            /** Format: int32 */
-            verordnet?: number;
-            /** Format: int32 */
-            erbracht?: number;
-            /** Format: int32 */
-            offen?: number;
-            /** Format: date */
-            ersteBehandlung?: string;
-            /** Format: date */
-            letzteBehandlung?: string;
-            status?: string;
-            begruendung?: string;
-            regeln?: components["schemas"]["Regel"][];
         };
         Abrechnungsuebersicht: {
             posten?: components["schemas"]["Abrechnungsposten"][];
@@ -411,6 +436,52 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["Buchungsantwort"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Fehler"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Fehler"];
+                };
+            };
+        };
+    };
+    ansehen: {
+        parameters: {
+            query?: never;
+            header: {
+                /**
+                 * @description Die Praxis, für die die Anfrage gilt. Platzhalter für Authentifizierung: In einer echten Anwendung käme der Mandant aus einem signierten Token.
+                 * @example praxis-a
+                 */
+                "X-Mandant": string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Verordnungsakte"];
                 };
             };
             /** @description Bad Request */

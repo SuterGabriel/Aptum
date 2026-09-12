@@ -2003,6 +2003,33 @@ werden kann. Ein Konzept ohne diese Spalte wäre eine Behauptung.
 
 ---
 
+## 2026-09-12 — Die Verordnung hinter der Kennung
+
+**Was delegiert wurde:** `GET /verordnungen/{id}` und ein Kasten neben dem
+Kennungsfeld der Suche: ausgestellt, Diagnosegruppe, Einheiten erbracht und
+offen, Frequenz, Stand.
+
+**Was auffiel.** Der Endpunkt brauchte keine neue Logik: Die Zeile, die die
+Abrechnungsübersicht je Verordnung bildet, ist genau das, was die Suche
+neben der Kennung zeigen will. Ein Anwendungsfall mit vier Zeilen, der die
+Übersicht für eine Akte aufruft. Das ist der zweite Abnehmer für
+`pruefeErbrachtes` am selben Tag — und der Grund, warum das Lesemodell in die
+Domäne gehörte und nicht in den Controller der Abrechnung.
+
+**Eine Entscheidung im Kleinen.** Lädt die Akte nicht (404), bleibt der
+Kasten still. Die Suche meldet dieselbe unbekannte Kennung ohnehin als
+Alert; zweimal dieselbe Meldung wäre einmal zu viel. Das steht als Test.
+
+**Ein Nebeneffekt.** Das Wort „prüffest" für den Status lag in der
+ag-grid-Komponente. Die Suche hätte es importiert — und damit ag-grid ins
+Startbündel geholt, das heute Nachmittag mit Mühe klein geblieben ist. Jetzt
+liegt es in einer eigenen Datei mit drei Zeilen. Der Produktions-Build hat
+es bestätigt: 470 kB, unverändert.
+
+**Zeitschätzung:** eine Stunde.
+
+---
+
 ## Vorlage für weitere Einträge
 
 ```

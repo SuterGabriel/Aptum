@@ -28,8 +28,8 @@
           "required" : true
         },
         "responses" : {
-          "400" : {
-            "description" : "Bad Request",
+          "404" : {
+            "description" : "Not Found",
             "content" : {
               "*/*" : {
                 "schema" : {
@@ -38,8 +38,8 @@
               }
             }
           },
-          "404" : {
-            "description" : "Not Found",
+          "400" : {
+            "description" : "Bad Request",
             "content" : {
               "*/*" : {
                 "schema" : {
@@ -83,8 +83,8 @@
           "required" : true
         },
         "responses" : {
-          "400" : {
-            "description" : "Bad Request",
+          "404" : {
+            "description" : "Not Found",
             "content" : {
               "*/*" : {
                 "schema" : {
@@ -93,8 +93,8 @@
               }
             }
           },
-          "404" : {
-            "description" : "Not Found",
+          "400" : {
+            "description" : "Bad Request",
             "content" : {
               "*/*" : {
                 "schema" : {
@@ -138,8 +138,8 @@
           "required" : true
         },
         "responses" : {
-          "400" : {
-            "description" : "Bad Request",
+          "404" : {
+            "description" : "Not Found",
             "content" : {
               "*/*" : {
                 "schema" : {
@@ -148,8 +148,8 @@
               }
             }
           },
-          "404" : {
-            "description" : "Not Found",
+          "400" : {
+            "description" : "Bad Request",
             "content" : {
               "*/*" : {
                 "schema" : {
@@ -193,8 +193,8 @@
           "required" : true
         },
         "responses" : {
-          "400" : {
-            "description" : "Bad Request",
+          "404" : {
+            "description" : "Not Found",
             "content" : {
               "*/*" : {
                 "schema" : {
@@ -203,8 +203,8 @@
               }
             }
           },
-          "404" : {
-            "description" : "Not Found",
+          "400" : {
+            "description" : "Bad Request",
             "content" : {
               "*/*" : {
                 "schema" : {
@@ -219,6 +219,59 @@
               "*/*" : {
                 "schema" : {
                   "$ref" : "#/components/schemas/Buchungsantwort"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/verordnungen/{id}" : {
+      "get" : {
+        "tags" : [ "verordnung-controller" ],
+        "operationId" : "ansehen",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "uuid"
+          }
+        }, {
+          "name" : "X-Mandant",
+          "in" : "header",
+          "description" : "Die Praxis, für die die Anfrage gilt. Platzhalter für Authentifizierung: In einer echten Anwendung käme der Mandant aus einem signierten Token.",
+          "required" : true,
+          "example" : "praxis-a"
+        } ],
+        "responses" : {
+          "404" : {
+            "description" : "Not Found",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Fehler"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Fehler"
+                }
+              }
+            }
+          },
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Verordnungsakte"
                 }
               }
             }
@@ -246,8 +299,8 @@
           "example" : "praxis-a"
         } ],
         "responses" : {
-          "400" : {
-            "description" : "Bad Request",
+          "404" : {
+            "description" : "Not Found",
             "content" : {
               "*/*" : {
                 "schema" : {
@@ -256,8 +309,8 @@
               }
             }
           },
-          "404" : {
-            "description" : "Not Found",
+          "400" : {
+            "description" : "Bad Request",
             "content" : {
               "*/*" : {
                 "schema" : {
@@ -291,8 +344,8 @@
           "example" : "praxis-a"
         } ],
         "responses" : {
-          "400" : {
-            "description" : "Bad Request",
+          "404" : {
+            "description" : "Not Found",
             "content" : {
               "*/*" : {
                 "schema" : {
@@ -301,8 +354,8 @@
               }
             }
           },
-          "404" : {
-            "description" : "Not Found",
+          "400" : {
+            "description" : "Bad Request",
             "content" : {
               "*/*" : {
                 "schema" : {
@@ -522,6 +575,79 @@
           }
         }
       },
+      "Abrechnungsposten" : {
+        "type" : "object",
+        "properties" : {
+          "verordnung" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "ausstellungsdatum" : {
+            "type" : "string",
+            "format" : "date"
+          },
+          "diagnosegruppe" : {
+            "type" : "string"
+          },
+          "therapieform" : {
+            "type" : "string"
+          },
+          "verordnet" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "erbracht" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "offen" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "ersteBehandlung" : {
+            "type" : "string",
+            "format" : "date"
+          },
+          "letzteBehandlung" : {
+            "type" : "string",
+            "format" : "date"
+          },
+          "status" : {
+            "type" : "string"
+          },
+          "begruendung" : {
+            "type" : "string"
+          },
+          "regeln" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Regel"
+            }
+          }
+        }
+      },
+      "Verordnungsakte" : {
+        "type" : "object",
+        "properties" : {
+          "posten" : {
+            "$ref" : "#/components/schemas/Abrechnungsposten"
+          },
+          "dringlicherBedarf" : {
+            "type" : "boolean"
+          },
+          "frequenzMin" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "frequenzMax" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "frequenz" : {
+            "type" : "string"
+          }
+        }
+      },
       "Belegung" : {
         "type" : "object",
         "properties" : {
@@ -583,57 +709,6 @@
             "type" : "array",
             "items" : {
               "$ref" : "#/components/schemas/Spalte"
-            }
-          }
-        }
-      },
-      "Abrechnungsposten" : {
-        "type" : "object",
-        "properties" : {
-          "verordnung" : {
-            "type" : "string",
-            "format" : "uuid"
-          },
-          "ausstellungsdatum" : {
-            "type" : "string",
-            "format" : "date"
-          },
-          "diagnosegruppe" : {
-            "type" : "string"
-          },
-          "therapieform" : {
-            "type" : "string"
-          },
-          "verordnet" : {
-            "type" : "integer",
-            "format" : "int32"
-          },
-          "erbracht" : {
-            "type" : "integer",
-            "format" : "int32"
-          },
-          "offen" : {
-            "type" : "integer",
-            "format" : "int32"
-          },
-          "ersteBehandlung" : {
-            "type" : "string",
-            "format" : "date"
-          },
-          "letzteBehandlung" : {
-            "type" : "string",
-            "format" : "date"
-          },
-          "status" : {
-            "type" : "string"
-          },
-          "begruendung" : {
-            "type" : "string"
-          },
-          "regeln" : {
-            "type" : "array",
-            "items" : {
-              "$ref" : "#/components/schemas/Regel"
             }
           }
         }

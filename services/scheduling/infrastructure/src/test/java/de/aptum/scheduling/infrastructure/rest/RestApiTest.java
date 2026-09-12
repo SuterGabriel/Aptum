@@ -161,6 +161,34 @@ class RestApiTest extends MitDatenbank {
                 "Mandant B sieht keine Verordnung von A");
     }
 
+    @Test
+    @DisplayName("Eine Verordnung ansehen: Vordruck, Verlauf und Prüfstand - für den anderen Mandanten 404")
+    void eineVerordnungAnsehen() {
+        UUID verordnung = verordnungAnlegen("praxis-a");
+        Dto.Terminvorschlag slot = als("praxis-a", "/termine/suche", dieseWoche(verordnung), Dto.Suchantwort.class)
+                .getBody()
+                .vorschlaege()
+                .get(0);
+        als(
+                "praxis-a",
+                "/termine",
+                new Dto.Buchung(verordnung, "KG_EINZEL", slot.therapeut(), slot.raum(), slot.beginn(), null),
+                Dto.Buchungsantwort.class);
+
+        ResponseEntity<Dto.Verordnungsakte> akte =
+                lese("praxis-a", "/verordnungen/" + verordnung, Dto.Verordnungsakte.class);
+        assertEquals(HttpStatus.OK, akte.getStatusCode());
+        assertEquals(verordnung, akte.getBody().posten().verordnung());
+        assertEquals(1, akte.getBody().posten().erbracht());
+        assertEquals("PRUEFFEST", akte.getBody().posten().status());
+        assertEquals(1, akte.getBody().frequenzMin());
+        assertEquals(3, akte.getBody().frequenzMax());
+        assertFalse(akte.getBody().frequenz().isBlank());
+
+        ResponseEntity<Dto.Fehler> fremd = lese("praxis-b", "/verordnungen/" + verordnung, Dto.Fehler.class);
+        assertEquals(HttpStatus.NOT_FOUND, fremd.getStatusCode(), "fremd ist unbekannt, nicht verboten");
+    }
+
     private UUID verordnungAnlegen(String mandant) {
         ResponseEntity<Dto.VerordnungAngelegt> antwort = als(
                 mandant,

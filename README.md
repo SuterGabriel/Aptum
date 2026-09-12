@@ -211,7 +211,7 @@ Wer nur das Chart prüfen will, ohne ArgoCD: `helm install aptum deploy/helm/apt
 | 2 | Kalender-Grid, Tabelle, WCAG, End-to-End-Tests | **abgeschlossen** — Kalender-Grid, Buchungsdialog mit Regelprüfung, Abrechnungsübersicht auf ag-grid, Playwright mit axe als CI-Job für jede Seite; die Verordnungssicht folgt in Stufe 5 |
 | 3 | AI-Layer, MCP-Server, Evals, Provider-Vergleich | **in Arbeit** — Verordnungserfassung aus Freitext in `services/ai-assist/` (Python), Pseudonymisierung vor dem Aufruf, zwei Provider, Eval-Suite mit 55 Fällen in `evals/`, MCP-Server mit vier Werkzeugen, Seite „Verordnung erfassen“; Provider-Vergleich offen |
 | 4 | Container, Helm, ArgoCD, Terraform, Observability | **abgeschlossen, soweit ein Portfolio es kann** — drei Dienste als Container, `compose.yml` fährt alles mit einem Befehl hoch; Terraform in zwei Ständen stellt ArgoCD, ArgoCD rollt das Helm-Chart aus dem Repo aus, die CI fährt das bei jedem Push in einem `kind`-Cluster (ADR-010); getrennte Probes, JSON-Protokoll mit Mandanten-ID. Was ein Betrieb darüber hinaus bräuchte, benennt `docs/BETRIEB.md` |
-| 5 | Demo, ADRs vervollständigen, Mapping | **in Arbeit** — Mapping gegen das Repo abgeglichen, Demodaten und Bilder im README, Abrechnungsübersicht (ADR-011); Verordnungssicht folgt |
+| 5 | Demo, ADRs vervollständigen, Mapping | **in Arbeit** — Mapping gegen das Repo abgeglichen, Demodaten und Bilder im README, Abrechnungsübersicht (ADR-011), die Verordnung hinter der Kennung auf der Suche-Seite (`GET /verordnungen/{id}`); eine eigene Verordnungsübersicht mit Fristen-Zeitleiste ist offen |
 
 ## Daten
 

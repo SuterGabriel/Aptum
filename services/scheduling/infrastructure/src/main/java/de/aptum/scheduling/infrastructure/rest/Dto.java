@@ -118,6 +118,20 @@ final class Dto {
         }
     }
 
+    /** Eine Verordnung im Ganzen: der Vordruck, und die Abrechnungszeile dazu. */
+    record Verordnungsakte(
+            Abrechnungsposten posten, boolean dringlicherBedarf, int frequenzMin, int frequenzMax, String frequenz) {
+        static Verordnungsakte von(Abrechnungszeile z) {
+            var f = z.verordnung().frequenz();
+            return new Verordnungsakte(
+                    Abrechnungsposten.von(z),
+                    z.verordnung().dringlicherBedarf(),
+                    f.minProWoche(),
+                    f.maxProWoche(),
+                    f.beschreibung());
+        }
+    }
+
     /** Die Zeilen und die Summen darüber — dieselben Zahlen, die die Tabelle unten zeigt. */
     record Abrechnungsuebersicht(List<Abrechnungsposten> posten, int erbracht, int prueffest, int beanstandet) {
         static Abrechnungsuebersicht von(List<Abrechnungszeile> zeilen) {

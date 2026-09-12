@@ -4,6 +4,7 @@ import de.aptum.scheduling.application.anwendungsfall.AbrechnungAnzeigen;
 import de.aptum.scheduling.application.anwendungsfall.TerminBuchen;
 import de.aptum.scheduling.application.anwendungsfall.TerminSuchen;
 import de.aptum.scheduling.application.anwendungsfall.VerordnungAnlegen;
+import de.aptum.scheduling.application.anwendungsfall.VerordnungAnzeigen;
 import de.aptum.scheduling.application.anwendungsfall.WocheAnzeigen;
 import de.aptum.scheduling.application.stammdaten.Stammdaten;
 import de.aptum.scheduling.domain.port.TerminRepository;
@@ -46,6 +47,11 @@ class AnwendungsfallKonfiguration {
     @Bean
     WocheAnzeigen wocheAnzeigen(TerminRepository termine, Stammdaten stammdaten) {
         return new WocheAnzeigen(termine, stammdaten);
+    }
+
+    @Bean
+    VerordnungAnzeigen verordnungAnzeigen(VerordnungRepository verordnungen, Regelwerk regelwerk) {
+        return new VerordnungAnzeigen(verordnungen, regelwerk);
     }
 
     @Bean
