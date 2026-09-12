@@ -21,6 +21,14 @@ spring:
       ddl-auto: none
     open-in-view: false
 
+# Eine JSON-Zeile je Ereignis, im Elastic-Common-Schema: Ein Sammler braucht
+# Felder, keine Sätze. Der Mandant steht als Feld drin (MDC, siehe
+# MandantKontextHalter), Namen und Diagnosen nicht - DATENSCHUTZ.md, Regel 5.
+logging:
+  structured:
+    format:
+      console: ecs
+
 management:
   endpoints:
     web:

@@ -3,6 +3,7 @@ package de.aptum.scheduling.infrastructure.mandant;
 import de.aptum.scheduling.application.mandant.MandantId;
 import de.aptum.scheduling.application.mandant.MandantKontext;
 import java.util.function.Supplier;
+import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 
 /**
@@ -34,9 +35,17 @@ public class MandantKontextHalter implements MandantKontext {
     }
 
     /** Führt die Arbeit als dieser Mandant aus und räumt danach auf — auch bei einer Ausnahme. */
+    /** Schlüssel im Protokoll. Jede Zeile einer Anfrage trägt den Mandanten als Feld. */
+    static final String PROTOKOLL_FELD = "mandant";
+
     public <T> T als(MandantId mandant, Supplier<T> arbeit) {
         MandantId vorher = AKTUELL.get();
         AKTUELL.set(mandant);
+        // Derselbe Ort, an dem der Mandant für die Anfrage gebunden wird, legt
+        // ihn auch ins Protokoll - DATENSCHUTZ.md, Regel 5: Mandant ja,
+        // Personenbezug nein. Eine Stelle, nicht zwei, die auseinanderlaufen.
+        String protokollVorher = MDC.get(PROTOKOLL_FELD);
+        MDC.put(PROTOKOLL_FELD, mandant.wert());
         try {
             return arbeit.get();
         } finally {
@@ -44,6 +53,11 @@ public class MandantKontextHalter implements MandantKontext {
                 AKTUELL.remove();
             } else {
                 AKTUELL.set(vorher);
+            }
+            if (protokollVorher == null) {
+                MDC.remove(PROTOKOLL_FELD);
+            } else {
+                MDC.put(PROTOKOLL_FELD, protokollVorher);
             }
         }
     }

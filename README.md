@@ -172,6 +172,7 @@ Wer nur das Chart prüfen will, ohne ArgoCD: `helm install aptum deploy/helm/apt
 | [docs/PIPELINE.md](docs/PIPELINE.md) | Die Gates zwischen einer Änderung und `main` — und was sie nicht abfangen |
 | [docs/ENTWICKLUNGSLOG.md](docs/ENTWICKLUNGSLOG.md) | Beobachtungen zum KI-Einsatz, ehrlich auch da wo es nicht gut aussieht |
 | [docs/DATENSCHUTZ.md](docs/DATENSCHUTZ.md) | Regeln für Testdaten und was in einer echten Anwendung zu klären wäre |
+| [docs/BETRIEB.md](docs/BETRIEB.md) | Wie es läuft und ausgerollt wird, was ein Betrieb erfährt — und was bewusst nicht gebaut ist |
 | [CLAUDE.md](CLAUDE.md) | Die Projektregeln auf einer Bildschirmseite |
 | [.claude/](.claude/) | Skills, Commands und Subagents, versioniert im Repo |
 
@@ -183,7 +184,7 @@ Wer nur das Chart prüfen will, ohne ArgoCD: `helm install aptum deploy/helm/apt
 | 1 | Domänenkern in reinem Java, dann Spring, Multi-Tenancy, Angular-Suchflow | **abgeschlossen** — Domänenkern mit Slot-Suche, Spring Boot in drei Modulen, RLS gegen echtes Postgres, REST mit OpenAPI, Terminsuche in Angular |
 | 2 | Kalender-Grid, Tabelle, WCAG, End-to-End-Tests | **in Arbeit** — Kalender-Grid, Buchungsdialog mit Regelprüfung, Playwright mit axe als CI-Job; Verordnungsübersicht und Tabelle offen |
 | 3 | AI-Layer, MCP-Server, Evals, Provider-Vergleich | **in Arbeit** — Verordnungserfassung aus Freitext in `services/ai-assist/` (Python), Pseudonymisierung vor dem Aufruf, zwei Provider, Eval-Suite mit 55 Fällen in `evals/`, MCP-Server mit vier Werkzeugen, Seite „Verordnung erfassen“; Provider-Vergleich offen |
-| 4 | Container, Helm, ArgoCD, Terraform, Observability | **in Arbeit** — drei Dienste als Container, `compose.yml` fährt alles mit einem Befehl hoch; Helm-Chart in `deploy/helm/aptum/`; Terraform in zwei Ständen (`deploy/terraform/`) stellt ArgoCD, ArgoCD rollt aus dem Repo aus — die CI fährt das bei jedem Push in einem `kind`-Cluster (ADR-010); Observability und `docs/BETRIEB.md` folgen |
+| 4 | Container, Helm, ArgoCD, Terraform, Observability | **abgeschlossen, soweit ein Portfolio es kann** — drei Dienste als Container, `compose.yml` fährt alles mit einem Befehl hoch; Terraform in zwei Ständen stellt ArgoCD, ArgoCD rollt das Helm-Chart aus dem Repo aus, die CI fährt das bei jedem Push in einem `kind`-Cluster (ADR-010); getrennte Probes, JSON-Protokoll mit Mandanten-ID. Was ein Betrieb darüber hinaus bräuchte, benennt `docs/BETRIEB.md` |
 | 5 | Demo, ADRs vervollständigen, Mapping | offen |
 
 ## Daten

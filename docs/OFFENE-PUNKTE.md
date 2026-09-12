@@ -39,8 +39,10 @@ Was ein Portfolio-Projekt trotzdem nicht ersetzt: zwei Jahre einen Cluster
 betrieben zu haben. Der Punkt bleibt deshalb auch am Ende „teilweise
 belegbar“, wie S5.
 
-**Formulierung nach außen:** "Bei Kubernetes und ArgoCD komme ich aus der
-CI-Ecke und baue das gerade an einem Healthcare-Projekt auf."
+**Formulierung nach außen:** „Alle vier Werkzeuge sind in diesem Projekt
+angewendet, in der Pipeline, bei jedem Push — und ich kann jede Entscheidung
+dahinter begründen. Was ich nicht habe, ist ein Cluster, den ich über Monate
+betrieben habe. Das sage ich, bevor Sie fragen.“ Siehe `docs/BETRIEB.md`.
 
 ## 4. Erfahrung mit gewachsenen Systemen
 

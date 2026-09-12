@@ -1873,6 +1873,42 @@ angewendet.
 
 ---
 
+## 2026-09-12 — Stufe 4, Schritt 4: was ein Betrieb erfährt, und was nicht gebaut ist
+
+**Was delegiert wurde:** Strukturiertes Protokoll mit Mandanten-ID in beiden
+Diensten, und `docs/BETRIEB.md` — das Dokument, das die Grenze zieht.
+
+**Das Protokoll.** Regel 5 aus `DATENSCHUTZ.md` stand seit Stufe 0 als Satz
+da: Mandant ja, Personenbezug nein. Jetzt ist er eine Zeile JSON. Spring
+schreibt ECS-Format über eine Zeile Konfiguration, und der
+`MandantKontextHalter` legt den Mandanten in den MDC — genau dort, wo er
+ohnehin für die Dauer der Anfrage gebunden wird; eine Stelle, nicht zwei.
+In Python sind es zwanzig Zeilen Formatter ohne Abhängigkeit. Der Test, der
+zählt, ist der negative: Er schickt einen Freitext mit Namen und
+Geburtsdatum durch den Dienst und prüft, dass keine Protokollzeile den
+Namen, das Datum oder den Text enthält — nur Mandant und Zeichenzahl. Eine
+Datenschutzregel, die kaputtgehen kann.
+
+**Das Dokument.** `BETRIEB.md` hat drei Teile, und der dritte ist der
+längste: was bewusst nicht gebaut ist. Ingress mit TLS, Backups, die man
+zurückgespielt hat, Netzwerkrichtlinien, Metriken mit einem Sammler, ein
+Cluster, der bleibt. Jeder Punkt steht da, weil sein Fehlen sonst wie
+Unkenntnis aussieht — dasselbe Muster wie in `DATENSCHUTZ.md`. Ein
+Metriken-Endpunkt ohne Sammler wäre eine Behauptung; deshalb gibt es keinen.
+
+**Was das für das Mapping heißt.** C4 steht auf „teilweise belegbar“, nicht
+auf „belegt“, mit einem Hinweis wie bei S5. Alle vier Werkzeuge sind
+angewendet, in der CI, bei jedem Push. Was fehlt, ist ein Cluster über
+Monate — und das kann kein Portfolio zeigen. CA1 und SA7 sind belegt, CA3
+teilweise. Von fünf offenen Anforderungen heute Morgen ist eine übrig:
+ag-grid.
+
+**Zeitschätzung:** eine Stunde. Der ganze Tag Stufe 4: sieben Stunden, vier
+Commits, ein ADR, zwei Fehlversuche im Log und eine rote CI, die ich zu spät
+gesehen habe.
+
+---
+
 ## Vorlage für weitere Einträge
 
 ```

@@ -212,6 +212,11 @@ pruefe "Terraform stellt die Plattform" datei deploy/terraform/plattform/main.tf
 pruefe "Terraform meldet die Anwendung an" enthaelt deploy/terraform/anwendung/main.tf "kind       = \"Application\""
 pruefe "Provider sind festgenagelt" datei deploy/terraform/plattform/.terraform.lock.hcl
 pruefe "ADR-010 begründet GitOps" datei docs/adr/ADR-010-gitops-mit-terraform-und-argocd.md
+pruefe "Betrieb ist beschrieben, samt Grenze" datei docs/BETRIEB.md
+pruefe "Protokoll ist JSON mit Mandant (Python)" datei services/ai-assist/src/ai_assist/protokoll.py
+pruefe "Protokoll ohne Personenbezug ist getestet" datei services/ai-assist/tests/test_protokoll.py
+pruefe "Protokoll ist strukturiert (Java)" enthaelt services/scheduling/infrastructure/src/main/resources/application.yml "structured"
+pruefe "Mandant steht im Protokoll (Java)" enthaelt services/scheduling/infrastructure/src/main/java/de/aptum/scheduling/infrastructure/mandant/MandantKontextHalter.java "MDC"
 pruefe "kind-Cluster ist konfiguriert" datei deploy/kind/cluster.yaml
 pruefe "Prüfung ohne Buchung im Backend" enthaelt services/scheduling/infrastructure/src/main/java/de/aptum/scheduling/infrastructure/rest/TerminController.java "/pruefung"
 pruefe "Wochenansicht nimmt die Grenzen aus Termin" enthaelt services/scheduling/domain/src/main/java/de/aptum/scheduling/domain/kalender/Wochenansicht.java "belegtRaum"

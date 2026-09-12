@@ -7,6 +7,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -28,6 +30,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 class MandantFilter extends OncePerRequestFilter {
 
     static final String HEADER = "X-Mandant";
+
+    private static final Logger PROTOKOLL = LoggerFactory.getLogger(MandantFilter.class);
 
     private final MandantKontextHalter halter;
 
@@ -57,6 +61,11 @@ class MandantFilter extends OncePerRequestFilter {
             halter.als(new MandantId(wert.trim()), () -> {
                 try {
                     chain.doFilter(request, response);
+                    // Eine Zeile je Anfrage, innerhalb des Mandantenkontexts: Methode,
+                    // Pfad, Status - und über den MDC der Mandant als Feld. Kein
+                    // Körper, keine Parameter; die Pfade tragen höchstens Kennungen.
+                    PROTOKOLL.info(
+                            "anfrage {} {} -> {}", request.getMethod(), request.getRequestURI(), response.getStatus());
                 } catch (IOException e) {
                     throw new UncheckedIOException(e);
                 } catch (ServletException e) {

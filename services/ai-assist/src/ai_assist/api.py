@@ -12,9 +12,12 @@ from fastapi import Depends, FastAPI, Header, HTTPException
 from pydantic import BaseModel, Field
 
 from ai_assist.erfassung import erfasse
+from ai_assist.protokoll import einrichten
 from ai_assist.provider import Provider, ProviderFehler, aus_umgebung
 from ai_assist.schema import Erfassung
 
+# JSON auf stdout, eine Zeile je Ereignis, mit Mandant als Feld (DATENSCHUTZ.md, Regel 5).
+einrichten()
 log = logging.getLogger("ai_assist")
 
 app = FastAPI(
@@ -47,8 +50,9 @@ def erfassung(
     x_mandant: Annotated[str, Header(alias="X-Mandant")],
     p: Annotated[Provider, Depends(provider)],
 ) -> Erfassung:
-    # Regel 5 aus DATENSCHUTZ.md: Mandant ja, Personenbezug nein.
-    log.info("erfassung mandant=%s zeichen=%d", x_mandant, len(freitext.text))
+    # Regel 5 aus DATENSCHUTZ.md: der Mandant als Feld, die Länge als Zahl -
+    # und der Text selbst in keiner Zeile, denn er trägt den Personenbezug.
+    log.info("erfassung", extra={"mandant": x_mandant, "zeichen": len(freitext.text)})
     try:
         return erfasse(freitext.text, p)
     except ProviderFehler as fehler:
