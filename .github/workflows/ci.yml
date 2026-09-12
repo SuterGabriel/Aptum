@@ -30,7 +30,7 @@ jobs:
     name: Beleg-Check
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Belege prüfen
         run: bash scripts/beleg-check.sh
 
@@ -41,8 +41,8 @@ jobs:
     # und zusammen unter einer Sekunde laufen. Sie bleiben getrennte Schritte,
     # damit im roten Lauf ohne Logsuche sichtbar ist, welches der beiden hing.
     steps:
-      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
-      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: '24'
       # Der Git-Hook prüft nur vorgemerkte Dateien und ist mit --no-verify
@@ -64,8 +64,8 @@ jobs:
     # auffällt und falsche Fachlogik nicht. Ein Test über eine erfundene
     # Frist ist grün. Das ist der Job, der das abfängt.
     steps:
-      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
-      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: '24'
       - name: Fundstellen prüfen
@@ -83,8 +83,8 @@ jobs:
     # manuellen Blick. Dieser Job macht daraus eine Zusage, die kaputtgehen
     # kann, sobald jemand eine Farbe anfasst.
     steps:
-      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
-      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: '24'
       - name: Kontraste nachrechnen
@@ -98,8 +98,8 @@ jobs:
     # Testcontainers - ubuntu-latest bringt Docker mit. Darunter der
     # Isolationstest aus ADR-002: Mandant A sieht nichts von Mandant B.
     steps:
-      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
-      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
         with:
           distribution: temurin
           java-version: '21'
@@ -110,7 +110,7 @@ jobs:
       - name: Format, Tests, ArchUnit, Abdeckung
         run: mvn -B --file services/scheduling/pom.xml spotless:check verify
       - name: Abdeckung für Sonar sichern
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: abdeckung-backend
           path: services/scheduling/**/target/site/jacoco/jacoco.xml
@@ -118,7 +118,7 @@ jobs:
       # Wenn ein Test rot ist, gehört der Bericht dazu - nicht nur das Log.
       - name: Testberichte sichern
         if: failure()
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: surefire-reports
           path: services/scheduling/**/target/surefire-reports/
@@ -135,8 +135,8 @@ jobs:
     # OpenAPI-Dokument neu erzeugt und mit der eingecheckten Fassung
     # verglichen - dieselbe Drift-Prüfung wie im Backend, eine Ebene weiter.
     steps:
-      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
-      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: '24'
           cache: npm
@@ -151,7 +151,7 @@ jobs:
       - name: Unit-Tests mit Abdeckung
         run: npm run test:coverage
       - name: Abdeckung für Sonar sichern
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: abdeckung-frontend
           path: frontend/coverage/aptum/lcov.info
@@ -169,8 +169,8 @@ jobs:
     # ohne Schlüssel und ohne Netz gegen aufgezeichnete Antworten - sie
     # prüfen die Pipeline, nicht das Modell. Das Modell prüft der Eval.
     steps:
-      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
-      - uses: astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78 # v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
         with:
           enable-cache: true
           cache-dependency-glob: services/ai-assist/uv.lock
@@ -184,7 +184,7 @@ jobs:
       - name: Tests mit Abdeckung
         run: uv run --frozen --no-build pytest -q --cov=ai_assist --cov-report=xml
       - name: Abdeckung für Sonar sichern
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: abdeckung-ai-assist
           path: services/ai-assist/coverage.xml
@@ -201,17 +201,17 @@ jobs:
     # Jobs davor; hier wird nur eingesammelt und kompiliert.
     if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     steps:
-      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
-      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5
+      - uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
         with:
           distribution: temurin
           java-version: '21'
           cache: maven
       - name: Klassen für die Java-Analyse
         run: mvn -B -q --file services/scheduling/pom.xml test-compile
-      - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           pattern: abdeckung-*
           path: abdeckung
@@ -226,7 +226,7 @@ jobs:
           cp abdeckung/abdeckung-frontend/lcov.info frontend/coverage/aptum/lcov.info
           cp abdeckung/abdeckung-ai-assist/coverage.xml services/ai-assist/coverage.xml
           find services/scheduling -name jacoco.xml
-      - uses: SonarSource/sonarqube-scan-action@fd88b7d7ccbaefd23d8f36f73b59db7a3d246602 # v6
+      - uses: SonarSource/sonarqube-scan-action@22918119ff8e1ca75a623e15c8296b6ea4fbe28f # v8.2.1
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
@@ -251,7 +251,7 @@ jobs:
       REGISTRY: ghcr.io/sutergabriel
       TAG: ${{ github.sha }}
     steps:
-      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       # Das Token kommt über env in den Schritt, nicht als Text im Skript -
       # sonst steht es expandiert im Prozessaufruf und in jedem Debug-Log.
       - name: Bei der Registry anmelden
@@ -266,14 +266,14 @@ jobs:
             docker tag aptum-$i:latest $REGISTRY/aptum-$i:$TAG
             docker push $REGISTRY/aptum-$i:$TAG
           done
-      - uses: azure/setup-helm@1a275c3b69536ee54be43f2070a358922e12c8d4 # v4
+      - uses: azure/setup-helm@9bc31f4ebc9c6b171d7bfbaa5d006ae7abdb4310 # v5.0.1
       - name: Chart prüfen
         run: helm lint deploy/helm/aptum
-      - uses: helm/kind-action@ef37e7f390d99f746eb8b610417061a60e82a6cc # v1
+      - uses: helm/kind-action@06c1ae10762d3b9c1644e7fe69596ae519e015a2 # v1.15.0
         with:
           cluster_name: aptum
           config: deploy/kind/cluster.yaml
-      - uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3
+      - uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e # v4.0.1
         with:
           terraform_wrapper: false
       # Stand 1: die Plattform. Das Pull-Secret trägt das Token dieses Laufs -
@@ -341,7 +341,7 @@ jobs:
       run:
         working-directory: services/ai-assist
     steps:
-      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 2
       - name: Hat sich etwas geändert, das das Modell sieht?
@@ -371,7 +371,7 @@ jobs:
           else
             echo "da=true" >> "$GITHUB_OUTPUT"
           fi
-      - uses: astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78 # v7
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
         if: steps.schluessel.outputs.da == 'true'
         with:
           enable-cache: true
@@ -408,8 +408,8 @@ jobs:
         ports: ['5432:5432']
         options: --health-cmd "pg_isready -U aptum" --health-interval 5s --health-timeout 5s --health-retries 10
     steps:
-      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
-      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
         with:
           distribution: temurin
           java-version: '21'
@@ -428,7 +428,7 @@ jobs:
       # Der AI-Dienst mit aufgezeichneten Antworten: kein Schlüssel, kein Netz,
       # kein Zufall. Die Seite "Verordnung erfassen" ist damit vollständig
       # testbar - geprüft wird die Kette, nicht das Modell.
-      - uses: astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78 # v7
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
         with:
           enable-cache: true
           cache-dependency-glob: services/ai-assist/uv.lock
@@ -442,7 +442,7 @@ jobs:
           nohup uv run --frozen --no-build uvicorn ai_assist.api:app --port 8090 > ai.log 2>&1 &
           for i in $(seq 1 40); do curl -sf localhost:8090/health && exit 0; sleep 1; done
           echo "AI-Dienst nicht gestartet"; cat ai.log; exit 1
-      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: '24'
           cache: npm
@@ -458,7 +458,7 @@ jobs:
           CI: 'true'
       - name: Bericht und Traces sichern
         if: failure()
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: playwright
           path: |
