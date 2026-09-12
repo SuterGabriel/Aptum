@@ -1,0 +1,89 @@
+/*
+ * Ohne Kapselung (siehe Komponente): Jeder Selektor beginnt mit .abrechnung,
+ * damit nichts hier auf andere Seiten abfärbt. Farben nur aus tokens.css.
+ */
+.abrechnung {
+  display: grid;
+  gap: var(--abstand-4);
+}
+
+.abrechnung h1 {
+  font-size: var(--schrift-xl);
+  margin: 0 0 var(--abstand-2);
+}
+
+.abrechnung .einleitung,
+.abrechnung .hinweis {
+  color: var(--text-secondary);
+  font-size: var(--schrift-s);
+  margin: 0;
+  max-width: 70ch;
+}
+
+.abrechnung .werkzeuge {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: space-between;
+  gap: var(--abstand-3);
+}
+
+.abrechnung .filter {
+  display: grid;
+  gap: var(--abstand-1);
+}
+
+.abrechnung .filter label {
+  font-size: var(--schrift-s);
+  font-weight: var(--gewicht-mittel);
+}
+
+.abrechnung .filter input {
+  min-height: var(--hitflaeche-min);
+  min-width: 20rem;
+  padding: var(--abstand-1) var(--abstand-3);
+  border: var(--rand-duenn) solid var(--border-strong);
+  border-radius: var(--radius-klein);
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  font: inherit;
+}
+
+.abrechnung .summe {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: var(--schrift-s);
+}
+
+.abrechnung .fehler {
+  margin: 0;
+  padding: var(--abstand-3);
+  border-left: var(--rand-dick) solid var(--regel-verletzt-border);
+  background: var(--regel-verletzt-bg);
+  color: var(--regel-verletzt-text);
+}
+
+/* ---- Die Statuszelle: Farbe und Wort, nie eines allein ---------------- */
+
+.abrechnung .ag-cell.status-prueffest {
+  background: var(--regel-erfuellt-bg);
+  color: var(--regel-erfuellt-text);
+  box-shadow: inset var(--rand-dick) 0 0 var(--regel-erfuellt-border);
+}
+
+.abrechnung .ag-cell.status-beanstandet {
+  background: var(--regel-verletzt-bg);
+  color: var(--regel-verletzt-text);
+  box-shadow: inset var(--rand-dick) 0 0 var(--regel-verletzt-border);
+  font-weight: var(--gewicht-mittel);
+}
+
+.abrechnung .ag-cell.status-offen {
+  color: var(--text-secondary);
+}
+
+/* Umgebrochene Begründungen brauchen Luft nach oben und unten. */
+.abrechnung .ag-cell[col-id='begruendung'] {
+  line-height: var(--zeilenhoehe-text);
+  padding-block: var(--abstand-2);
+}

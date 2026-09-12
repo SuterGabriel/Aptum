@@ -77,6 +77,26 @@ public final class Regelwerk {
         return new Pruefbericht(e);
     }
 
+    /**
+     * Das Erbrachte allein, ohne Kandidaten: Ist, was auf der Verordnung
+     * steht, prüffest? Für die Abrechnung, die nichts bucht, sondern nachsieht.
+     *
+     * <p>Nur die Regeln, die über schon erbrachte Behandlungen urteilen. Das
+     * Restkontingent fragt, ob noch eine dazupasst — die Frage der Buchung,
+     * nicht der Abrechnung. Die Frequenz ist eine Warnung nach Rücksprache und
+     * macht nichts unabrechenbar. Die Gültigkeit wird am Tag der letzten
+     * Behandlung geprüft: Was damals regelkonform war, bleibt es.
+     */
+    public Pruefbericht pruefeErbrachtes(Verordnung verordnung, Behandlungsverlauf verlauf) {
+        List<Pruefergebnis> e = new ArrayList<>();
+        e.add(hoechstmenge.pruefe(verordnung));
+        verlauf.ersterBehandlungstag().ifPresent((tag) -> e.add(behandlungsbeginn.pruefe(verordnung, tag)));
+        e.add(unterbrechung.pruefe(verordnung, verlauf));
+        e.add(unterbrechungsSumme.pruefe(verordnung, verlauf));
+        verlauf.letzterBehandlungstag().ifPresent((tag) -> e.add(gueltigkeit.pruefe(verordnung, verlauf, tag)));
+        return new Pruefbericht(e);
+    }
+
     /** Person und Raum für genau diesen Kandidaten. */
     public Pruefbericht pruefeRessourcen(Kontext k, Kandidat kandidat) {
         List<Pruefergebnis> e = new ArrayList<>();

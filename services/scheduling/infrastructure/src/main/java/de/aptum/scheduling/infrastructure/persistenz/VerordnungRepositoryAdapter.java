@@ -46,6 +46,19 @@ class VerordnungRepositoryAdapter implements VerordnungRepository {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public List<VerordnungAkte> alle() {
+        // Die Policy filtert auf den Mandanten der Sitzung; hier steht kein where.
+        return em
+                .createQuery(
+                        "select v from VerordnungEntity v order by v.ausstellungsdatum, v.id", VerordnungEntity.class)
+                .getResultList()
+                .stream()
+                .map(this::zurDomaene)
+                .toList();
+    }
+
+    @Override
     public void speichere(VerordnungAkte akte) {
         VerordnungEntity vorhanden = em.find(VerordnungEntity.class, akte.id().wert());
         if (vorhanden != null) {

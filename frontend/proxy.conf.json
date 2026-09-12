@@ -20,6 +20,13 @@
     },
     "secure": false
   },
+  "/api/abrechnung": {
+    "target": "http://localhost:8080",
+    "pathRewrite": {
+      "^/api": ""
+    },
+    "secure": false
+  },
   "/api/erfassung": {
     "target": "http://localhost:8090",
     "pathRewrite": {

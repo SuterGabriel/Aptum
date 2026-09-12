@@ -2,6 +2,7 @@ package de.aptum.scheduling.domain.port;
 
 import de.aptum.scheduling.domain.model.VerordnungAkte;
 import de.aptum.scheduling.domain.model.VerordnungId;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -18,6 +19,14 @@ import java.util.Optional;
 public interface VerordnungRepository {
 
     Optional<VerordnungAkte> lade(VerordnungId id);
+
+    /**
+     * Alle Akten des Mandanten, für die Abrechnungsübersicht. Kein Filter in
+     * der Signatur: Für eine Praxis sind es Hunderte, nicht Millionen, und die
+     * Übersicht sortiert und filtert selbst. Die Grenze, ab der das in die
+     * Datenbank gehörte, nennt ADR-001.
+     */
+    List<VerordnungAkte> alle();
 
     void speichere(VerordnungAkte akte);
 }

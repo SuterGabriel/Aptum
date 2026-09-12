@@ -84,6 +84,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/abrechnung/uebersicht": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["uebersicht"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -185,6 +201,36 @@ export interface components {
             /** Format: int32 */
             nachruheMinuten?: number;
             spalten?: components["schemas"]["Spalte"][];
+        };
+        Abrechnungsposten: {
+            /** Format: uuid */
+            verordnung?: string;
+            /** Format: date */
+            ausstellungsdatum?: string;
+            diagnosegruppe?: string;
+            therapieform?: string;
+            /** Format: int32 */
+            verordnet?: number;
+            /** Format: int32 */
+            erbracht?: number;
+            /** Format: int32 */
+            offen?: number;
+            /** Format: date */
+            ersteBehandlung?: string;
+            /** Format: date */
+            letzteBehandlung?: string;
+            status?: string;
+            begruendung?: string;
+            regeln?: components["schemas"]["Regel"][];
+        };
+        Abrechnungsuebersicht: {
+            posten?: components["schemas"]["Abrechnungsposten"][];
+            /** Format: int32 */
+            erbracht?: number;
+            /** Format: int32 */
+            prueffest?: number;
+            /** Format: int32 */
+            beanstandet?: number;
         };
     };
     responses: never;
@@ -411,6 +457,50 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["Woche"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Fehler"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Fehler"];
+                };
+            };
+        };
+    };
+    uebersicht: {
+        parameters: {
+            query?: never;
+            header: {
+                /**
+                 * @description Die Praxis, für die die Anfrage gilt. Platzhalter für Authentifizierung: In einer echten Anwendung käme der Mandant aus einem signierten Token.
+                 * @example praxis-a
+                 */
+                "X-Mandant": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Abrechnungsuebersicht"];
                 };
             };
             /** @description Bad Request */

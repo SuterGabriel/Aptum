@@ -1,6 +1,8 @@
 package de.aptum.scheduling.infrastructure.rest;
 
 import de.aptum.scheduling.application.anwendungsfall.WocheAnzeigen;
+import de.aptum.scheduling.domain.abrechnung.Abrechnungsstatus;
+import de.aptum.scheduling.domain.abrechnung.Abrechnungszeile;
 import de.aptum.scheduling.domain.kalender.Wochenansicht;
 import de.aptum.scheduling.domain.model.Buchungsentscheidung;
 import de.aptum.scheduling.domain.model.Pruefbericht;
@@ -84,6 +86,52 @@ final class Dto {
     }
 
     record Uebersteuerung(String begruendung, String von) {}
+
+    /** Eine Verordnung aus Sicht der Abrechnung. Die Regeln stehen dabei, damit die Tabelle sie aufklappen kann. */
+    record Abrechnungsposten(
+            UUID verordnung,
+            LocalDate ausstellungsdatum,
+            String diagnosegruppe,
+            String therapieform,
+            int verordnet,
+            int erbracht,
+            int offen,
+            LocalDate ersteBehandlung,
+            LocalDate letzteBehandlung,
+            String status,
+            String begruendung,
+            List<Regel> regeln) {
+        static Abrechnungsposten von(Abrechnungszeile z) {
+            return new Abrechnungsposten(
+                    z.id().wert(),
+                    z.verordnung().ausstellungsdatum(),
+                    z.verordnung().diagnosegruppe().name(),
+                    z.verordnung().therapieform().name(),
+                    z.verordnung().verordneteEinheiten(),
+                    z.erbracht(),
+                    z.offen(),
+                    z.ersteBehandlung().orElse(null),
+                    z.letzteBehandlung().orElse(null),
+                    z.status().name(),
+                    z.begruendung(),
+                    Regel.alle(z.bericht()));
+        }
+    }
+
+    /** Die Zeilen und die Summen darüber — dieselben Zahlen, die die Tabelle unten zeigt. */
+    record Abrechnungsuebersicht(List<Abrechnungsposten> posten, int erbracht, int prueffest, int beanstandet) {
+        static Abrechnungsuebersicht von(List<Abrechnungszeile> zeilen) {
+            return new Abrechnungsuebersicht(
+                    zeilen.stream().map(Abrechnungsposten::von).toList(),
+                    zeilen.stream().mapToInt(Abrechnungszeile::erbracht).sum(),
+                    (int) zeilen.stream()
+                            .filter((z) -> z.status() == Abrechnungsstatus.PRUEFFEST)
+                            .count(),
+                    (int) zeilen.stream()
+                            .filter((z) -> z.status() == Abrechnungsstatus.BEANSTANDET)
+                            .count());
+        }
+    }
 
     record Buchung(
             UUID verordnung,

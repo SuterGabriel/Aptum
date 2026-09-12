@@ -1937,6 +1937,47 @@ sie soll, auch beim Seeden.
 
 ---
 
+## 2026-09-12 — Die Abrechnungsübersicht: ag-grid, aber die Regeln bleiben, wo sie sind
+
+**Was delegiert wurde:** Lesemodell in der Domäne, Anwendungsfall, Endpunkt,
+Angular-Seite mit ag-grid, Tests auf allen drei Ebenen, ADR-011.
+
+**Die Entscheidung davor.** `services/billing/` war ein leerer Ordner mit
+`.gitkeep`, und der erste Reflex war, ihn zu löschen. Die Rückfrage („wieso
+löschen?") war berechtigt: Der Ordner heißt wie das, was als Nächstes gebaut
+wird. Drei Optionen, eine ADR — die Abrechnung wird ein Lesemodell im
+Scheduling-Dienst, weil „prüffest" dieselben Regeln braucht, die jede
+Buchung geprüft haben. Der Ordner bleibt und trägt jetzt eine README mit der
+Bedingung, unter der er Code bekommt. Ein leerer Ordner sieht wie eine Lücke
+aus; ein Ordner mit begründeter Entscheidung ist eine.
+
+**Was gut ging.** Das Regelwerk brauchte genau eine neue Methode:
+`pruefeErbrachtes`, ohne Kandidaten. Sie lässt Restkontingent und Frequenz
+aus und prüft die Gültigkeit am Tag der letzten Behandlung — beides steht
+begründet im Code, weil es fachliche Auslegungen sind. Der Domänentest hat
+sechs Fälle, und der REST-Test prüft die Mandantengrenze: Praxis B sieht die
+Verordnung von Praxis A nicht in der Abrechnung. ag-grid selbst: Thema aus
+den Token statt aus der Bibliothek, damit die Kontrastprüfung der CI weiter
+gilt; Statuszelle mit Wort *und* Farbe. axe fand nichts, im Unit-Test und im
+Browser — bei einer Bibliothek, die man nicht misst, wäre das eine Behauptung
+gewesen.
+
+**Was nicht auf Anhieb ging.** Drei Dinge, alle klein, alle lehrreich.
+Erstens: Der Produktions-Build riss das Budget — ag-grid wiegt 1,1 MB, mehr
+als der Rest der Anwendung. Die Route ist jetzt lazy, und statt
+`AllCommunityModule` sind zehn Module registriert; das Startbündel blieb bei
+470 kB. Zweitens: Der Selektor für Zeilen aus älteren ag-grid-Versionen
+(`.ag-center-cols-container`) existiert in Version 36 nicht mehr; der Test
+hängt jetzt am Attribut `row-index`, nicht an einer Layout-Klasse. Drittens:
+Der e2e-Test bekam 404, weil der Compose-Container noch das alte Backend
+fuhr — der Fehler war nicht im Code, sondern im Kopf: „läuft" heißt nicht
+„läuft mit diesem Stand".
+
+**Zeitschätzung:** dreieinhalb Stunden, davon eine für Budget, Selektor und
+den Container.
+
+---
+
 ## Vorlage für weitere Einträge
 
 ```

@@ -32,7 +32,9 @@ ein Befehl, eine Regelprüfung für alles:
   Regelprüfung zu durchlaufen wie eine manuelle Buchung.
 - **Frontend (Angular 20).** Terminsuche, Buchungsdialog mit der Regelprüfung
   als benannter Liste, ein selbst gebautes Kalender-Grid mit Roving Tabindex
-  (ADR-003), Verordnungserfassung. axe-core im Unit-Test und im echten Browser.
+  (ADR-003), Verordnungserfassung, Abrechnungsübersicht auf ag-grid — lazy
+  geladen, im Thema der Token (ADR-011). axe-core im Unit-Test und im echten
+  Browser, für jede Seite.
 - **Betrieb.** `docker compose up` für den Schreibtisch; Terraform, ArgoCD und
   Helm für den Cluster — die CI fährt das bei jedem Push in `kind` (ADR-010).
 
@@ -42,6 +44,7 @@ ein Befehl, eine Regelprüfung für alles:
 | Das Kalender-Grid: Rüstzeit, Nachruhe und Sperrzeiten als eigene Zustände, jede Zelle mit Namen für Screenreader | Der Buchungsdialog: dieselben Regeln, die die Suche befragt hat, als Liste — bevor jemand entscheidet |
 | ![Terminsuche: 520 Vorschläge, 650 ausgeschlossen mit Grund je Regel](docs/bilder/suche.png) | ![Verordnung erfassen: Freitext links, Vorschlag des Modells rechts, nicht Gelesenes bleibt leer](docs/bilder/erfassung.png) |
 | Die Terminsuche zählt, was sie weggelassen hat, und warum | Die Erfassung: das Modell liest, was es lesen kann, und schweigt beim Rest. Der Mensch ergänzt, die Domäne prüft |
+| ![Abrechnungsübersicht: eine Zeile je Verordnung, Status prüffest oder beanstandet mit der verletzten Regel](docs/bilder/abrechnung.png) | Die Abrechnung: dieselben Regeln, noch einmal über das Erbrachte. „Beanstandet“ nennt die Regel — derselbe Name wie im Buchungsdialog, weil es derselbe Code ist (ADR-011) |
 
 Was hier behauptet wird, ist an der jeweiligen Stelle im Repo nachprüfbar oder
 als offen gekennzeichnet — und ein CI-Job prüft die Belege mit
@@ -204,10 +207,10 @@ Wer nur das Chart prüfen will, ohne ArgoCD: `helm install aptum deploy/helm/apt
 |---|---|---|
 | 0 | Setup, Regeln, Skills, CI-Grundgerüst, ADR-001 | **erledigt** |
 | 1 | Domänenkern in reinem Java, dann Spring, Multi-Tenancy, Angular-Suchflow | **abgeschlossen** — Domänenkern mit Slot-Suche, Spring Boot in drei Modulen, RLS gegen echtes Postgres, REST mit OpenAPI, Terminsuche in Angular |
-| 2 | Kalender-Grid, Tabelle, WCAG, End-to-End-Tests | **in Arbeit** — Kalender-Grid, Buchungsdialog mit Regelprüfung, Playwright mit axe als CI-Job; Verordnungsübersicht und Tabelle offen |
+| 2 | Kalender-Grid, Tabelle, WCAG, End-to-End-Tests | **abgeschlossen** — Kalender-Grid, Buchungsdialog mit Regelprüfung, Abrechnungsübersicht auf ag-grid, Playwright mit axe als CI-Job für jede Seite; die Verordnungssicht folgt in Stufe 5 |
 | 3 | AI-Layer, MCP-Server, Evals, Provider-Vergleich | **in Arbeit** — Verordnungserfassung aus Freitext in `services/ai-assist/` (Python), Pseudonymisierung vor dem Aufruf, zwei Provider, Eval-Suite mit 55 Fällen in `evals/`, MCP-Server mit vier Werkzeugen, Seite „Verordnung erfassen“; Provider-Vergleich offen |
 | 4 | Container, Helm, ArgoCD, Terraform, Observability | **abgeschlossen, soweit ein Portfolio es kann** — drei Dienste als Container, `compose.yml` fährt alles mit einem Befehl hoch; Terraform in zwei Ständen stellt ArgoCD, ArgoCD rollt das Helm-Chart aus dem Repo aus, die CI fährt das bei jedem Push in einem `kind`-Cluster (ADR-010); getrennte Probes, JSON-Protokoll mit Mandanten-ID. Was ein Betrieb darüber hinaus bräuchte, benennt `docs/BETRIEB.md` |
-| 5 | Demo, ADRs vervollständigen, Mapping | **in Arbeit** — Mapping gegen das Repo abgeglichen, Demodaten und Bilder im README; Abrechnungsübersicht und Verordnungssicht folgen |
+| 5 | Demo, ADRs vervollständigen, Mapping | **in Arbeit** — Mapping gegen das Repo abgeglichen, Demodaten und Bilder im README, Abrechnungsübersicht (ADR-011); Verordnungssicht folgt |
 
 ## Daten
 

@@ -126,6 +126,41 @@ class RestApiTest extends MitDatenbank {
                 "Mandant B sieht keinen Termin von A");
     }
 
+    @Test
+    @DisplayName("Die Abrechnung zeigt die gebuchte Behandlung als erbracht und prüffest - dem anderen Mandanten nicht")
+    void dieAbrechnungNachDerBuchung() {
+        UUID verordnung = verordnungAnlegen("praxis-a");
+        Dto.Terminvorschlag slot = als("praxis-a", "/termine/suche", dieseWoche(verordnung), Dto.Suchantwort.class)
+                .getBody()
+                .vorschlaege()
+                .get(0);
+        als(
+                "praxis-a",
+                "/termine",
+                new Dto.Buchung(verordnung, "KG_EINZEL", slot.therapeut(), slot.raum(), slot.beginn(), null),
+                Dto.Buchungsantwort.class);
+
+        ResponseEntity<Dto.Abrechnungsuebersicht> antwort =
+                lese("praxis-a", "/abrechnung/uebersicht", Dto.Abrechnungsuebersicht.class);
+        assertEquals(HttpStatus.OK, antwort.getStatusCode());
+        Dto.Abrechnungsposten posten = antwort.getBody().posten().stream()
+                .filter(p -> p.verordnung().equals(verordnung))
+                .findFirst()
+                .orElseThrow(() -> new AssertionError("die Verordnung fehlt in der Abrechnung"));
+        assertEquals(1, posten.erbracht());
+        assertEquals(5, posten.offen());
+        assertEquals("PRUEFFEST", posten.status());
+        assertEquals(slot.beginn().toLocalDate(), posten.ersteBehandlung());
+        assertTrue(posten.regeln().stream().anyMatch(r -> r.regel().equals("Verordnungsfrist")));
+        assertTrue(antwort.getBody().prueffest() >= 1);
+
+        Dto.Abrechnungsuebersicht fremd = lese("praxis-b", "/abrechnung/uebersicht", Dto.Abrechnungsuebersicht.class)
+                .getBody();
+        assertTrue(
+                fremd.posten().stream().noneMatch(p -> p.verordnung().equals(verordnung)),
+                "Mandant B sieht keine Verordnung von A");
+    }
+
     private UUID verordnungAnlegen(String mandant) {
         ResponseEntity<Dto.VerordnungAngelegt> antwort = als(
                 mandant,

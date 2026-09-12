@@ -278,6 +278,51 @@
           }
         }
       }
+    },
+    "/abrechnung/uebersicht" : {
+      "get" : {
+        "tags" : [ "abrechnung-controller" ],
+        "operationId" : "uebersicht",
+        "parameters" : [ {
+          "name" : "X-Mandant",
+          "in" : "header",
+          "description" : "Die Praxis, für die die Anfrage gilt. Platzhalter für Authentifizierung: In einer echten Anwendung käme der Mandant aus einem signierten Token.",
+          "required" : true,
+          "example" : "praxis-a"
+        } ],
+        "responses" : {
+          "400" : {
+            "description" : "Bad Request",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Fehler"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Fehler"
+                }
+              }
+            }
+          },
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Abrechnungsuebersicht"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components" : {
@@ -539,6 +584,80 @@
             "items" : {
               "$ref" : "#/components/schemas/Spalte"
             }
+          }
+        }
+      },
+      "Abrechnungsposten" : {
+        "type" : "object",
+        "properties" : {
+          "verordnung" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "ausstellungsdatum" : {
+            "type" : "string",
+            "format" : "date"
+          },
+          "diagnosegruppe" : {
+            "type" : "string"
+          },
+          "therapieform" : {
+            "type" : "string"
+          },
+          "verordnet" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "erbracht" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "offen" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "ersteBehandlung" : {
+            "type" : "string",
+            "format" : "date"
+          },
+          "letzteBehandlung" : {
+            "type" : "string",
+            "format" : "date"
+          },
+          "status" : {
+            "type" : "string"
+          },
+          "begruendung" : {
+            "type" : "string"
+          },
+          "regeln" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Regel"
+            }
+          }
+        }
+      },
+      "Abrechnungsuebersicht" : {
+        "type" : "object",
+        "properties" : {
+          "posten" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Abrechnungsposten"
+            }
+          },
+          "erbracht" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "prueffest" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "beanstandet" : {
+            "type" : "integer",
+            "format" : "int32"
           }
         }
       }

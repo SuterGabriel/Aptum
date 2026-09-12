@@ -220,6 +220,14 @@ pruefe "Mandant steht im Protokoll (Java)" enthaelt services/scheduling/infrastr
 pruefe "kind-Cluster ist konfiguriert" datei deploy/kind/cluster.yaml
 pruefe "Prüfung ohne Buchung im Backend" enthaelt services/scheduling/infrastructure/src/main/java/de/aptum/scheduling/infrastructure/rest/TerminController.java "/pruefung"
 pruefe "Wochenansicht nimmt die Grenzen aus Termin" enthaelt services/scheduling/domain/src/main/java/de/aptum/scheduling/domain/kalender/Wochenansicht.java "belegtRaum"
+pruefe "Abrechnung fragt das Regelwerk, nicht ein eigenes if" enthaelt services/scheduling/domain/src/main/java/de/aptum/scheduling/domain/abrechnung/Abrechnungsuebersicht.java "regelwerk.pruefeErbrachtes"
+pruefe "Abrechnungsübersicht ist getestet (Domäne)" datei services/scheduling/domain/src/test/java/de/aptum/scheduling/domain/abrechnung/AbrechnungsuebersichtTest.java
+pruefe "Abrechnung über HTTP mit Mandantengrenze getestet" enthaelt services/scheduling/infrastructure/src/test/java/de/aptum/scheduling/infrastructure/rest/RestApiTest.java "/abrechnung/uebersicht"
+pruefe "ag-grid nur in der Abrechnung" enthaelt frontend/src/app/abrechnung/abrechnungs-uebersicht.ts "ag-grid-angular"
+pruefe "ag-grid wird lazy geladen" enthaelt frontend/src/app/app.routes.ts "loadComponent"
+pruefe "Abrechnung mit axe im Browser" datei frontend/e2e/abrechnung.spec.ts
+pruefe "ADR-011 begründet den Schnitt der Abrechnung" datei docs/adr/ADR-011-abrechnung-als-lesemodell.md
+pruefe "billing ist eine Entscheidung, kein leerer Ordner" datei services/billing/README.md
 pruefe "stumme Lücke 1 ist Fixture" datei scripts/fixtures/regel-check/domain/NachbarBorgt.java
 pruefe "stumme Lücke 2 ist Fixture" datei scripts/fixtures/regel-check/domain/KlassenkommentarBorgt.java
 pruefe "Wertabgleich ist Fixture" datei scripts/fixtures/regel-check/domain/FalscherWert.java

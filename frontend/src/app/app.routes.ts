@@ -11,5 +11,13 @@ export const routes: Routes = [
   },
   { path: 'suche', component: TerminSuche, title: 'Terminsuche - Aptum' },
   { path: 'kalender', component: KalenderSeite, title: 'Kalender - Aptum' },
+  {
+    path: 'abrechnung',
+    // Lazy, und zwar nur diese Seite: ag-grid wiegt mehr als der Rest der
+    // Anwendung zusammen. Wer Termine sucht, lädt es nicht.
+    loadComponent: () =>
+      import('./abrechnung/abrechnungs-uebersicht').then((m) => m.AbrechnungsUebersicht),
+    title: 'Abrechnung - Aptum',
+  },
   { path: '', redirectTo: 'suche', pathMatch: 'full' },
 ];

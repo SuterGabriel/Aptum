@@ -18,6 +18,7 @@ rekonstruiert Begründungen, die er nie hatte — und das merkt man ihnen an.
 | [ADR-008](docs/adr/ADR-008-maven-statt-gradle.md) | Maven statt Gradle, Module je Service | angenommen | 2026-09-09 |
 | [ADR-010](docs/adr/ADR-010-gitops-mit-terraform-und-argocd.md) | GitOps: Terraform stellt die Plattform in zwei Ständen, ArgoCD rollt aus dem Repo aus; kind als Beweiscluster in der CI | angenommen | 2026-09-12 |
 | [ADR-009](docs/adr/ADR-009-blockieren-mit-uebersteuerung.md) | Verletzte Regeln blockieren, Übersteuerung nur mit Begründung | angenommen | 2026-09-10 |
+| [ADR-011](docs/adr/ADR-011-abrechnung-als-lesemodell.md) | Die Abrechnung ist ein Lesemodell im Scheduling-Dienst mit denselben Regeln, kein dritter Dienst; ag-grid nur dort, lazy geladen | angenommen | 2026-09-12 |
 
 > **Zur Nummerierung:** ADR-006 entstand als zweite Entscheidung, trägt aber
 > die sechste Nummer. Die Nummern 002 bis 005 waren im Voraus für Themen

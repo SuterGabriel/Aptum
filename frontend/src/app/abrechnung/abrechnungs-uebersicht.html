@@ -1,0 +1,55 @@
+<div class="abrechnung">
+  <header class="kopf">
+    <h1 id="abrechnung-titel">Abrechnung</h1>
+    <p class="einleitung">
+      Welche Einheiten sind erbracht und prüffest? Dieselben Regeln, die jede Buchung geprüft haben,
+      laufen noch einmal über das Erbrachte - beanstandet heißt: eine davon ist verletzt, und die
+      Zeile sagt welche.
+    </p>
+  </header>
+
+  <div class="werkzeuge">
+    <div class="filter">
+      <label for="abrechnung-filter">Tabelle filtern</label>
+      <input
+        id="abrechnung-filter"
+        type="search"
+        autocomplete="off"
+        placeholder="z. B. beanstandet, WS, T. Alpha"
+        [value]="filter()"
+        (input)="filtern($event)"
+      />
+    </div>
+    <p class="summe" aria-live="polite">{{ summe() }}</p>
+  </div>
+
+  @switch (zustand().status) {
+    @case ('laedt') {
+      <p class="hinweis" aria-live="polite">Abrechnung wird geladen.</p>
+    }
+    @case ('fehler') {
+      @if (zustand(); as z) {
+        @if (z.status === 'fehler') {
+          <p class="fehler" role="alert">{{ z.meldung }}</p>
+        }
+      }
+    }
+    @case ('fertig') {
+      <section aria-labelledby="abrechnung-titel" class="tabelle">
+        <ag-grid-angular
+          [rowData]="posten()"
+          [columnDefs]="spalten"
+          [defaultColDef]="standard"
+          [theme]="thema"
+          [localeText]="sprache"
+          [quickFilterText]="filter()"
+          [getRowId]="zeilenId"
+          [ensureDomOrder]="true"
+          [suppressColumnVirtualisation]="true"
+          [enableCellTextSelection]="true"
+          domLayout="autoHeight"
+        />
+      </section>
+    }
+  }
+</div>

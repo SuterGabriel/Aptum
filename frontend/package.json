@@ -30,6 +30,7 @@
   },
   "private": true,
   "dependencies": {
+    "@ag-grid-community/locale": "^36.1.0",
     "@angular/cdk": "^20.2.14",
     "@angular/common": "^20.3.0",
     "@angular/compiler": "^20.3.0",
@@ -37,6 +38,8 @@
     "@angular/forms": "^20.3.0",
     "@angular/platform-browser": "^20.3.0",
     "@angular/router": "^20.3.0",
+    "ag-grid-angular": "^36.1.0",
+    "ag-grid-community": "^36.1.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
