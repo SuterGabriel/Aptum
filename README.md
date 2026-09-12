@@ -2,28 +2,50 @@
 
 Terminplanung und Verordnungsverwaltung für Physio- und Ergotherapiepraxen.
 
+Ein Portfolio-Projekt mit einem Auftraggeber aus Papier: zwei Ausschreibungen
+für Full-Stack-Entwicklung mit Angular, Java, KI-Anbindung und Cloud-Betrieb.
+Jede ihrer Anforderungen steht wörtlich in
+[docs/ANFORDERUNGEN.md](docs/ANFORDERUNGEN.md), mit Status und dem Ort im Repo,
+an dem sie nachprüfbar eingelöst ist — auch die, die ein Portfolio nicht
+einlösen kann. Das ist die Tabelle, die man zuerst lesen sollte.
+
 *Aptum*, lateinisch für „passend". Die Anwendung beantwortet eine einzige
 Frage: Passt dieser Termin zu Therapeut, Raum, Patient **und** Verordnung? Die
 vier Dimensionen unten sind der Grund für den Namen.
 
-**Stand: Stufe 1 abgeschlossen, Stufe 2 in Arbeit.** Alle vier Dimensionen sind
-als benannte Regeln mit parametrisierten Grenzfalltests modelliert, und die
-Slot-Suche schneidet sie: Sie liefert Vorschläge mit ihrem Prüfbericht und
-zählt, was sie aus welchem Grund weggelassen hat. Dasselbe Regelwerk, das die
-Suche befragt, prüft später jede Buchung von Hand und jeden Vorschlag eines
-Sprachmodells — es gibt keinen zweiten Weg. Das Spring-Boot-Gerüst steht in
-drei Modulen, die Persistenz trennt Mandanten per Row Level Security und
-beweist das gegen ein echtes Postgres (ADR-002). Zwei REST-Endpunkte suchen und buchen
-durch dasselbe Regelwerk — nachspielbar mit `curl`. Das Angular-Frontend zeigt
-die Terminsuche — der Suchflow aus dem Skill als echter Code —, den
-Buchungsdialog mit der Regelprüfung als benannter Liste, und das selbst gebaute
-Kalender-Grid (ADR-003): sechs Zustände aus den Token, Roving Tabindex, ein Name
-je Zelle, axe-core im Test und im echten Browser.
+## Was läuft
 
-Vorgezogen aus Stufe 2 sind die Gestaltungstoken und die Kontrastprüfung
-(ADR-006), weil der Auftrag an die Gestaltung eine Grundlage brauchte. Was
-hier behauptet wird, ist an der jeweiligen Stelle im Repo nachprüfbar oder als
-offen gekennzeichnet.
+**Stand 12. September 2026, Stufen 0 bis 4 abgeschlossen.** Drei Dienste,
+ein Befehl, eine Regelprüfung für alles:
+
+- **Scheduling-Dienst (Java 21, Spring Boot 3.5).** Der Domänenkern kennt kein
+  Framework — ArchUnit prüft das. 65 Fachregeln aus Heilmittel-Richtlinie und
+  Verträgen sind mit Fundstelle dokumentiert, elf davon als benannte
+  Regelklassen mit parametrisierten Grenzfalltests umgesetzt; keine Fachzahl
+  steht im Code ohne ihre Fundstelle (ADR-007). Die Slot-Suche schneidet Therapeut, Raum, Patient und Verordnung und sagt, was
+  sie aus welchem Grund weggelassen hat. Mandanten trennt Postgres per Row
+  Level Security, bewiesen gegen eine echte Datenbank (ADR-002).
+- **AI-Dienst (Python 3.12, FastAPI).** Liest eine Verordnung aus Freitext,
+  nachdem Namen und Geburtsdaten ersetzt sind, und sagt, was er *nicht* lesen
+  konnte, statt zu raten. Zwei Provider, eine Eval-Suite mit 55 Fällen, ein
+  MCP-Server mit vier Werkzeugen. Kein Vorschlag wird gebucht, ohne dieselbe
+  Regelprüfung zu durchlaufen wie eine manuelle Buchung.
+- **Frontend (Angular 20).** Terminsuche, Buchungsdialog mit der Regelprüfung
+  als benannter Liste, ein selbst gebautes Kalender-Grid mit Roving Tabindex
+  (ADR-003), Verordnungserfassung. axe-core im Unit-Test und im echten Browser.
+- **Betrieb.** `docker compose up` für den Schreibtisch; Terraform, ArgoCD und
+  Helm für den Cluster — die CI fährt das bei jedem Push in `kind` (ADR-010).
+
+| | |
+|---|---|
+| ![Kalender-Grid: ein Tag, zwei Therapeuten, Termine mit Vor- und Nachbereitung](docs/bilder/kalender.png) | ![Buchungsdialog: elf Regeln geprüft, jede benannt und erklärt](docs/bilder/buchungsdialog.png) |
+| Das Kalender-Grid: Rüstzeit, Nachruhe und Sperrzeiten als eigene Zustände, jede Zelle mit Namen für Screenreader | Der Buchungsdialog: dieselben Regeln, die die Suche befragt hat, als Liste — bevor jemand entscheidet |
+| ![Terminsuche: 520 Vorschläge, 650 ausgeschlossen mit Grund je Regel](docs/bilder/suche.png) | ![Verordnung erfassen: Freitext links, Vorschlag des Modells rechts, nicht Gelesenes bleibt leer](docs/bilder/erfassung.png) |
+| Die Terminsuche zählt, was sie weggelassen hat, und warum | Die Erfassung: das Modell liest, was es lesen kann, und schweigt beim Rest. Der Mensch ergänzt, die Domäne prüft |
+
+Was hier behauptet wird, ist an der jeweiligen Stelle im Repo nachprüfbar oder
+als offen gekennzeichnet — und ein CI-Job prüft die Belege mit
+([unten](#was-hier-nachprüfbar-ist)).
 
 ---
 
@@ -185,7 +207,7 @@ Wer nur das Chart prüfen will, ohne ArgoCD: `helm install aptum deploy/helm/apt
 | 2 | Kalender-Grid, Tabelle, WCAG, End-to-End-Tests | **in Arbeit** — Kalender-Grid, Buchungsdialog mit Regelprüfung, Playwright mit axe als CI-Job; Verordnungsübersicht und Tabelle offen |
 | 3 | AI-Layer, MCP-Server, Evals, Provider-Vergleich | **in Arbeit** — Verordnungserfassung aus Freitext in `services/ai-assist/` (Python), Pseudonymisierung vor dem Aufruf, zwei Provider, Eval-Suite mit 55 Fällen in `evals/`, MCP-Server mit vier Werkzeugen, Seite „Verordnung erfassen“; Provider-Vergleich offen |
 | 4 | Container, Helm, ArgoCD, Terraform, Observability | **abgeschlossen, soweit ein Portfolio es kann** — drei Dienste als Container, `compose.yml` fährt alles mit einem Befehl hoch; Terraform in zwei Ständen stellt ArgoCD, ArgoCD rollt das Helm-Chart aus dem Repo aus, die CI fährt das bei jedem Push in einem `kind`-Cluster (ADR-010); getrennte Probes, JSON-Protokoll mit Mandanten-ID. Was ein Betrieb darüber hinaus bräuchte, benennt `docs/BETRIEB.md` |
-| 5 | Demo, ADRs vervollständigen, Mapping | offen |
+| 5 | Demo, ADRs vervollständigen, Mapping | **in Arbeit** — Mapping gegen das Repo abgeglichen, Demodaten und Bilder im README; Abrechnungsübersicht und Verordnungssicht folgen |
 
 ## Daten
 

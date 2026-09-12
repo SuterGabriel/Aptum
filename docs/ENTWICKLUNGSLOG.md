@@ -1909,6 +1909,34 @@ gesehen habe.
 
 ---
 
+## 2026-09-12 — Das README als Fremder gelesen
+
+**Anlass:** Dieselbe Ausschreibung ist erneut erschienen, Start in fünf Tagen.
+Vor der Bewerbung einmal das README so lesen, wie es jemand liest, der das
+Projekt nicht kennt und drei Minuten hat.
+
+**Was auffiel.** Der erste Absatz sagte „Stufe 1 abgeschlossen, Stufe 2 in
+Arbeit", die Tabelle am Ende sagte Stufe 4 abgeschlossen — auf derselben
+Seite. Der Absatz war über Wochen angewachsen, jede Stufe hatte einen Satz
+angehängt, niemand hatte den ersten Satz je wieder gelesen. Zweitens: kein
+Bild. Wer das Repo öffnet, baut es nicht; für den existiert das Frontend
+nur, wenn es zu sehen ist. Drittens fehlte im ersten Bildschirm der Satz,
+wofür das Projekt gebaut ist — die Ausschreibungstabelle tauchte erst im
+Wegweiser auf.
+
+**Was sich änderte.** Ein neuer Kopf: Zweck in einem Absatz mit Link auf das
+Mapping, dann „Was läuft" mit einem Absatz je Dienst, dann vier Bilder aus
+dem laufenden Stack. Dabei fiel eine zweite Ungenauigkeit auf: „65 Fachregeln,
+jede mit Grenzfalltests" wäre zu viel gesagt — 65 sind dokumentiert, elf sind
+Regelklassen. So steht es jetzt. Die Bilder entstehen mit Playwright aus
+den Demodaten; Manuelle Therapie ließ sich nicht buchen, weil keine der
+beiden Testpersonen das Zertifikat hat — die Qualifikationsregel tut, was
+sie soll, auch beim Seeden.
+
+**Zeitschätzung:** anderthalb Stunden.
+
+---
+
 ## Vorlage für weitere Einträge
 
 ```
