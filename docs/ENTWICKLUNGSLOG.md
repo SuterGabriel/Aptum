@@ -2030,6 +2030,46 @@ es bestätigt: 470 kB, unverändert.
 
 ---
 
+## 2026-09-12 — Die Seite scrollt nie mehr
+
+**Anlass:** „Kannst du das Frontend noch schöner bauen? Keine Scrollbar
+außer im Kalender selbst." Dazu der Hinweis, im Angular-MCP nachzusehen.
+
+**Der MCP.** Die Angular-CLI bringt seit Version 20 einen MCP-Server mit
+(`ng mcp`). Er hat drei Werkzeuge: Best Practices, Dokumentationssuche,
+Projektliste. Die Best Practices sind allgemein — Signals, Standalone,
+`@if`/`@for`, `inject()`, und: Host-Bindungen gehören ins `host`-Objekt des
+Decorators, nicht in `@HostBinding`. Zu Layout sagt er nichts, die Doku-Suche
+fand zu „scroll container" nichts. Das Layout ist also nach dem
+Mockup-Auftrag entschieden, nicht nach dem Werkzeug. Was daraus blieb: Die
+vier Seiten tragen ihre Klasse jetzt über `host: { class: 'seite' }`.
+
+**Der Schnitt.** `html` und `body` sind so hoch wie das Fenster und scrollen
+nicht. Die Hülle ist ein Gitter aus Kopf und einer Zeile, die Zeile bekommt
+die Ansicht, und jede Ansicht scrollt nur dort, wo ihr Inhalt wächst: die
+Kriterien und die Trefferliste in der Suche getrennt, das Gitter im Kalender
+mit stehender Kopfzeile *und* stehender Zeitspalte, der Vorschlagskasten in
+der Erfassung, die Tabelle in der Abrechnung. Unter 56 rem stapeln sich die
+Spalten, und dann scrollt `main` — die einzige Stelle, an der das erlaubt
+ist. Die Vorschläge sind dichter geworden: eine Zeile je Vorschlag, Buchen
+rechts; hundert Vorschläge waren vorher hundert Kästen.
+
+**Was nicht auf Anhieb ging.** Die Abrechnung hing am unteren Rand, darüber
+Leere. Die Messung im DOM zeigte: Die Ansicht war 505 Pixel hoch und stand
+bei 379. Ursache war das leere `<router-outlet>`-Element — Angular setzt die
+Ansicht als *Geschwister* daneben, und das leere Element war damit das erste
+Gitterkind und belegte die einzige Zeile. Ein `display: none` auf dem Outlet,
+und alle vier Ansichten füllten die Zeile. Der zweite Fund war unsichtbar:
+Die Seite hatte 32 000 Pixel Überhang, den niemand sah, weil `html` nicht
+scrollt. Die Screenreader-Texte in den Vorschlägen sind absolut
+positioniert, und ohne positionierten Vorfahren streckten sie das Dokument.
+Die Scrollbereiche sind jetzt `position: relative`. Beides hätte ein
+Screenshot nicht gezeigt; gezeigt hat es die Zahl.
+
+**Zeitschätzung:** zwei Stunden, davon eine halbe für das Outlet.
+
+---
+
 ## Vorlage für weitere Einträge
 
 ```

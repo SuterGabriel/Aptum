@@ -1,11 +1,22 @@
+:host {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  height: 100dvh;
+}
+
 .kopf {
   display: flex;
   align-items: center;
   gap: var(--abstand-5);
-  padding: var(--abstand-2) var(--abstand-4);
+  padding: 0 var(--abstand-4);
   background: var(--surface-sunken);
   border-bottom: var(--rand-duenn) solid var(--border-subtle);
   min-height: var(--hitflaeche-min);
+}
+
+nav {
+  display: flex;
+  gap: var(--abstand-1);
 }
 
 .wortmarke {
@@ -27,9 +38,26 @@ nav a {
 nav a.aktiv {
   color: var(--text-primary);
   text-decoration: underline;
-  text-underline-offset: 0.2em;
+  text-underline-offset: 0.35em;
+  text-decoration-thickness: var(--rand-dick);
+  text-decoration-color: var(--accent);
 }
 
+/* Die Zeile, die der Ansicht bleibt; scrollt nur, wenn eine Ansicht auf
+   einem schmalen Bildschirm ihre Spalten stapelt. */
 main {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr);
+  grid-auto-rows: minmax(0, 1fr);
+  min-height: 0;
   padding: var(--abstand-4);
+  overflow: auto;
+  scrollbar-width: thin;
+}
+
+/* Das Outlet selbst ist leer; die Ansicht wird als Geschwister eingesetzt.
+   Ohne diese Zeile wäre das leere Element das erste Gitterkind und nähme
+   der Ansicht die Zeile weg. */
+router-outlet {
+  display: none;
 }

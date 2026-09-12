@@ -53,6 +53,7 @@ const FORMULARFELDER: readonly UnsicheresFeld[] = [
   templateUrl: './verordnung-erfassen.html',
   styleUrl: './verordnung-erfassen.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'seite' },
 })
 export class VerordnungErfassen {
   private readonly fb = inject(NonNullableFormBuilder);

@@ -106,6 +106,7 @@ const datum = (p: ValueFormatterParams<Abrechnungsposten, string | undefined>): 
   // erreicht sie nicht. Alle Selektoren sind deshalb mit .abrechnung geklammert.
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'seite' },
 })
 export class AbrechnungsUebersicht {
   private readonly api = inject(AptumApi);

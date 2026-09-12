@@ -67,7 +67,7 @@
       </select>
     </fieldset>
 
-    <fieldset>
+    <fieldset class="notiz">
       <legend><span class="nummer" aria-hidden="true">2</span> Therapeut</legend>
       <p class="abgeleitet">
         Kein Filter. Wer das Heilmittel abrechnen darf und wann Dienst hat, entscheiden die Regeln
@@ -76,7 +76,7 @@
       </p>
     </fieldset>
 
-    <fieldset>
+    <fieldset class="notiz">
       <legend><span class="nummer" aria-hidden="true">3</span> Raum</legend>
       <p class="abgeleitet">
         Kein Filter. Die Raumanforderung folgt aus dem Heilmittel - Gerätebereich oder Liege, mit
@@ -147,57 +147,59 @@
         @if (zustand(); as z) {
           @if (z.status === 'fertig') {
             <p class="zusammenfassung">{{ z.antwort.zusammenfassung }}</p>
-            <ol class="vorschlaege">
-              @for (v of z.antwort.vorschlaege; track (v.beginn ?? '') + (v.therapeut ?? '')) {
-                <li class="vorschlag">
-                  <span class="wann">
-                    <span class="datum">{{
-                      v.beginn | date: 'EEEE, d. MMMM' : zone(v.beginn)
-                    }}</span>
-                    <span class="zeit zahl">
-                      {{ v.beginn | date: 'HH:mm' : zone(v.beginn) }} bis
-                      {{ v.ende | date: 'HH:mm' : zone(v.ende) }}
+            <div class="treffer">
+              <ol class="vorschlaege">
+                @for (v of z.antwort.vorschlaege; track (v.beginn ?? '') + (v.therapeut ?? '')) {
+                  <li class="vorschlag">
+                    <span class="wann">
+                      <span class="datum">{{
+                        v.beginn | date: 'EEEE, d. MMMM' : zone(v.beginn)
+                      }}</span>
+                      <span class="zeit zahl">
+                        {{ v.beginn | date: 'HH:mm' : zone(v.beginn) }} bis
+                        {{ v.ende | date: 'HH:mm' : zone(v.ende) }}
+                      </span>
                     </span>
-                  </span>
-                  <span class="wer">
-                    <span>{{ v.therapeut }}</span>
-                    <span class="trenner" aria-hidden="true">·</span>
-                    <span>{{ v.raum }}</span>
-                    <span class="trenner" aria-hidden="true">·</span>
-                    <span class="zahl">{{ dauerMinuten(v) }} min</span>
-                  </span>
-                  <button type="button" class="buchen" (click)="buchen(v)">
-                    Buchen<span class="still"
-                      >: {{ v.beginn | date: 'EEEE HH:mm' : zone(v.beginn) }},
-                      {{ v.therapeut }}</span
-                    >
-                  </button>
-                  @if (v.warnungen?.length) {
-                    <ul class="warnungen">
-                      @for (w of v.warnungen; track w.regel) {
-                        <li class="warnung">{{ w.regel }}: {{ w.begruendung }}</li>
-                      }
-                    </ul>
-                  }
-                </li>
+                    <span class="wer">
+                      <span>{{ v.therapeut }}</span>
+                      <span class="trenner" aria-hidden="true">·</span>
+                      <span>{{ v.raum }}</span>
+                      <span class="trenner" aria-hidden="true">·</span>
+                      <span class="zahl">{{ dauerMinuten(v) }} min</span>
+                    </span>
+                    <button type="button" class="buchen" (click)="buchen(v)">
+                      Buchen<span class="still"
+                        >: {{ v.beginn | date: 'EEEE HH:mm' : zone(v.beginn) }},
+                        {{ v.therapeut }}</span
+                      >
+                    </button>
+                    @if (v.warnungen?.length) {
+                      <ul class="warnungen">
+                        @for (w of v.warnungen; track w.regel) {
+                          <li class="warnung">{{ w.regel }}: {{ w.begruendung }}</li>
+                        }
+                      </ul>
+                    }
+                  </li>
+                }
+              </ol>
+              @if (ausgeschlossen().length) {
+                <aside class="ausgeschlossen" aria-labelledby="ausgeschlossen-titel">
+                  <h3 id="ausgeschlossen-titel">Nicht gezeigt</h3>
+                  <ul>
+                    @for (a of ausgeschlossen(); track a.regel) {
+                      <li>
+                        <span class="zahl">{{ a.anzahl }}</span> wegen {{ a.regel }}
+                      </li>
+                    }
+                  </ul>
+                  <p class="hinweis">
+                    Von {{ z.antwort.geprueft }} geprüften Slots. Die Regeln entscheiden, nicht die
+                    Suche.
+                  </p>
+                </aside>
               }
-            </ol>
-            @if (ausgeschlossen().length) {
-              <aside class="ausgeschlossen" aria-labelledby="ausgeschlossen-titel">
-                <h3 id="ausgeschlossen-titel">Nicht gezeigt</h3>
-                <ul>
-                  @for (a of ausgeschlossen(); track a.regel) {
-                    <li>
-                      <span class="zahl">{{ a.anzahl }}</span> wegen {{ a.regel }}
-                    </li>
-                  }
-                </ul>
-                <p class="hinweis">
-                  Von {{ z.antwort.geprueft }} geprüften Slots. Die Regeln entscheiden, nicht die
-                  Suche.
-                </p>
-              </aside>
-            }
+            </div>
           }
         }
       }

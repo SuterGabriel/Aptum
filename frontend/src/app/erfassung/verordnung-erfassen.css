@@ -1,13 +1,31 @@
 .erfassung {
+  height: 100%;
+  min-height: 0;
   display: grid;
   grid-template-columns: minmax(20rem, 26rem) minmax(0, 1fr);
   gap: var(--abstand-6);
   align-items: start;
 }
 
+/* Der Vorschlag wächst mit den Feldern; er scrollt in seinem Kasten. */
+.eingabe,
+.vorschlag {
+  position: relative;
+  max-height: 100%;
+  overflow: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+}
+
 @media (max-width: 60rem) {
   .erfassung {
     grid-template-columns: 1fr;
+    height: auto;
+  }
+  .eingabe,
+  .vorschlag {
+    max-height: none;
+    overflow: visible;
   }
 }
 

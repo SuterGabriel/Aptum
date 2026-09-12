@@ -47,6 +47,7 @@ function fensterGueltig(gruppe: AbstractControl) {
   templateUrl: './termin-suche.html',
   styleUrl: './termin-suche.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'seite' },
 })
 export class TerminSuche {
   private readonly fb = inject(NonNullableFormBuilder);

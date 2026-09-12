@@ -1,15 +1,21 @@
+/* Das Gitter ist der eine Bereich, der scrollt. Kopfzeile und Zeitspalte
+   bleiben stehen, damit man um 15 Uhr noch weiß, in wessen Spalte man ist. */
 :host {
   display: block;
-  overflow-x: auto;
+  position: relative;
+  height: 100%;
+  overflow: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+  border: var(--rand-duenn) solid var(--border-subtle);
+  border-radius: var(--radius-gross);
+  background: var(--surface-raised);
 }
 
 .grid {
   display: flex;
   flex-direction: column;
   min-width: max-content;
-  border: var(--rand-duenn) solid var(--border-subtle);
-  border-radius: var(--radius-gross);
-  background: var(--surface-raised);
 }
 
 .zeile {
@@ -21,9 +27,14 @@
   height: auto;
   position: sticky;
   top: 0;
-  z-index: 1;
+  z-index: 3;
   background: var(--surface-sunken);
   border-bottom: var(--rand-duenn) solid var(--border-strong);
+}
+
+.zeile.kopf .zeit {
+  z-index: 4;
+  background: var(--surface-sunken);
 }
 
 .zeile.kopf .zelle,
@@ -35,6 +46,10 @@
 
 .zeit {
   flex: 0 0 var(--grid-zeitspalte);
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  background: var(--surface-raised);
   font-size: var(--schrift-xs);
   color: var(--text-secondary);
   padding: 0 var(--abstand-2);

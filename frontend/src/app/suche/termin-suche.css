@@ -1,13 +1,46 @@
 .suche {
+  height: 100%;
+  min-height: 0;
   display: grid;
-  grid-template-columns: minmax(18rem, 24rem) minmax(0, 1fr);
+  grid-template-columns: minmax(18rem, 22rem) minmax(0, 1fr);
   gap: var(--abstand-6);
-  align-items: start;
+}
+
+/* Beide Spalten scrollen für sich; die Seite nie. */
+.kriterien {
+  position: relative;
+  overflow: auto;
+  min-height: 0;
+  padding-right: var(--abstand-2);
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+}
+
+.ergebnis {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.treffer {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  padding-right: var(--abstand-2);
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
 }
 
 @media (max-width: 56rem) {
   .suche {
     grid-template-columns: 1fr;
+    height: auto;
+  }
+  .kriterien,
+  .treffer {
+    overflow: visible;
+    padding-right: 0;
   }
 }
 
@@ -41,8 +74,19 @@ fieldset {
   border: var(--rand-duenn) solid var(--border-subtle);
   border-radius: var(--radius-gross);
   background: var(--surface-raised);
-  padding: var(--abstand-3) var(--abstand-4) var(--abstand-4);
-  margin: 0 0 var(--abstand-4);
+  padding: var(--abstand-2) var(--abstand-4) var(--abstand-3);
+  margin: 0 0 var(--abstand-3);
+}
+
+/* Die zwei Dimensionen ohne Eingabe sind Notizen, keine Formulare: flacher. */
+fieldset.notiz {
+  background: transparent;
+  border-style: dashed;
+  padding-bottom: var(--abstand-2);
+}
+
+fieldset.notiz .abgeleitet {
+  margin: 0;
 }
 
 legend {
@@ -147,10 +191,19 @@ input[aria-invalid='true'] {
   gap: var(--abstand-2);
 }
 
+/* Eine Zeile je Vorschlag: wann und wer links, Buchen rechts. Dicht, weil
+   hundert Vorschläge sonst hundert Kästen sind. */
 .vorschlag {
   display: grid;
-  gap: var(--abstand-1);
-  padding: var(--abstand-3) var(--abstand-4);
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    'wann buchen'
+    'wer buchen'
+    'warnungen warnungen';
+  align-items: center;
+  column-gap: var(--abstand-4);
+  row-gap: 2px;
+  padding: var(--abstand-2) var(--abstand-4);
   background: var(--slot-frei-bg);
   border: var(--rand-duenn) solid var(--slot-frei-border);
   border-radius: var(--radius-gross);
@@ -158,11 +211,23 @@ input[aria-invalid='true'] {
 }
 
 .wann {
+  grid-area: wann;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
   gap: var(--abstand-3);
   font-weight: var(--gewicht-mittel);
+}
+
+.wer {
+  grid-area: wer;
+}
+
+.buchen {
+  grid-area: buchen;
+}
+
+.warnungen {
+  grid-area: warnungen;
 }
 
 .wer {
@@ -174,7 +239,7 @@ input[aria-invalid='true'] {
 }
 
 .buchen {
-  justify-self: start;
+  justify-self: end;
   min-height: var(--hitflaeche-min);
   padding: var(--abstand-1) var(--abstand-4);
   border-radius: var(--radius-klein);
@@ -220,6 +285,7 @@ input[aria-invalid='true'] {
   background: var(--surface-sunken);
   border-radius: var(--radius-gross);
   padding: var(--abstand-3) var(--abstand-4);
+  margin-bottom: var(--abstand-2);
 }
 
 .ausgeschlossen ul {

@@ -1,6 +1,15 @@
+/* Kopf, Gitter, Fuß: Das Gitter bekommt, was zwischen den beiden übrig
+   bleibt, und scrollt darin - die Seite nicht. */
 .seite {
+  height: 100%;
+  min-height: 0;
   display: grid;
-  gap: var(--abstand-4);
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: var(--abstand-3);
+}
+
+app-kalender-grid {
+  min-height: 0;
 }
 
 .kopf {

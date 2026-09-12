@@ -41,6 +41,7 @@ const LEGENDE: readonly { zustand: Zustand; erklaerung: string }[] = [
   templateUrl: './kalender-seite.html',
   styleUrl: './kalender-seite.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'seite' },
 })
 export class KalenderSeite {
   private readonly api = inject(AptumApi);

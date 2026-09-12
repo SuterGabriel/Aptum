@@ -17,6 +17,19 @@ html {
   color-scheme: light;
 }
 
+/*
+ * Die Seite selbst scrollt nie. Die Hülle ist so hoch wie das Fenster, und
+ * jede Ansicht füllt sie und scrollt nur dort, wo ihr Inhalt wächst: die
+ * Trefferliste, das Gitter, die Tabelle. Wer hundertmal am Tag auf denselben
+ * Kalender schaut, soll ihn nicht erst suchen müssen (Mockup-Auftrag:
+ * hohe Dichte ist ein Vorteil).
+ */
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+}
+
 body {
   margin: 0;
   background: var(--surface-page);
@@ -45,6 +58,23 @@ body {
 /* Der abgedunkelte Hintergrund des Dialogs, aus dem Token mit Deckkraft. */
 .cdk-overlay-dark-backdrop {
   background: color-mix(in srgb, var(--surface-backdrop) 55%, transparent);
+}
+
+/* Jede geroutete Ansicht ist ein Gitterkind der Hülle und wird so hoch wie
+   die Zeile, die ihr bleibt. Der Klassenname kommt aus dem host-Objekt der
+   Komponente, nicht aus dem Template. */
+.seite {
+  display: block;
+  min-height: 0;
+  min-width: 0;
+}
+
+/* Schmale Rollbalken in den Bereichen, die innen scrollen. */
+.rollt {
+  overflow: auto;
+  min-height: 0;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
 }
 
 /* ---- Zwei Hilfsklassen, die jede Seite braucht ---------------------- */

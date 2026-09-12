@@ -2,9 +2,24 @@
  * Ohne Kapselung (siehe Komponente): Jeder Selektor beginnt mit .abrechnung,
  * damit nichts hier auf andere Seiten abfärbt. Farben nur aus tokens.css.
  */
+/* Kopf, Werkzeuge, Tabelle: Die Tabelle bekommt den Rest und scrollt selbst. */
 .abrechnung {
+  height: 100%;
+  min-height: 0;
   display: grid;
-  gap: var(--abstand-4);
+  grid-template-rows: auto auto minmax(0, 1fr);
+  gap: var(--abstand-3);
+}
+
+.abrechnung .tabelle {
+  min-height: 0;
+  display: grid;
+}
+
+.abrechnung ag-grid-angular {
+  display: block;
+  height: 100%;
+  min-height: 20rem;
 }
 
 .abrechnung h1 {
