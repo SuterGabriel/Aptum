@@ -15,6 +15,10 @@ test.describe('Abrechnungsübersicht', () => {
   test.beforeAll(async ({ request }) => {
     verordnung = await verordnungAnlegen(request);
     await terminBuchen(request, verordnung);
+    // Eine zweite, ohne Termin: Der Tastaturtest braucht zwei Zeilen, und in
+    // der frischen CI-Datenbank läuft diese Datei als erste - dort gäbe es
+    // sonst nur eine. Lokal fiel das nicht auf, weil die Tabelle voll war.
+    await verordnungAnlegen(request);
   });
 
   test('zeigt die gebuchte Behandlung als erbracht und prüffest, mit Regelname in der Zeile', async ({
