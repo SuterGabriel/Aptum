@@ -1,5 +1,9 @@
 # Aptum
 
+[![CI](https://github.com/SuterGabriel/Aptum/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/SuterGabriel/Aptum/actions/workflows/ci.yml)
+[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=SuterGabriel_Aptum&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=SuterGabriel_Aptum)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=SuterGabriel_Aptum&metric=coverage)](https://sonarcloud.io/summary/new_code?id=SuterGabriel_Aptum)
+
 Terminplanung und Verordnungsverwaltung für Physio- und Ergotherapiepraxen.
 
 Ein Portfolio-Projekt mit einem Auftraggeber aus Papier: zwei Ausschreibungen
